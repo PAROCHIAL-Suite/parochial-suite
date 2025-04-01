@@ -27,8 +27,6 @@
                 echo $email = $rows['email'];           
                 echo  "<br>" . $p = $rows['password'];            
                 $stationCode = $rows['stationCode'];
-                $parishID = $rows['parishID'];    
-                $login_Status = $rows['login_status'];
             }
 
             $cookie_name = "user";
@@ -39,20 +37,23 @@
             $cookie_value = $email;
             setcookie($cookie_name, $cookie_value,  time() + 86400); // 86400 = 1 day       
 
-            if(!isset($_COOKIE['user'])) {
-               echo "Cookie named '" . $cookie_name . "' is not set!";            
-            }
-            else{
+
+     
                 if ($role == 'Adminstrator') {       
                   header("Location: ./admin/?ref=$id");
-                }else{
+                 }
+                elseif ($role == 'Developer') {
+                    header("Location: ./DEVELOPER/?ref=$id");
+                }
+                
+                else{
                     echo "<script>alert('User does not exist')</script>";
                 }
 
             }
 
         }
-    }
+    
 ?>
 
 
