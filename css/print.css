@@ -1,0 +1,40 @@
+
+/* Rounded fort for title of the page */
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+
+body{
+  font-family: "Source Sans 3", sans-serif;
+  font-weight: 0; 
+  background-color: #fff;
+}
+
+.header1{
+  margin: auto;
+  text-align: center;
+}
+
+.header1 img{
+  width: 80px;
+  height: 80px;
+  text-align: center;
+}
+.header1  table{
+  text-align: center;
+  border-bottom: 2px double;
+}
+
+.header1  table tr:nth-child(3) td:nth-child(1){
+  font-weight: 500;
+  font-size: 13.5px;
+  text-align: center;
+}
+.header1 tr:nth-child(1) th{
+  font-size: 25px;
+  letter-spacing: 1px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.headerTitle{
+  font-size: 28px;
+}
