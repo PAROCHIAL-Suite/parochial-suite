@@ -1,19 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+</head>
+<body>
 	<div class="searchContainer">
         <table>
-				<td colspan="5" width="35%">
-					<i style="font-size:15px; margin-left: 20px; margin-right:10px;" class="fa">&#xf002;</i>
-					<input type="text" name="query" id="searchbox" placeholder="Search by name, surname, dob, etc." style="width: 400px;">
+			<tr>
+				<td colspan="5" width="50%">					
+					<input type="text" name="query" id="searchbox" placeholder="Type here..." >
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				</td>	
 				<td>
 					<button onclick="location.reload();" >
-						<i style="font-size:17px; color: green" class="fa">&#xf021;</i>
-
+						<i style="font-size:14px; color: #202020;" class="fa">&#xf021;</i>
 					</button>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<button  class="excelBtn" onclick="exportToExcel('table', 'Exported from parochilcloud')">Export as excel</button>					
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<button  class="excelBtn" onclick="exportTableToPDF()" >PDF</button>
+				<button  class="excelBtn" onclick="exportToExcel('table', 'Exported from parochilcloud')">Export to Excel</button>					
+				
 				</td>							
 			</tr>          		
         </table>	
 	</div>
+</body>
+</html>	
+
+

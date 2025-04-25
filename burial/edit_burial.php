@@ -83,8 +83,8 @@ if (isset($_POST['post_eucharist_from'])){
 	$reg_no = mysqli_real_escape_string($conn,$_POST['reg_no']);
 	$cause = mysqli_real_escape_string($conn,$_POST['cause']);
 	$info_source = mysqli_real_escape_string($conn,$_POST['info_source']);
-	$burial_date = mysqli_real_escape_string($conn,$_POST['burial_date']);
-	// $burial_date = reformatDate($db);
+	$db = mysqli_real_escape_string($conn,$_POST['burial_date']);
+	$burial_date = reformatDate($db);
 	$grave_no = mysqli_real_escape_string($conn,$_POST['grave_no']);
 	$minister = mysqli_real_escape_string($conn,$_POST['minister']);
 	
@@ -99,12 +99,17 @@ if (isset($_POST['post_eucharist_from'])){
 		'$cause',
 		'$info_source',
 		'$grave_no' ,
-		'$minister')";
+		'$minister ')";
 	if(mysqli_query($conn, $sql)){	
-		     
+		echo "
+			<script>
+			    alert('A new Burial record has been created.');			    	
+			</script>"; 	     
 			$total_records = $total_records + 1;
 	} else{
 	         echo "ERROR: Hush! Sorry $sql. " . mysqli_error($conn);
 	}    
-}}
+}
+
+
 ?>

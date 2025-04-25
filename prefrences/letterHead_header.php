@@ -1,6 +1,6 @@
 <?php
 	include '../connection.php';
-	$sql = "SELECT * FROM parish_info";
+	$sql = "SELECT * FROM parish_info WHERE stationID = '$STATION_CODE'";
 	$result = $conn->query($sql);
 
 	while ($rows=$result->fetch_assoc()) { 
@@ -45,13 +45,11 @@
 </head>
 <body>
 	<div class="header1 container" >
+		<!-- <img src="../prefrences/media/<?php // echo $logo; ?>"> -->
 
 		<table border="0"  width="100%">
 			<tr>
-				<td  class="logo" rowspan="4" width="40px"><img src="../prefrences/media/<?php echo $logo; ?>"> 
-				</td>
 				<td class="title"><?php echo $name; ?></td>	
-				<td class="logo rightbox" rowspan="4" width="40px"></td>
 			</tr>
 			<tr>
 				<td class="adrs_line"><b><?php echo  $diocese; ?></b></td>

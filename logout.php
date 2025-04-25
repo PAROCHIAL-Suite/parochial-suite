@@ -7,12 +7,19 @@
 </head>
 <body>
 <?php 
-        $conn = mysqli_connect('localhost', 'root', '', 'parochial_cloud');
-    if ($conn->connect_error) {
-        echo "\'<h2>Running Status :<b> Active</b></h2>";
-        die("Connection failed. " . $conn->connect_error);
+       $servername = "localhost";
+    $database = "u381709061_parochial_db";
+    $username = "u381709061_Ecclesiastical";
+     
+    // Create connection
+     
+    $conn = mysqli_connect($servername, $username, '/vV+q6=C', $database);
+     
+    // Check connection
+     
+    if (!$conn) {     
+        die("Unable to connect: " . mysqli_connect_error());     
     }
-
 	$id = $_GET['id'];
 
 	$sql = "UPDATE users SET login_status = 'Logged Out' WHERE ID = '$id'";  
@@ -23,7 +30,7 @@
 		setcookie("username", $USERNAME, time() - 3600);
 
 		echo "<script>alert('Logged out')</script>";   	
-		header("Location: ../index.php");			    
+		header("Location: index.php");			    
 	} 
 	else{echo "ERROR: Hush! Sorry $sql. " . mysqli_error($conn);}
 	            

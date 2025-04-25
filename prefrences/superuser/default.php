@@ -14,10 +14,10 @@
 
 	<div class="main">
 		<main>
-			<iframe src="../home/index.php?ref=<?php echo $_GET['ref']; ?>" width="100%" height="100%" id="iframe"></iframe>
+			<iframe src="dashboard.php?ref=<?php echo $_GET['ref']; ?>" width="100%" height="100%" id="iframe"></iframe>
 		</main>
 	</div>
 
 
 </body>
-</html>
+</html>	

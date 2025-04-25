@@ -58,19 +58,10 @@
 		</div>
 		<table width="30%" border="0">
 			<tr>
-				<td width="30%"><p>Parochial Cloud</p></td>
+				<td width="30%"><p>Parochial Suite</p></td>
 			</tr>
 		</table>
 	</div>
-	<?php  
-	// AFTER GETTING THE CREDENTIALS THIS CODE WILL REDIRECT THEM ACCORDING TO THERE PRIVILLAGE.
 
-		if ($role == 'User' and $path == '/admin/default.php') {			
-			header("Location: ../index.php");
-		}
-		elseif ($role == 'Adminstrator' and $path == '/view_only/index.php') {
-			header("Location: ../index.php");
-		}
-	?>
 </body>
 </html>

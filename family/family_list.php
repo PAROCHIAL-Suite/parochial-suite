@@ -35,7 +35,7 @@
 			$sql = " SELECT * FROM family_master_table 
 			WHERE stationID = '$STATION_CODE'";
 			$result = $conn->query($sql);									
-			 	while ($rows=$result->fetch_assoc()){						 	
+			while ($rows=$result->fetch_assoc()){						 	
 		?>			
 		<tr>		
 
@@ -54,6 +54,7 @@
 		</table>     			
     </div>
 	</div>
+	<!-- THE BELOW FILE CONTAINS JAVA SCRIPT CODE TO FILTER AND SEARCH DATA THROUGHT THE TABLE, THIS A NECESSARY FILE FOR SEARCH PAGES -->
 	<script src="../js/search_script.js"></script>
 
 

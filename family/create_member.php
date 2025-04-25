@@ -117,7 +117,7 @@ if (isset($_POST['register_member'])) {	// code...
 </head>
 <body>
 	<?php include '../nav/global_nav.php'; ?>
-	<br><br>
+	<br>
 	<div class="pageName card-heading">
 		<table border="0">
 			<tr>

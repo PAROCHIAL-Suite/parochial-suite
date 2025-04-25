@@ -6,13 +6,14 @@
 	<title></title>
 </head>
 <body>
+
 	<div class="searchContainer">
+
     <table border="0" width="100%">
 			<tr>
-				<td width="35%">
-					<i style="font-size:15px; margin-left: 25px; margin-right:10px;" class="fa">&#xf002;</i>
-					<input type="text" name="query" id="searchbox" placeholder="Search by name, surname, dob, etc." style="width: 400px;">
-  						
+				<td colspan="5" width="50%">					
+					<input type="text" name="query" id="searchbox" placeholder="Type here..." >
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				</td>
 				
 				<td width="4%"><i style="font-size:17px; float: right; margin-right:14px;" class="fa">&#xf0b0;</i>

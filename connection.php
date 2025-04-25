@@ -29,6 +29,7 @@
     // RETRIVING CREDENTIALS STORES AT LOCAL SYSTEM
     $STATION_CODE = $_COOKIE['user'];
     $USERNAME = $_COOKIE['username'];
+    
 
     if(!isset($_COOKIE['user'])) {
         echo "<script>alert('Session Expired')</script>";    
@@ -78,7 +79,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title></title>
+    <title>Parochial Suite</title>
 </head>
 <body>
     <script>
