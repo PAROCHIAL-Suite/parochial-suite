@@ -3,22 +3,17 @@ include '../config/connection.php';
 if (!$conn) {
 	die("Connection failed: " . mysqli_connect_error());
 }
-if (isset($_POST['add_priest'])) {
-	// code...
-	$name = mysqli_real_escape_string($conn, $_REQUEST['name']);
-	$designation = mysqli_real_escape_string($conn, $_REQUEST['designation']);
-	$start_date = $_REQUEST['start_date'];
+if (isset($_POST['create_tenure'])) {
+	$s_dt = $_POST['start_dt'];
+	$e_dt = $_POST['end_dt'];
 
-	$end_date = $_REQUEST['end_date'];
+	$sql = "INSERT INTO council_master_table VALUES('','$STATION_CODE', '$s_dt', '$e_dt')";
 
-	$sql = "INSERT INTO priest (ID, stationID, name, designation, start_date, end_date) 
-	        VALUES ('', '$STATION_CODE', '$name', '$designation', '$start_date', '$end_date')";
 	if (mysqli_query($conn, $sql)) {
-		echo "<script>alert('A name had been added successfully!');</script>";
+		// echo "<script>alert('Tenure created...');</script>";	
 	} else {
-		echo "ERROR: Could not execute $sql. " . mysqli_error($conn);
+		echo "ERROR: Hush! Sorry $sql. " . mysqli_error($conn);
 	}
-
 }
 
 ?>
@@ -38,7 +33,7 @@ if (isset($_POST['add_priest'])) {
 	<?php include '../nav/global_nav.php'; ?>
 	<br><br>
 	<div class="pageName">
-		<h3>PRIEST RECORDS</h3>
+		<h3>CREATE NEW TENURE</h3>
 	</div>
 	<br>
 
@@ -47,37 +42,25 @@ if (isset($_POST['add_priest'])) {
 		enctype="multipart/form-data">
 		<div class="form-section">
 			<div class="form-section-header">
-				<h3>Basic Information</h3>
+				<h3>Tenure Information</h3>
 			</div>
 			<div class="form-grid">
 				<div class="form-group">
-					<label for="Pries Name">Priest Name</label>
-					<input type="text" id="name" name="name" required>
-				</div>
-				<div class="form-group">
-					<label for="status">Designation</label>
-					<select id="designation" name="designation" required>
-						<option value="" hidden>Select</option>
-						<option>Parish Priest</option>
-						<option>Asst. Parish Priest</option>
-						<option>Parish Priest (In-Charge)</option>
-					</select>
-				</div>
-				<div class="form-group">
-					<label for="startYear">Start Year</label>
+					<label for="Pries Name">START YEAR</label>
 					<input type="number" pattern="\d{4}" maxlength="4" inputmode="numeric"
-						oninput="this.value=this.value.slice(0,4)" placeholder="YYYY" name="start_date" required>
+						oninput="this.value=this.value.slice(0,4)" placeholder="YYYY" name="start_dt" required>
 				</div>
+
 				<div class="form-group">
-					<label for="endYear">End Year</label>
+					<label for="startYear">END YEAR</label>
 					<input type="number" pattern="\d{4}" maxlength="4" inputmode="numeric"
-						oninput="this.value=this.value.slice(0,4)" placeholder="YYYY" name="end_date">
+						oninput="this.value=this.value.slice(0,4)" placeholder="YYYY" name="end_dt" required>
 				</div>
 			</div>
 		</div>
 		<div class="form-header">
 			<div class="form-actions">
-				<button type="submit" class="btn-primary" name="add_priest">
+				<button type="submit" class="btn-primary" name="create_tenure">
 					<i class="fas fa-save"></i> Save
 				</button>
 				<button class="btn-secondary" onclick="location.reload()">
@@ -88,7 +71,7 @@ if (isset($_POST['add_priest'])) {
 		<br><br>
 	</form>
 
-	<!-- Disply 10 priest -->
+
 	<div class="container-widgets">
 		<!-- Recent Transactions -->
 		<div class="widget-row">
@@ -101,24 +84,26 @@ if (isset($_POST['add_priest'])) {
 						<thead>
 							<tr>
 								<th>ACTIONS</th>
-								<th>NAME</th>
-								<th>DESIGNATION</th>
 								<th>START DATE</th>
 								<th>END DATE</th>
 							</tr>
 						</thead>
 						<tbody>
 							<?php
-
-							$sql = "SELECT * FROM priest WHERE stationID = '$STATION_CODE' ORDER BY start_date DESC LIMIT 5";
+							include '../config/connection.php';
+							$sql = "SELECT * FROM council_master_table WHERE stationID = '$STATION_CODE'";
 							$result = $conn->query($sql);
+
 							while ($rows = $result->fetch_assoc()) {
-								$id = $rows['ID'];
 								?>
 								<tr>
-									<td><a href="edit_priest.php?id=<?php echo $rows['ID']; ?>">Edit</a></td>
-									<td><?php echo $rows['name']; ?></td>
-									<td><?php echo $rows['designation']; ?></td>
+									<td>
+										<a
+											href="add_group.php?id=<?php echo $rows['ID']; ?>&s_date=<?php echo $rows['start_date']; ?>&e_date=<?php echo $rows['end_date']; ?>">Add
+											Groups</a>
+										<!-- <b>|</b>
+										<a href="editTenure.php?tID=<?php echo $rows['ID']; ?>">Edit</a> -->
+									</td>
 									<td><?php echo $rows['start_date']; ?></td>
 									<td><?php echo $rows['end_date']; ?></td>
 								</tr>

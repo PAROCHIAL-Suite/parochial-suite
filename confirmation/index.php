@@ -1,31 +1,31 @@
 <?php
-	include '../connection.php';
-	$sql = "SELECT COUNT(*) as total FROM confirmation";
-	$result = $conn->query($sql);
+include '../config/connection.php';
+$sql = "SELECT COUNT(*) as total FROM confirmation";
+$result = $conn->query($sql);
 
-	if ($result) {
-	    // Fetch the result as an associative array
-	    $row = $result->fetch_assoc();
-	    $total_records = $row['total'];
-	    if ($total_records == 0) {
-	    	// code...
-	    	$total_records = 1;
-	    }
-	    elseif ($total_records > 0) {
-	     	// code...
-	     
-	    	// code...
-	    	$total_records = $total_records + 1;
-	    }
-	    
-	} else {
-	    echo "Error: " . $sql . "<br>" . $conn->error;
+if ($result) {
+	// Fetch the result as an associative array
+	$row = $result->fetch_assoc();
+	$total_records = $row['total'];
+	if ($total_records == 0) {
+		// code...
+		$total_records = 1;
+	} elseif ($total_records > 0) {
+		// code...
+
+		// code...
+		$total_records = $total_records + 1;
 	}
 
-	
-?>    
+} else {
+	echo "Error: " . $sql . "<br>" . $conn->error;
+}
+
+
+?>
 <!DOCTYPE html>
 <html>
+
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -34,141 +34,176 @@
 
 	<title></title>
 </head>
+
 <body>
 	<?php include '../nav/global_nav.php'; ?>
 	<br><br>
-	<div class="pageName card-heading">
-		<table border="0">
-			<tr>
-				<td width="40%" ><h3>REGISTRATION OF CONFIRMATION</h3></td>
-			</tr>
-		</table>
+	<div class="pageName">
+		<a href="sacrament_search_index.php" class="" style="float: right; margin-right: 50px; ">
+			<i class="fas fa-search"></i> Search - Communion Reports
+		</a>
+		<h3>REGISTRATION OF HOLY COMMUNION</h3>
 	</div>
-<br>
+	<div class="form-header">
+		<div class="form-actions">
+			<button type="submit" class="btn-primary" onclick="document.getElementById('post_eucharist_from').click()">
+				<i class="fas fa-save"></i> Save
+			</button>
+			<button class="btn-secondary" onclick="location.reload()">
+				<i class="fas fa-times"></i> Reset
+			</button>
+		</div>
+		<div class="form-actions">
+			<div class="">
+				<label><b>Recent Transaction</b></label>
+				<h4 style="color: var(--accent-color);"><span style="font-weight: normal; ">Reg. No.</span>
+					<?php echo $lastCreated; ?></h4>
+			</div>
+		</div>
+	</div>
 
-	<form id="baptism_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-		<table width="100%"  border="0" cellspacing="10" class="form">
-			<tr>
-				<td colspan="4"><h4>Certificate Details</h4></td>
-			</tr><tr></tr>
-			<tr>
-				<td width="28%"><p>NAME</p></td>
-				<td><input type="text" name="name"></td>
-			</tr>
-			<tr>				
-				<td><p>SURNAME</p></td>
-				<td><input type="text" name="surname"></td>				
-			</tr>
-			<tr>				
-				<td><p>DATE OF BIRTH</p></td>
-				<td><input type="text" class="auto-format-date"name="dob"  placeholder="dd/mm/yyyy"></td>	
-							
-			</tr>
-			<tr>				
-				<td><p>GENDER</p></td>
-				<td>
+	<form id="eucharistFormReg" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST"
+		enctype="multipart/form-data">
+		<div class="form-section">
+			<div class="form-section-header">
+				<h3>Registration Information</h3>
+			</div>
+			<div class="form-grid">
+				<div class="form-group">
+					<label for="">NAME</label>
+					<input type="text" name="name" required>
+				</div>
+				<div class="form-group">
+					<label for="surname">SURNAME</label>
+					<input type="text" name="surname">
+				</div>
+				<div class="form-group">
+					<label for="dob">DATE OF BIRTH</label>
+					<input type="text" class="auto-format-date" name="dob" placeholder="dd/mm/yyyy">
+				</div>
+
+			</div>
+
+			<div class="form-grid">
+				<div class="form-group">
+					<label for="Name">GENDER</label>
 					<select name="gender">
-						<option hidden>--</option>
-						<option>Male</option>
-						<option>Female</option>
+						<option value="" hidden required>Select</option>
+						<option value="Male">Male</option>
+						<option value="Female">Female</option>
 					</select>
-				</td>				
-			</tr>
-			<tr>				
-				<td><p>FATHER'S NAME</p></td>
-				<td><input type="text" name="father_name"></td>				
-			</tr>		
-			<tr>				
-				<td><p>MOTHER'S NAME</p></td>
-				<td><input type="text" name="mother_name"></td>				
-			</tr>										
-			<tr>
-				<td><p>BAPTISM DATE</p></td>
-				<td><input type="text" class="auto-format-date"  name="baptism_date"  placeholder="dd/mm/yyyy"></td>							
-			</tr>
-	
-			<tr>
-				<td><p>BAPTISM REGISTRATION NO.</p></td>
-				<td><input type="text" name="baptism_reg"></td>
-			</tr>
-			<tr>				
-				<td><p>BAPTISM PARISH NAME</p></td>
-				<td><input type="text" name="baptism_parish"></td>				
-			</tr>	
-			<tr>				
-				<td><p>PARISH ADDRESS</p></td>
-				<td><input type="text" name="p_address"></td>				
-			</tr>		
-			<tr>				
-				<td><p>CHURCH OF CONFIRMATION</p></td>
-				<td><input type="text" name="church_of_confirmation"></td>				
-			</tr>		
-			<tr>				
-				<td><p>DATE OF CONFIRMATION</p></td>
-				<td><input type="text" class="auto-format-date" name="date" placeholder="dd/mm/yyyy"></td>			
-			</tr>							
-			<tr></tr><tr></tr><tr></tr>
-			<tr>
-				<td colspan="4"><h4>Parochial Details</h4></td>
-			</tr><tr></tr>
-			<tr>				
-				<td><p>SPONSOR</p></td>
-				<td><input type="text" name="sponsor" ></td>
-								
-			</tr>					
-			<tr>
-				<td ><p>MINISTER'S NAME</p></td>
-				<td><input type="text" name="minister_name"></td>
-			</tr>
-			<tr>				
-				<td><p>PARISH PRIEST</p></td>
-				<td><input type="text" name="parish_priest" 
-					></td>			
-			</tr>					
+				</div>
+				<div class="form-group">
+					<label for="father_name">FATHER'S NAME</label>
+					<input type="text" name="father_name">
+				</div>
+
+				<div class="form-group">
+					<label for="mother_name">MOTHER'S NAME</label>
+					<input type="text" name="mother_name">
+				</div>
+			</div>
+
+			<div class="form-section-header">
+				<h3>Parochial Information</h3>
+			</div>
+			<div class="form-grid">
+				<div class="form-group">
+					<label for="baptism_reg">BAPTISM REGISTRATION NO.</label>
+					<input type="text" name="baptism_reg" required>
+				</div>
+
+				<div class="form-group">
+					<label for="baptism_date">BAPTISM DATE</label>
+					<input type="text" class="auto-format-date" name="baptism_date" placeholder="dd/mm/yyyy">
+				</div>
+
+				<div class="form-group">
+					<label for="baptism_parish">BAPTISM PARISH NAME</label>
+					<input type="text" name="baptism_parish">
+				</div>
+			</div>
+
+			<div class="form-grid">
+				<div class="form-group">
+					<label for="p_address">PARISH ADDRESS</label>
+					<input type="text" name="p_address">
+				</div>
+
+				<div class="form-group">
+					<label for="church_of_eucharist">CHURCH OF CONFIRMATION</label>
+					<input type="text" name="church_of_confirmaiton">
+				</div>
+
+				<div class="form-group">
+					<label for="date">DATE OF CONFIRMATION<label>
+							<input type="text" class="auto-format-date" name="date_of_confirmation"
+								placeholder="dd/mm/yyyy">
+				</div>
+			</div>
+			<div class="form-grid">
+				<div class="form-group">
+					<label for="sponsor">SPONSOR</label>
+					<input type="text" name="sponsor">
+				</div>
+				<div class="form-group">
+					<label for="minister_name">MINISTER'S NAME</label>
+					<input type="text" name="minister_name">
+				</div>
+
+				<div class="form-group">
+					<label for="parish_priest">PARISH PRIEST</label>
+					<input type="text" name="parish_priest">
+				</div>
 
 
-			<tr></tr><tr></tr><tr></tr>
-			<tr>
-				<td></td>
-				<td>  
-					<input type="submit" name="post_eucharist_from" id="saveFrm" value="Save">  </td>
-				<td></td>
-			</tr>
-		</table>		
-	</form><br><br>
+			</div>
 
-	
+		</div>
+		<div class="form-header">
+			<div class="form-actions">
+				<button type="submit" class="btn-primary" name="post_eucharist_from" id="post_eucharist_from">
+					<i class="fas fa-save"></i> Save
+				</button>
+				<button class="btn-secondary" onclick="location.reload()">
+					<i class="fas fa-times"></i> Reset
+				</button>
+			</div>
+		</div>
+	</form>
+
 </body>
+
 </html>
 
 
 <?php
 
-	$year = date("Y");
+$year = date("Y");
 
 
-	if (isset($_POST['post_eucharist_from'])){
-		include '../connection.php';
-		$reg_no = $total_records."/".$year;
-		$name = mysqli_real_escape_string($conn,$_POST['name']);
-		$surname = mysqli_real_escape_string($conn,$_POST['surname']);
-		$dob = mysqli_real_escape_string($conn,$_POST['dob']);
-		$gender = mysqli_real_escape_string($conn,$_POST['gender']);
-		$father_name = mysqli_real_escape_string($conn,$_POST['father_name']);
-		$mother_name = mysqli_real_escape_string($conn,$_POST['mother_name']);
+if (isset($_POST['post_eucharist_from'])) {
+	include '../config/connection.php';
+	$reg_no = $total_records . "/" . $year;
+	$name = mysqli_real_escape_string($conn, $_POST['name']);
+	$surname = mysqli_real_escape_string($conn, $_POST['surname']);
+	$dob = mysqli_real_escape_string($conn, $_POST['dob']);
+	$gender = mysqli_real_escape_string($conn, $_POST['gender']);
+	$father_name = mysqli_real_escape_string($conn, $_POST['father_name']);
+	$mother_name = mysqli_real_escape_string($conn, $_POST['mother_name']);
 
-		$baptism_reg = mysqli_real_escape_string($conn,$_POST['baptism_reg']);
-		$baptism_date= mysqli_real_escape_string($conn,$_POST['baptism_date']);
+	$baptism_reg = mysqli_real_escape_string($conn, $_POST['baptism_reg']);
+	$baptism_date = mysqli_real_escape_string($conn, $_POST['baptism_date']);
 
-		$baptism_parish = mysqli_real_escape_string($conn,$_POST['baptism_parish']);
-		$address = mysqli_real_escape_string($conn,$_POST['p_address']);
-		$church_of_confirmation = mysqli_real_escape_string($conn,$_POST['church_of_confirmation']);
-		$sponsor = mysqli_real_escape_string($conn,$_POST['sponsor']);
-		$minister_name = mysqli_real_escape_string($conn,$_POST['minister_name']);
-		$parish_priest = mysqli_real_escape_string($conn,$_POST['parish_priest']);
-		$date = $_POST['date'];
+	$baptism_parish = mysqli_real_escape_string($conn, $_POST['baptism_parish']);
+	$address = mysqli_real_escape_string($conn, $_POST['p_address']);
+	$church_of_confirmation = mysqli_real_escape_string($conn, $_POST['church_of_confirmation']);
+	$sponsor = mysqli_real_escape_string($conn, $_POST['sponsor']);
+	$minister_name = mysqli_real_escape_string($conn, $_POST['minister_name']);
+	$parish_priest = mysqli_real_escape_string($conn, $_POST['parish_priest']);
+	$date = $_POST['date'];
 
-		$sql ="INSERT INTO confirmation VALUES(
+	$sql = "INSERT INTO confirmation VALUES(
 			'',
 			'$STATION_CODE',
 			'$reg_no',
@@ -184,16 +219,16 @@
 			'$minister_name',
 			'$parish_priest',
 			'$date', '', ''	)";
-		if(mysqli_query($conn, $sql)){	
-			echo "
+	if (mysqli_query($conn, $sql)) {
+		echo "
 				<script>
 				    alert('A new Confirmation record has been created.');			    	
-				</script>"; 	     
-				$total_records = $total_records + 1;
-		} else{
-		         echo "ERROR: Hush! Sorry $sql. " . mysqli_error($conn);
-		}    
+				</script>";
+		$total_records = $total_records + 1;
+	} else {
+		echo "ERROR: Hush! Sorry $sql. " . mysqli_error($conn);
 	}
+}
 
 
 ?>

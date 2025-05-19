@@ -5,14 +5,14 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" type="text/css" href="../css/parochialUI.css">
-	<title>Report - FAMILY</title>
+	<title>Report - Baptism</title>
 </head>
 
 <body>
 	<?php include '../nav/global_nav.php'; ?>
 	<br><br>
 	<div class="pageName">
-		<h3>FAMILY RECORDS</h3>
+		<h3>BAPTISM RECORDS</h3>
 	</div>
 	<br>
 	<?php include '../simpleSearchBox.php'; ?>
@@ -26,31 +26,35 @@
 						<thead>
 							<tr>
 								<th>ACTION</th>
-								<th onclick="sortTable(1);">FAMILY ID</th>
-								<th onclick="sortTable(2);">AREA CODE</th>
-								<th onclick="sortTable(3);">FAMILY NAME</th>
-
-								<th>ADDRESS</th>
+								<th onclick="sortTable(1);">REG. NO.</th>
+								<th onclick="sortTable(2)">NAME<span class="sort-icon"></span></th>
+								<th onclick="sortTable(3);">DATE OF BIRTH</th>
+								<th onclick="sortTable(4);">FATHER'S NAME</th>
+								<th onclick="sortTable(5);">MOTHER'S NAME</th>
+								<th onclick="sortTable(6);">FATHER'S OCCUPATION</th>
 							</tr>
 						</thead>
 						<tbody>
 							<?php
-							include '../config/connection.php';
-							$sql = " SELECT * FROM family_master_table WHERE stationID = '$STATION_CODE'";
+							include "../config/connection.php";
+
+							$sql = "SELECT * FROM baptism WHERE stationID = '$STATION_CODE' ";
 							$result = $conn->query($sql);
 							while ($rows = $result->fetch_assoc()) {
 								?>
 								<tr>
 									<td>
-										<a href="edit_family.php?id=<?php echo $rows['family_ID']; ?>">Edit</a>
+										<a href="btsm_certificate.php?id=<?php echo $rows['reg_no']; ?>"
+											class="btn-link">View</a>
 										<b>|</b>
-										<a href="view_family.php?id=<?php echo $rows['family_ID']; ?>">View</a>
+										<a href="btsm_edit.php?id=<?php echo $rows['reg_no']; ?>" class="btn-link">Edit</a>
 									</td>
-									<td><?php echo $rows['family_ID']; ?></td>
-									<td><?php echo $rows['area_code']; ?></td>
-									<td><?php echo $rows['family_name']; ?></td>
-									<td><?php echo $rows['address']; ?></td>
-
+									<td><?php echo $rows['reg_no']; ?></td>
+									<td><?php echo $rows['name'] . " " . $rows['surname']; ?></td>
+									<td><?php echo $rows['dob']; ?></td>
+									<td><?php echo $rows['father_name']; ?></td>
+									<td><?php echo $rows['mother_name']; ?></td>
+									<td><?php echo $rows['father_occupation']; ?></td>
 								</tr>
 							<?php } ?>
 						</tbody>
@@ -62,6 +66,10 @@
 	</div>
 	<script src="../js/export.js"></script>
 	<script src="../js/search_script.js"></script>
+
+
+
+	</script>
 </body>
 
 </html>

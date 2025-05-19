@@ -5,56 +5,58 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" type="text/css" href="../css/parochialUI.css">
-	<title>Report - Members</title>
+	<title>Report - FAMILY</title>
 </head>
 
 <body>
 	<?php include '../nav/global_nav.php'; ?>
 	<br><br>
 	<div class="pageName">
-		<h3>MEMBERS RECORDS</h3>
+		<h3>CONFIRMATION RECORDS</h3>
 	</div>
-	<br>
+
+	<div class="form-header">
+		<div class="form-actions">
+
+
+		</div>
+	</div>
 	<?php include '../simpleSearchBox.php'; ?>
 
 	<div class="container-widgets">
 		<!-- Report Table Section -->
 		<div class=" widget-row">
-			<div class="widget table-widget" style="max-height: 82.7%;">
+			<div class="widget table-widget" style="max-height: 79%;">
 				<div class="widget-content">
 					<table class="data-table" id="table" style="width: 100%;">
 						<thead>
 							<tr>
 								<th>ACTION</th>
-								<th onclick="sortTable(1);">Family ID</th>
-								<th onclick="sortTable(2);">Area</th>
-								<th onclick="sortTable(3);">Status</th>
-								<th onclick="sortTable(4);">Name</th>
-								<th onclick="sortTable(5);">Gender</th>
-								<th onclick="sortTable(6);">Address</th>
+								<th onclick="sortTable(1);">REG. NO.</th>
+								<th onclick="sortTable(2);">NAME</th>
+								<th onclick="sortTable(3);">D.O.B</th>
+								<th onclick="sortTable(4);">DATE OF CONFIRMATION</th>
+								<th onclick="sortTable(5);">PARISH PRIEST</th>
 							</tr>
 						</thead>
 						<tbody>
 							<?php
-							$sql = "SELECT * from family_member WHERE stationID = '$STATION_CODE'";
+							include '../config/connection.php';
+							$sql = "SELECT * from confirmation WHERE stationID = '$STATION_CODE'";
 							$result = $conn->query($sql);
 							while ($rows = $result->fetch_assoc()) {
 								?>
 								<tr>
-									<td><a href="edit_member.php?id=<?php echo $rows['ID']; ?>">Edit</a> &nbsp;&nbsp;&nbsp;
-										<b>|</b>
-										&nbsp;&nbsp;&nbsp;<a
-											href="view_member.php?famID=<?php echo $rows['family_ID']; ?>">View</a>
+									<td><a href="edit_eucharist.php?id=<?php echo $rows['reg_no']; ?>">Edit</a>
+										|
+										<a href="notify.php?id=<?php echo $rows['id'] ?>">Nofify</a>
 									</td>
-									<td><?php echo $rows['family_ID']; ?></td>
-									<td><?php echo $rows['area_code']; ?></td>
-
-									<td><?php echo $rows['status']; ?></td>
+									<td style="text-align: center;"><?php echo $rows['reg_no']; ?></td>
 									<td><?php echo $rows['name'] . " " . $rows['surname'];
 									; ?></td>
-									<td><?php echo $rows['gender']; ?></td>
-									<td><?php echo $rows['address']; ?></td>
-
+									<td><?php echo $rows['dob']; ?></td>
+									<td><?php echo $rows['date_of_confirmation']; ?></td>
+									<td><?php echo $rows['parish_priest']; ?></td>
 								</tr>
 							<?php } ?>
 						</tbody>

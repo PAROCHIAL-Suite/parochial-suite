@@ -1,25 +1,26 @@
 <?php
-	include '../connection.php';
+include '../config/connection.php';
 
-	if (isset($_POST['create_unit_code'])) {
-		// code...
-		$area_name = $_POST['area_name'];
-		$given_name = $_POST['given_name'];
-		$area_code = $_POST['area_code'];
+if (isset($_POST['create_unit_code'])) {
+	// code...
+	$area_name = $_POST['area_name'];
+	$given_name = $_POST['given_name'];
+	$area_code = $_POST['area_code'];
 
-		$sql = "INSERT INTO area_mapping VALUES('','$STATION_CODE', '$area_name', '$given_name', '$area_code')";
+	$sql = "INSERT INTO area_mapping VALUES('','$STATION_CODE', '$area_name', '$given_name', '$area_code')";
 
-	    if(mysqli_query($conn, $sql)){	
-			 //header("Location: create_unit.php");
-		} else{
-		    echo "ERROR: $sql. " . mysqli_error($conn);
-		}    		
-
+	if (mysqli_query($conn, $sql)) {
+		//header("Location: create_unit.php");
+	} else {
+		echo "ERROR: $sql. " . mysqli_error($conn);
 	}
+
+}
 
 ?>
 <!DOCTYPE html>
 <html>
+
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -28,79 +29,99 @@
 	<link rel="stylesheet" type="text/css" href="print.css">
 	<title></title>
 </head>
+
 <body>
+
+
+	<!-- Include the global navigation bar -->
 	<?php include '../nav/global_nav.php'; ?>
 	<br><br>
-	<div class="pageName card-heading">
-		<table border="0">
-			<tr>
-				<td width="40%"><h3>CREATE UNIT</h3></td>
-			</tr>
-		</table>
+	<div class="pageName">
+		<h3>Area Mapping</h3>
 	</div>
 	<br>
 
-	<form id="" class="" method="post" action="">
-		<table width="20%"  border="0" cellspacing="14" class="form" style="">
-			<tr>
-				<td colspan="8"><h4>Area/Unit Mapping</h4></td>
-			</tr>
-			<tr>
-				<td><p>AREA NAME</p></td>
-				<td><p>GIVEN NAME</p></td>
-				<td><p>SET A CODE NAME</p></td>
-			</tr>
-			<tr>
-				
-				<td><input type="text" name="area_name">  </td>
-				
-				<td><input type="text" name="given_name">  </td>	
-				
-				<td><input type="text" name="area_code">  </td>	
-												
-			</tr>
-			<tr></tr><tr></tr>
-			<tr>
-			
-				<td><input type="submit" name="create_unit_code" value="Create">  </td>
-			</tr>
-		</table>
+
+	<!-- Form for baptism registration -->
+	<form id="areaMappingForm" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" enctype="multipart/form-data">
+		<div class="form-section">
+			<div class="form-section-header">
+				<h3>Create Area</h3>
+			</div>
+			<div class="form-grid">
+				<div class="form-group">
+					<label for="area Name">AREA NAME</label>
+					<input type="text" name="area_name" placeholder="" required>
+				</div>
+				<div class="form-group">
+					<label for="Given Name">PATRON SAINT NAME</label>
+					<input type="text" name="given_name" placeholder="" required>
+				</div>
+				<div class="form-group">
+					<label for="area code">AREA CODE</label>
+					<input type="text" name="area_code" placeholder="" required>
+				</div>
+			</div>
+		</div>
+		<div class="form-header">
+			<div class="form-actions">
+				<button type="submit" class="btn-primary" name="create_unit_code">
+					<i class="fas fa-save"></i> Save
+				</button>
+				<button class="btn-secondary" onclick="location.reload()">
+					<i class="fas fa-times"></i> Reset
+				</button>
+			</div>
+		</div>
 	</form>
-	<br>
-	<div class="searchContainer">
-        <table>
-				<td colspan="5">
-					<i style="font-size:15px; margin-left: 10px; margin-right:10px;" class="fa">&#xf002;</i>
-					<input type="text" name="query" id="searchbox" placeholder="Search by name, surname, dob, etc." style="width: 400px;">
-				</td>			
-			</tr>          		
-        </table>	
+
+	<br> <br>
+	<?php include '../simpleSearchBox.php'; ?>
+	<!-- Disply 10 priest -->
+	<div class="container-widgets">
+		<!-- Recent Transactions -->
+		<div class="widget-row">
+			<div class="widget table-widget" style="max-height: 55%;">
+				<div class="widget-header">
+					<h3>List From Past Few Years</h3>
+				</div>
+				<div class="widget-content">
+					<table class="data-table" id="table">
+						<thead>
+							<tr>
+								<th>ACTIONS</th>
+								<th>AREA NAME</th>
+								<th>GIVEN NAME</th>
+								<th>AREA CODE</th>
+
+							</tr>
+						</thead>
+						<tbody>
+							<?php
+							include '../config/connection.php';
+							$sql = "SELECT * FROM area_mapping WHERE stationID = '$STATION_CODE'";
+							$result = $conn->query($sql);
+
+							while ($rows = $result->fetch_assoc()) {
+								?>
+								<tr>
+									<td><a href="edit_unit.php?unitID=<?php echo $rows['ID']; ?>">Edit</a> </td>
+									<td><?php echo $rows['area_name']; ?></td>
+									<td><?php echo $rows['given_name']; ?></td>
+									<td><?php echo $rows['area_code']; ?></td>
+
+								</tr>
+							<?php } ?>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
 	</div>
-	<div  class="recordDisplayContainer" style="height: 50%;">
-		<table class="recordDisplay" id="table" width="100%">
-			<tr>
-				<th width="10%">AREA NAME</th>
-				<th width="25%">GIVEN NAME</th>
-				<th width="10%">AREA CODE</th>
-				<th>ACTIONS</th>
-			</tr>
-			<?php
-				include '../connection.php';
-				$sql = "SELECT * FROM area_mapping WHERE stationID = '$STATION_CODE'";
-				$result = $conn->query($sql);
-					
-				while ($rows=$result->fetch_assoc()){			 		
-			?>			
-			<tr>
-				<td><?php echo $rows['area_name']; ?></td>
-				<td><?php echo $rows['given_name']; ?></td>
-				<td><?php echo $rows['area_code']; ?></td>
-				<td><a href="edit_unit.php?unitID=<?php echo $rows['ID']; ?>">Edit</a> </td>
-			</tr>
-		<?php } ?>
-		</table>
-	</div>
+
+
+
 	<script src="../js/search_script.js"></script>
 </body>
-</html>
 
+</html>

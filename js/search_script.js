@@ -54,40 +54,59 @@ document.getElementById('filterByArea').addEventListener('change', function() {
   }
 });
 
+// TO FILTER TABLE
+// Function to sort the table based on the clicked column and add sorting icons
+function sortTable(columnIndex) {
+  const table = document.getElementById("table");
+  const rows = Array.from(table.rows).slice(1); // Exclude header row
+  const header = table.rows[0].cells[columnIndex]; // Get the header cell
+  const isAscending = header.getAttribute("data-sort") !== "asc"; // Determine sort direction
 
-//  to generate pdf from table
-//         // Initialize jsPDF
-// const { jsPDF } = window.jspdf;
-        
-// function exportTableToPDF() {
-//   // Get the table element
-//   const table = document.getElementById("table");
-            
-//             // Options for html2canvas
-//   const options = {
-//     scale: 2, // Higher scale for better quality
-//     useCORS: true, // Enable cross-origin images
-//     logging: false // Disable logging
-//   };
-            
-//             // Convert table to canvas
-//   html2canvas(table, options).then((canvas) => {
-//     // Create PDF
-//     const pdf = new jsPDF('p', 'mm', 'a4');
-//     const imgData = canvas.toDataURL('image/png');
-            
-//                 // Calculate PDF page dimensions
-//     const pdfWidth = pdf.internal.pageSize.getWidth();
-//     const pdfHeight = pdf.internal.pageSize.getHeight();
-                
-//                 // Calculate image dimensions to fit the PDF
-//     const imgWidth = pdfWidth - 20; // 10mm margin on each side
-//     const imgHeight = (canvas.height * imgWidth) / canvas.width;
-            
-//             // Add image to PDF
-//     pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
-              
-//                 // Save the PDF
-//     pdf.save('table_export.pdf');
-//   });
-// }
+  // Reset all header icons
+  Array.from(table.rows[0].cells).forEach(cell => {
+    cell.setAttribute("data-sort", "");
+    const iconSpan = cell.querySelector(".sort-icon");
+    if (iconSpan) iconSpan.remove(); // Remove existing icons
+  });
+
+  // Add sorting icon to the clicked header
+  header.setAttribute("data-sort", isAscending ? "asc" : "desc");
+  const icon = document.createElement("span");
+  icon.className = "sort-icon";
+  icon.style.color = isAscending ? "dimgrey" : "dimgrey"; // Set color based on sort direction
+  icon.style.marginLeft = "3px";
+  icon.style.fontSize = "0.8em"; // Adjust icon size
+  icon.textContent = isAscending ? "▲" : "▼";
+  header.appendChild(icon);
+
+  rows.sort((a, b) => {
+    const cellA = a.cells[columnIndex].innerText.toLowerCase();
+    const cellB = b.cells[columnIndex].innerText.toLowerCase();
+
+    if (cellA < cellB) return isAscending ? -1 : 1;
+    if (cellA > cellB) return isAscending ? 1 : -1;
+    return 0;
+  });
+
+  rows.forEach(row => table.appendChild(row)); // Reorder rows in the table
+}
+
+// Add event listeners to header cells for sorting and add initial sort icons
+const headers = document.querySelectorAll("#table thead th");
+if (headers.length === 0) {
+  console.error("No table headers found. Ensure your table has a <thead> with <th> elements.");
+} else {
+  headers.forEach((header, index) => {
+    // Add a default icon to indicate the column is sortable
+    const defaultIcon = document.createElement("span");
+    defaultIcon.className = "sort-icon";
+    defaultIcon.style.color = "gray";
+    defaultIcon.style.marginLeft = "5px";
+    defaultIcon.textContent = "⇅"; // Default icon for sortable columns
+    header.appendChild(defaultIcon);
+
+    // Add click event listener for sorting
+    header.addEventListener("click", () => sortTable(index));
+  });
+}
+

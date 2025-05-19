@@ -1,113 +1,148 @@
-<?php include '../connection.php'; ?>
+<?php include '../config/connection.php'; ?>
 
 <!DOCTYPE html>
 <html>
+
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" type="text/css" href="../css/nav.css">
-	<link rel="stylesheet" type="text/css" href="../css/ui.css">
 	<link rel="stylesheet" type="text/css" href="../css/parochialUI.css">
-	<script src="https://kit.fontawesome.com/088cbc7107.js" crossorigin="anonymous"></script>	
+	<script src="https://kit.fontawesome.com/088cbc7107.js" crossorigin="anonymous"></script>
 	<title></title>
-	<style type="text/css">
-		.btnNav{ 
-			background: #E8EDF1;		  
-		  color: #000;
-		  cursor: pointer;
-		  display: inline-block;
-		  font-family: "Titillium Web", sans-serif;
-		  font-size: 16px;
-		  height: 40px;
-		  outline: 0;
-		  overflow: hidden;
-		  padding: 0px 16px 0px;
-		  text-align: center;
-		  text-decoration: none;
-		  background: transparent		;
-		  touch-action: manipulation;
-		  white-space: nowrap;
-/*		  font-weight: 550;*/
-		  }	
+	<style>
+		/* Multi-level dropdown styles */
+		.global_nav .dropdown-content {
+			position: absolute;
+			display: none;
+			background: #fff;
+			min-width: 250px;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+			z-index: 100;
+		}
 
-		  .btnNav:hover{
-		  	background: var(--accent-color);
-			color: #fff;
-		  }
+		.global_nav .dropdown:hover>.dropdown-content {
+			display: block;
+		}
 
+		.global_nav .dropdown-content .dropdown {
+			position: relative;
+		}
 
+		.global_nav .dropdown-content .dropdown-content {
+			left: 100%;
+			top: 0;
+			margin-left: 1px;
+			display: none;
+		}
+
+		.global_nav .dropdown-content .dropdown:hover>.dropdown-content {
+			display: block;
+		}
+
+		.global_nav .dropdown-content a,
+		.global_nav .dropdown-content .dropdown>button.btnNav {
+			display: block;
+			padding: 8px 16px;
+			color: #333;
+			text-decoration: none;
+			background: none;
+			border: none;
+			width: 100%;
+			text-align: left;
+			cursor: pointer;
+		}
+
+		.global_nav .dropdown-content a:hover,
+		.global_nav .dropdown-content .dropdown>button.btnNav:hover {
+			background: #f0f0f0;
+		}
+
+		.caret-right {
+			text-align: right;
+			margin-left: 55px;
+
+			color: var(--accent-color);
+		}
 	</style>
 </head>
+
 <body>
 	<nav class="global_nav">
-		
-		<a href="../home/index.php"><button  id="home" class="btnNav"><i class="fa fa-home"></i></button></a>  
-	
-		<button  id="recent" class="btnNav"><i class="fa fa-clock-o"></i></button>
-		<!-- <button  id="recent" ><i class="fa fa-bookmark-o"></i></button>  -->
-		
- 		<div class="dropdown">
-		  <button class="btnNav" >Sacraments</button>
-		  <div class="dropdown-content">
-		  		<a href="../baptism/baptism_reg.php" target="_self">Baptism</a>
-		  		<a href="../eucharist/index.php">Holy Communion</a>
-		  		<a href="../confirmation/index.php">Confirmation</a>
-		  		<a href="#">Matrimony</a>
-		  </div>
-		</div>
 
- 		
+		<a href="../home/index.php"><button id="home" class="btnNav"><i class="fa fa-home"></i></button></a>
+
 		<div class="dropdown">
-		  <button class="btnNav">Family</button>
-		  <div class="dropdown-content">
-		    <a href="../family/create_unit.php">CREATE UNIT</a>
-		    <a href="../family/create_family.php">CREATE FAMILY</a>
-			<a href="../family/add_member_index.php">ADD MEMBER</a>			
-		  </div>
-		</div>
-
-		<a href="../priest/index.php"><button class="btnNav">Priests</button></a>
-		<div class="dropdown">
-		  <button class="btnNav">Council</button>
-		  <div class="dropdown-content">
-		    <a href="../council/index.php">CREATE COUNCIL</a>	
-		    <a href="../council/add_council_member.php">ADD MEMBER</a>	
-		    <a href="../council/view_member.php">VIEW MEMBERS</a>	
-		  </div>
-		</div>
-		<div class="dropdown">
-		  <button class="btnNav">Reports</button>
-		  <div class="dropdown-content">
-		    <a href="../family/member_list.php">
-		    	MEMBER
-			</a>		  	
-		    <a href="../family/family_list.php">
-		    	FAMILY
-			</a>
-
-			<hr style="width: 90%; margin: auto;">
-		  	<a href="../baptism/sacrament_search_index.php">
-		  		BAPTISM
-		  	</a>	
-		    <a href="../eucharist/search_communion.php">
-		    	HOLY COMMUNION
-			</a>
-		    <a href="../confirmation/search_confirmation.php">
-		    	CONFIRMATION
-			</a>
-
-		  </div>
+			<button class="btnNav">Sacraments</button>
+			<div class="dropdown-content">
+				<a href="../baptism/baptism_reg.php" target="_self">Baptism</a>
+				<a href="../eucharist/index.php">Holy Communion</a>
+				<a href="../confirmation/index.php">Confirmation</a>
+			</div>
 		</div>
 
 		<div class="dropdown">
-		  <button class="btnNav">Customize</button>
-		  <div class="dropdown-content">
-		    <a href="../customize/edit_report_header.php">EDIT REPORT HEADER</a>
-			
-		  </div>
+			<button class="btnNav">Family</button>
+			<div class="dropdown-content">
+				<a href="../family/create_unit.php">Create Unit</a>
+				<a href="../family/create_family.php">Add Family</a>
+				<a href="../family/add_member_index.php">Add Members</a>
+				<div class="dropdown">
+					<button class="btnNav">
+						More Family Options <i class="fa fa-caret-right caret-right"></i>
+					</button>
+					<div class="dropdown-content">
+						<a href="../family/family_list.php">Family List</a>
+						<a href="../family/member_list.php">Member List</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="dropdown">
+			<button class="btnNav">Priests</button>
+			<div class="dropdown-content">
+				<a href="../priest/index.php">Add A Priest</a>
+			</div>
+		</div>
+
+		<div class="dropdown">
+			<button class="btnNav">Council</button>
+			<div class="dropdown-content">
+				<a href="../council/create_tenure.php">Create New Term</a>
+				<a href="../council/add_council_member.php">Add Members</a>
+				<a href="../council/member_list.php">Members List</a>
+			</div>
+		</div>
+
+		<div class="dropdown">
+			<button class="btnNav">Reports</button>
+			<div class="dropdown-content">
+				<a href="../family/member_list.php">Members List</a>
+				<a href="../family/family_list.php">Family List</a>
+				<div class="dropdown">
+					<button class="btnNav">
+						Sacrament Reports <i class="fa fa-caret-right caret-right"></i>
+					</button>
+					<div class="dropdown-content">
+						<a href="../baptism/search.php">Baptism Records</a>
+						<a href="../eucharist/search.php">Holy Communion Records</a>
+						<a href="../confirmation/search.php">Confirmation Records</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="dropdown">
+			<button class="btnNav">Setup</button>
+
+			<div class="dropdown-content">
+
+				<!-- <a href="../prefrences/parish_setup.php">Parish</a> -->
+				<a href="../prefrences/edit_report_header.php">Edit Report Header</a>
+			</div>
 		</div>
 	</nav>
-
-
 </body>
+
 </html>

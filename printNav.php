@@ -1,11 +1,14 @@
- <div class="searchContainer" style=" width: 49%; margin: auto; background: aliceblue;">
-    <table border="0">
-        <tr>
-            <th width="15%">Print Priview</th>
-            <td width=""><button class="btnPrint" type="button" onclick="printJS('printJS-form', 'html')" >
-            <i class="fa" style="color: var(--txtblue);">&#xf02f;</i>  </button> </td>
-        </tr>
-    </table>           
-  </div>
-
-  
+<div class="container-widgets" style="">
+    <div class="widget-row">
+        <div class="widget table-widget">
+            <div class="widget-header">
+                <div class="search-actions">
+                    <button class="btn btn-secondary " id="exportBtn" onclick="printJS('table', 'html')">
+                        <i class="fa fa-print print"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>

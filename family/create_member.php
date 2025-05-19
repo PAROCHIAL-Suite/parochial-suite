@@ -1,201 +1,210 @@
-
 <?php
-	include '../connection.php';
-	$id = $_GET['id'];
-	
-	
-	$sql = "SELECT * FROM family_member WHERE family_ID = '$id' AND relation_with_head = 'Head'";
-	$result = $conn->query($sql);
-			 
-	while ($rows=$result->fetch_assoc()){ 		
-		$family_name = $rows['surname']; 	
-		$family_ID = $rows['family_ID']; 	
-		$area = $rows['area_code']; 	
-		$head = $rows['name'] . " " . $rows['surname'];
-		$contact_no = $rows['contact_no'];
-		$address = $rows['address'];
-	}
-	
-if (isset($_POST['register_member'])) {	// code...
+include '../config/connection.php';
+$id = $_GET['id'];
 
-	$fid =  $_GET['id'];
+$sql = "SELECT * FROM family_member WHERE family_ID = '$id' AND relation_with_head = 'Head'";
+$result = $conn->query($sql);
+
+while ($rows = $result->fetch_assoc()) {
+	$family_name = $rows['surname'];
+	$family_ID = $rows['family_ID'];
+	$area = $rows['area_code'];
+	$head = $rows['name'] . " " . $rows['surname'];
+	$contact_no = $rows['contact_no'];
+	$address = $rows['address'];
+}
+
+if (isset($_POST['register_member'])) {
+	$fid = $_GET['id'];
 	$area_code = $area;
-	$status = $_REQUEST['status'];
-	$status_remark = $_REQUEST['status_remark'];
-	$name = mysqli_real_escape_string($conn,$_REQUEST['name']);
-	$surname = mysqli_real_escape_string($conn,$_REQUEST['surname']);
-	$dob = mysqli_real_escape_string($conn,$_REQUEST['dob']);
-	$gender = mysqli_real_escape_string($conn,$_REQUEST['gender']);
-	$blood_grp = $_POST['blood_group'];
-	$occupation = mysqli_real_escape_string($conn,$_REQUEST['occupation']);
-	$qualification = mysqli_real_escape_string($conn,$_REQUEST['qualification']);
-	$address = mysqli_real_escape_string($conn,$_REQUEST['address']);
-	$contact_no = mysqli_real_escape_string($conn,$_REQUEST['contact_no']);
-	$email = mysqli_real_escape_string($conn,$_REQUEST['email']);
-	$relation_with_head = mysqli_real_escape_string($conn,$_REQUEST['relation_with_head']);
-	$relationship_status = mysqli_real_escape_string($conn,$_REQUEST['relationship_status']);
-	$lang = mysqli_real_escape_string($conn,$_REQUEST['lang']);
-	$other_lang = mysqli_real_escape_string($conn,$_REQUEST['other_lang']);
-	$baptism = mysqli_real_escape_string($conn,$_REQUEST['baptism']);
-	$confirmation = mysqli_real_escape_string($conn,$_REQUEST['confirmation']);
-	$eucharist = mysqli_real_escape_string($conn,$_REQUEST['eucharist']);
-	$marriage = mysqli_real_escape_string($conn,$_REQUEST['marriage']);
-	$annointing_of_the_sick = mysqli_real_escape_string($conn,$_REQUEST['annointing_of_the_sick']);
-	$ration_card = mysqli_real_escape_string($conn,$_REQUEST['ration_card']);
-	$pan_card = mysqli_real_escape_string($conn,$_REQUEST['pan_card']);
-	$adhar_card = mysqli_real_escape_string($conn,$_REQUEST['adhar_card']);
-	$aayushman_bharat = mysqli_real_escape_string($conn,$_REQUEST['aayushman_bharat']);
-	$ladki_bahin_yogana = mysqli_real_escape_string($conn,$_REQUEST['ladki_bahin_yogana']);
-	$old_age_pension = mysqli_real_escape_string($conn,$_REQUEST['old_age_pension']);
-	$differently_able = mysqli_real_escape_string($conn,$_REQUEST['differently_able']);
-	$voter_id = mysqli_real_escape_string($conn,$_REQUEST['voter_id']);
-	$driving_license = mysqli_real_escape_string($conn,$_REQUEST['driving_license']);
-	$monthly_income = mysqli_real_escape_string($conn,$_REQUEST['monthly_income']);
-	$any_other = mysqli_real_escape_string($conn,$_REQUEST['any_other']);
+	$status = mysqli_real_escape_string($conn, $_POST['status']);
+	$status_remark = mysqli_real_escape_string($conn, $_POST['status_remark']);
+	$name = mysqli_real_escape_string($conn, $_POST['name']);
+	$surname = mysqli_real_escape_string($conn, $_POST['surname']);
+	$dob = mysqli_real_escape_string($conn, $_POST['dob']);
+	$gender = mysqli_real_escape_string($conn, $_POST['gender']);
+	$blood_grp = mysqli_real_escape_string($conn, $_POST['blood_group']);
+	$occupation = mysqli_real_escape_string($conn, $_POST['occupation']);
+	$qualification = mysqli_real_escape_string($conn, $_POST['qualification']);
+	$address = mysqli_real_escape_string($conn, $_POST['address']);
+	$contact_no = mysqli_real_escape_string($conn, $_POST['contact_no']);
+	$email = mysqli_real_escape_string($conn, $_POST['email']);
+	$relation_with_head = mysqli_real_escape_string($conn, $_POST['relation_with_head']);
+	$relationship_status = mysqli_real_escape_string($conn, $_POST['relationship_status']);
+	$lang = mysqli_real_escape_string($conn, $_POST['lang']);
+	$other_lang = mysqli_real_escape_string($conn, $_POST['other_lang']);
+	$baptism = mysqli_real_escape_string($conn, $_POST['baptism']);
+	$confirmation = mysqli_real_escape_string($conn, $_POST['confirmation']);
+	$eucharist = mysqli_real_escape_string($conn, $_POST['eucharist']);
+	$marriage = mysqli_real_escape_string($conn, $_POST['marriage']);
+	$annointing_of_the_sick = mysqli_real_escape_string($conn, $_POST['annointing_of_the_sick']);
+	$ration_card = mysqli_real_escape_string($conn, $_POST['ration_card']);
+	$pan_card = mysqli_real_escape_string($conn, $_POST['pan_card']);
+	$adhar_card = mysqli_real_escape_string($conn, $_POST['adhar_card']);
+	$aayushman_bharat = mysqli_real_escape_string($conn, $_POST['aayushman_bharat']);
+	$ladki_bahin_yogana = mysqli_real_escape_string($conn, $_POST['ladki_bahin_yogana']);
+	$old_age_pension = mysqli_real_escape_string($conn, $_POST['old_age_pension']);
+	$differently_able = mysqli_real_escape_string($conn, $_POST['differently_able']);
+	$voter_id = mysqli_real_escape_string($conn, $_POST['voter_id']);
+	$driving_license = mysqli_real_escape_string($conn, $_POST['driving_license']);
+	$monthly_income = mysqli_real_escape_string($conn, $_POST['monthly_income']);
+	$any_other = mysqli_real_escape_string($conn, $_POST['any_other']);
 
 	$sql = "INSERT INTO family_member VALUES(
-		'',
-		'$fid',
-		'$STATION_CODE',
-		'$area_code',
-		'$status',	
-		'$status_remark',			
-		'$name',
-		'$surname',
-		'$dob',
-		'$gender',
-		'$blood_grp',
-		'$occupation',
-		'$qualification',
-		'$address', 
-		'$contact_no',
-		'$email',
-		'$relation_with_head',
-		'$relationship_status',
-		'$lang',
-		'$other_lang',
-		'$baptism',
-		'$confirmation',
-		'$eucharist',
-		'$annointing_of_the_sick',
-		'$marriage',
-		'$ration_card',
-		'$pan_card', 
-		'$adhar_card',
-		'$aayushman_bharat',
-		'$ladki_bahin_yogana',
-		'$old_age_pension',
-		'$differently_able',
-		'$voter_id', 
-		'$driving_license',
-		'$monthly_income',
-		'$any_other','','$USERNAME')";
-	
-	if(mysqli_query($conn, $sql)){
-//		header("Location: family_list.php");
-		echo "<script>alert('A new member has been added.');</script>"; 
-		header("Location: view_family.php?id=$family_ID");
+        '',
+        '$fid',
+        '$STATION_CODE',
+        '$area_code',
+        '$status',    
+        '$status_remark',            
+        '$name',
+        '$surname',
+        '$dob',
+        '$gender',
+        '$blood_grp',
+        '$occupation',
+        '$qualification',
+        '$address', 
+        '$contact_no',
+        '$email',
+        '$relation_with_head',
+        '$relationship_status',
+        '$lang',
+        '$other_lang',
+        '$baptism',
+        '$confirmation',
+        '$eucharist',
+        '$annointing_of_the_sick',
+        '$marriage',
+        '$ration_card',
+        '$pan_card', 
+        '$adhar_card',
+        '$aayushman_bharat',
+        '$ladki_bahin_yogana',
+        '$old_age_pension',
+        '$differently_able',
+        '$voter_id', 
+        '$driving_license',
+        '$monthly_income',
+        '$any_other','','$USERNAME')";
+
+	if (mysqli_query($conn, $sql)) {
+		echo "<script>alert('A new member has been added.');</script>";
+	} else {
+		echo "ERROR: Unable to register member.<br>";
+		echo "SQL Query: " . $sql . "<br>";
+		echo "MySQL Error: " . mysqli_error($conn);
 	}
-	else{
-		echo "ERROR: <code>UNABLE_TO_REG_MEMBER</code>\n";
-		echo "\n\n$sql. " . mysqli_error($conn);
-	}
-}  
+}
 
 ?>
 
 <!DOCTYPE html>
 <html>
+
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" type="text/css" href="../css/ui.css">
-	<link rel="stylesheet" type="text/css" href="../css/baptism.css">
-	<link rel="stylesheet" type="text/css" href="../print.css">
-	<script src="../print.js"></script>  
+	<link rel="stylesheet" href="../css/parochialUI.css">
+	<script src="../print.js"></script>
 	<title></title>
 </head>
+
 <body>
 	<?php include '../nav/global_nav.php'; ?>
-	<br>
-	<div class="pageName card-heading">
-		<table border="0">
-			<tr>
-				<td width="40%"><h3>ADD A MEMBER</h3></td>
-			</tr>
-		</table>
+	<br><br>
+	<div class="pageName">
+		<h3>ADD A MEMBER</h3>
 	</div>
 	<br>
-	<div class="actionBar">
-		<table width="100%" border="0" style="text-wrap: wrap;">
-			<tr>
-				<td width="10%"><b>Family Name</b></td>
-				<td width="10%"><b>Family ID</b></td>
-				<td width="10%"><b>Area Code</b></td>
-				<td width="20%"><b>Head of family</b></td>
-				<td width="10%"><b>Contact</b></td>
-				<td width="20%"><b>Address</b></td>
-			</tr>
+	<div class="form-section">
+		<div class="form-section-header" style="margin-bottom: 2px;">
+			<h3>Family Information</h3>
+		</div>
+		<div class="form-grid">
+			<div class="form-group">
+				<label for="">Family ID</label>
+				<?php echo $family_ID; ?>
+			</div>
+			<div class="form-group">
+				<label for="">Family Name</label>
+				<?php echo $family_name; ?>
+			</div>
+			<div class="form-group">
+				<label for="">Family Head Name</label>
+				<?php echo $head; ?>
+			</div>
+			<div class="form-group">
+				<label for="">Contact</label>
+				<?php echo $contact_no; ?>
+			</div>
+			<div class="form-group">
+				<label for="">Area Code</label>
+				<?php echo $area; ?>
+			</div>
+			<div class="form-group">
+				<label for="">Address</label>
+				<?php echo $address; ?>
+			</div>
+		</div>
+	</div>
 
-			<tr>
-				<td ><h4><span style="color: var(--txtblue);">
-					<?php echo  $family_name; ?></span></h4></td>
-				<td><?php echo  $family_ID; ?></td>
-				<td><?php echo  $area; ?></td>
-				<td><?php echo  $head; ?></td>
-				<td><?php echo  $contact_no; ?></td>
-				<td><?php echo  $address; ?></td>
-			</tr>
-		</table>		
-	</div>	
 	<br><br>
 
-	
-    
-	<div>
+	<div class="pageName">
+		<h3>MEMBER REGISTRATION FORM</h3>
+	</div>
+	<BR>
+	<div class="form-section">
 		<form id="" class="" method="post" action="<?php $_SERVER['PHP_SELF']; ?>">
-		<table width="100%"  border="0" cellspacing="10" class="form">
-			<tr>
-				<td colspan="4" ><h4>Baisc Details</h4></td>
-			</tr><tr></tr><tr></tr>
-			<tr>		
-				<td width="20%"><p>Status</p></td>
-				<td width="20%">
+			<div class="form-section-header" style="margin-bottom: 2px;">
+				<h3>Member Information</h3>
+			</div>
+			<div class="form-grid">
+				<div class="form-group">
+					<label for="">Status</label>
 					<select name="status">
 						<option selected value="ACTIVE">ACTIVE</option>
 						<option value="IN-ACTIVE">IN-ACTIVE</option>
 						<option value="DECEASED">DECEASED</option>
 					</select>
-				</td>
-				<td width="20%"><P>Status remark</p></td>
-				<td><input type="text" name="status_remark" ></td></td>
-			</tr>
-			<tr></tr><tr></tr><tr></tr><tr></tr><tr></tr>
-			<tr>
-				<td><p>NAME</p></td>
-				<td><input onblur="getLastName()"  type="text" name="name" required></td>
-										
-				<td><p>SURNAME</p></td>
-				<td><input type="text" name="surname" id="surname" value="<?php echo $family_name; ?>" required></td>				
-			</tr>
+				</div>
+				<div class="form-group">
+					<label for="">Status Remark</label>
+					<input type="text" name="status_remark">
+				</div>
+				<div></div>
+			</div>
 
-			<tr>
-				<td><p>DATE OF BIRTH</p></td>
-				<td><input type="text" name="dob" class="auto-format-date" placeholder="dd/mm/yyyy"></td>
-			</tr>
-			<tr>				
-				<td><p>GENDER</p></td>
-				<td> 
-					<select name="gender" style="width: 140px;">
-						<option hidden>Choose</option> 
+			<div class="form-grid">
+				<div class="form-group">
+					<label for="">Name</label>
+					<input onblur="getLastName()" type="text" name="name" required>
+				</div>
+				<div class="form-group">
+					<label for="">Surname</label>
+					<input type="text" name="surname" id="surname" value="<?php echo $family_name; ?>" required>
+				</div>
+				<div class="form-group">
+					<label for="">Date of birth</label>
+					<input type="text" name="dob" class="auto-format-date" placeholder="dd/mm/yyyy">
+				</div>
+			</div>
+
+			<div class="form-grid">
+				<div class="form-group">
+					<label for="">Gender</label>
+					<select name="gender">
+						<option hidden>Choose</option>
 						<option value="Male">Male</option>
-						<option value="Female">Female</option> 
-					</select> 
-				</td>
-							
-				<td><p>BLOOD GROOP</p></td>
-				<td>
-					<select id="blood_group" name="blood_group" style="width: 140px;">				<option hidden>--</option>	
+						<option value="Female">Female</option>
+					</select>
+				</div>
+
+				<div class="form-group">
+					<label for="">blood group</label>
+					<select id="blood_group" name="blood_group">
+						<option hidden>--</option>
 						<option value="A+">A+</option>
 						<option value="A-">A-</option>
 						<option value="B+">B+</option>
@@ -205,31 +214,45 @@ if (isset($_POST['register_member'])) {	// code...
 						<option value="O+">O+</option>
 						<option value="O-">O-</option>
 					</select>
-				</td>
-			</tr>
-			<tr>				
-				<td><p>OCCUPATION</p></td>
-				<td><input type="text" name="occupation"></td>					
-											
-				<td><p>QUALIFICATION</p></td>
-				<td><input type="text" name="qualification"></td>					
-			</tr>					
-			<tr>				
-				<td><p>ADDRESS</p></td>
-				<td><input type="text" name="address" id="m_address"  value="<?php echo $address; ?>"></td>					
-			</tr>	
-			<tr>
-				<td><p>CONTACT NO.</p></td>
-				<td><input type="text" name="contact_no"></td>
-							
-				<td><p>EMAIL ID</p></td>
-				<td><input type="email" name="email"></td>
-			</tr>				
-			<tr>
-				<td><p>RELATIION WITH HEAD</p></td>
-				<td>
+				</div>
+				<div></div>
+			</div>
+
+			<div class="form-grid">
+
+				<div class="form-group">
+					<label for="">Qualification</label>
+					<input type="text" name="qualification">
+				</div>
+				<div class="form-group">
+					<label for="">Occupation</label>
+					<input type="text" name="occupation">
+				</div>
+				<div class="form-group">
+					<label for="">mother TONGUE</label>
+					<select name="lang">
+						<option hidden></option>
+						<option hidden>--</option>
+						<option value="Hindi">Hindi</option>
+						<option value="English">English</option>
+						<option value="Marathi">Marathi</option>
+						<option value="Tamil">Tamil</option>
+						<option value="Telugue">Telugue</option>
+						<option value="Malayalam">Malayalam</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-grid">
+				<div class="form-group">
+					<label for="">Known Languages</label>
+					<input type="text" name="other_lang">
+				</div>
+
+				<div class="form-group">
+					<label for="">Relation with Head (<?php echo $head; ?>)</label>
 					<select id="relations" name="relation_with_head">
-						<option hidden>--</option>	
+						<option hidden>--</option>
 						<option>Husband</option>
 						<option>Wife</option>
 						<option>Father</option>
@@ -248,188 +271,199 @@ if (isset($_POST['register_member'])) {	// code...
 						<option>Son-in-Law</option>
 						<option>Daughter-in-Law</option>
 						<option>Daughter-in-Law</option>
-					</select>						
-				</td>	
-				<td><p>RELATIONSHIP STATUS</p></td>
-				<td>
-					<select name="relationship_status">				
-						<option hidden>--</option>	
+						<option>Father-in-Law</option>
+						<option>Mother-in-Law</option>
+						<option>Brother-in-Law</option>
+						<option>Sister-in-Law</option>
+						<option>Step Father</option>
+						<option>Step Mother</option>
+						<option>Step Brother</option>
+						<option>Step Sister</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="">Relationship Status</label>
+					<select name="relationship_status">
+						<option hidden>--</option>
 						<option value="Married">Married</option>
 						<option value="Divorsed">Divorsed</option>
-						<option value="Seperated">Seperated</option>									
+						<option value="Seperated">Seperated</option>
 						<option value="Bachelor">Bachelor</option>
-						<option value="Spinster">Spinster</option>			
+						<option value="Spinster">Spinster</option>
 						<option value="Widower">Widower</option>
 						<option value="Window">Widow</option>
-						<option value="Priest">Priest</option>	
+						<option value="Priest">Priest</option>
 					</select>
-				</td>
-			</tr>		
-			<tr>
-				<td><p>MOTHER LONGUE</p></td>
-				<td>
-					<select name="lang">	
-					<option hidden></option>		
-						<option hidden>--</option>				
-						<option value="Hindi">Hindi</option>
-						<option value="English">English</option>
-						<option value="Marathi">Marathi</option>
-						<option value="Tamil">Tamil</option>
-						<option value="Telugue">Telugue</option>
-						<option value="Malayalam">Malayalam</option>
-					</select>					
-				</td>
-							
-				<td><p>KNOWN LANGUAGES</p></td>
-				<td><input type="text" name="other_lang"></td>
-			</tr>											
-			<tr></tr><tr></tr><tr></tr>
-			<tr>
-				<td colspan="4"><h4>Sacrament Details</h4></td>
-			</tr><tr></tr>
-			<tr>
-				<td><p>BAPTISM</p></td>
-				<td>
+				</div>
+
+			</div>
+
+			<div class="form-section-header" style="margin-bottom: 2px;">
+				<h3>Contact Details</h3>
+			</div>
+			<div class="form-grid">
+				<div class="form-group">
+					<label for="">Email</label>
+					<input type="email" name="email">
+				</div>
+				<div class="form-group">
+					<label for="">Phone No.</label>
+					<input type="text" name="contact_no" id="contact_no">
+				</div>
+				<div class="form-group">
+					<label for="">address</label>
+					<textarea name="address" id="address" rows="2" cols="20" required><?php echo $address; ?></textarea>
+				</div>
+			</div>
+
+
+			<div class="form-section-header" style="margin-bottom: 2px;">
+				<h3>Sacramental Information</h3>
+			</div>
+			<div class="form-grid">
+				<div class="form-group">
+					<label for="">Baptism</label>
 					<select name="baptism">
-						
-						<option selected value="Yes">Yes</option><option value="No">No</option>
+						<option selected value="Yes">Yes</option>
+						<option value="No">No</option>
 					</select>
-				</td>
-							
-				<td><p>CONFIRMATION</p></td>
-				<td>
+				</div>
+				<div class="form-group">
+					<label for="">Confirmation</label>
 					<select name="confirmation">
-						
 						<option value="Yes">Yes</option>
 						<option value="No">No</option>
 					</select>
-				</td>
-			</tr>
-			<tr>
-				<td><p>COMMUNION</p></td>
-				<td>
+				</div>
+				<div class="form-group">
+					<label for="">Holy Communion</label>
 					<select name="eucharist">
-						
 						<option value="Yes">Yes</option>
 						<option value="No">No</option>
 					</select>
-				</td>
-				<td><p>ANNOINTING OF THE SICK</p></td>
-				<td>
+				</div>
+
+			</div>
+			<div class="form-grid">
+				<div class="form-group">
+					<label for="">Anointing of the Sick</label>
 					<select name="annointing_of_the_sick">
-						
 						<option value="Yes">Yes</option>
 						<option selected value="No">No</option>
 					</select>
-				</td>
-			</tr>
-			<tr>
-				<td><p>MARRIAGE</p></td>
-				<td>
+				</div>
+				<div class="form-group">
+					<label for="">Marriage</label>
 					<select name="marriage">
-						
-						<option value="Yes">Yes</option>
-						<option value="No">No</option>
-					</select></td>
-			</tr>			
-			<tr>
-				<td colspan="4"><h4>Govenment Entitlements</h4></td>
-			</tr><tr></tr>												
-			<tr>
-				<td><p>RATION CARD</p></td>
-				<td>
-					<select name="ration_card">						
 						<option value="Yes">Yes</option>
 						<option value="No">No</option>
 					</select>
-				</td>
-
-				<td><p>PAN CARD</p></td>
-				<td>
-					<select name="pan_card">						
+				</div>
+				<div class="form-group">
+					<label for="">Marriage Date</label>
+					<input type="text" name="marriage_date" class="auto-format-date" placeholder="dd/mm/yyyy">
+				</div>
+			</div>
+			<div class="form-section-header" style="margin-bottom: 2px;">
+				<h3>Government Entitlements</h3>
+			</div>
+			<div class="form-grid">
+				<div class="form-group">
+					<label for="">Ration Card</label>
+					<select name="ration_card">
+						<option value="Yes">Yes</option>
+						<option value="No">No</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="">PAN Card</label>
+					<select name="pan_card">
 						<option selected value="Yes">Yes</option>
 						<option value="No">No</option>
-					</select></td>
-			</tr>
-			<tr>
-				<td><p>ADHAR CARD</p></td>
-				<td>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="">Aadhar Card</label>
 					<select name="adhar_card">
 						<option value="Yes" selected>Yes</option>
 						<option value="No">No</option>
 					</select>
-				</td>
-
-				<td><p>AAYUSHMAN BHARAT (PM-JAY)</p></td>
-				<td>
+				</div>
+			</div>
+			<div class="form-grid">
+				<div class="form-group">
+					<label for="">Aayushman Bharat (PM-JAY)</label>
 					<select name="aayushman_bharat">
 						<option value="Yes">Yes</option>
 						<option selected value="No">No</option>
 					</select>
-				</td>
-			</tr>						
-			<tr>
-				<td><p>LADKI BAHIN YOGANA</p></td>
-				<td>
+				</div>
+				<div class="form-group">
+					<label for="">Ladki Bahin Yogana</label>
 					<select name="ladki_bahin_yogana">
 						<option value="Yes">Yes</option>
 						<option selected value="No">No</option>
 					</select>
-				</td>
-
-				<td><p>OLD AGE PENSION/NIRADHAR YOJANA</p></td>
-				<td>
+				</div>
+				<div class="form-group">
+					<label for="">Old Age Pension/Niradhar Yojana</label>
 					<select name="old_age_pension">
-						<option  value="Yes">Yes</option>
+						<option value="Yes">Yes</option>
 						<option selected value="No">No</option>
 					</select>
-				</td>
-			</tr>						
-			<tr>
-				<td><p>DIFFERENTLY ABLE PERSON</p></td>
-				<td>
+				</div>
+			</div>
+			<div class="form-grid">
+				<div class="form-group">
+					<label for="">Differently Able Person</label>
 					<select name="differently_able">
 						<option value="Yes">Yes</option>
 						<option selected value="No">No</option>
 					</select>
-				</td>
-
-				<td><p>VOTER ID</p></td>
-				<td>
+				</div>
+				<div class="form-group">
+					<label for="">Voter ID</label>
 					<select name="voter_id">
 						<option selected value="Yes">Yes</option>
 						<option value="No">No</option>
 					</select>
-				</td>
-			</tr>						
-			<tr>
-				<td><p>DRIVING LICENSE</p></td>
-				<td>
+				</div>
+				<div class="form-group">
+					<label for="">Driving License</label>
 					<select name="driving_license">
 						<option selected value="Yes">Yes</option>
 						<option value="No">No</option>
 					</select>
-				</td>
+				</div>
+			</div>
+			<div class="form-grid">
+				<div class="form-group">
+					<label for="">Monthly Income</label>
+					<input type="text" name="monthly_income">
+				</div>
+				<div class="form-group">
+					<label for="">Any Other/Remark</label>
+					<textarea name="any_other" id="any_other" rows="2" cols="20"></textarea>
+				</div>
+				<div></div>
+			</div>
 
-				<td><p>MONTHLY INCOME</p></td>
-				<td><input type="text" name="monthly_income"></select></td>
-			</tr>				
-			<tr>
-				<td><p>ANY OTHER/REMARK</p></td>
-				<td><input type="text" name="any_other" > </td>
-			</tr>						
-			<tr></tr><tr></tr><tr></tr>
-			<tr>
-				<td></td>
-				<td> <input type="submit" name="register_member" id="saveFrm" value="Save"></td>
-				<td></td>
-			</tr>
-		</table>		
-	</form>  
-</div>
+
+	</div>
+
+	<div class="form-header">
+		<div class="form-actions">
+			<button type="submit" class="btn-primary" name="register_member">
+				<i class="fas fa-save"></i> Save
+			</button>
+			<button class="btn-secondary" onclick="location.reload()">
+				<i class="fas fa-times"></i> Reset
+			</button>
+		</div>
+	</div>
+	</form>
+
 	<br><br>
-</div>
 </body>
+
 </html>
-
-

@@ -37,14 +37,6 @@ a, a:visited{
   color: var(--txtblue);
 }
 
-.pageName{
-  font-family: "Titillium Web", sans-serif ;
-  background-color: #fff;
-  padding-left: 30px;
-  border: none;
-  color: var(--txtblue);
-  background-color: transparent;
-}
 
 .heading{
   font-family: "Titillium Web", sans-serif ;

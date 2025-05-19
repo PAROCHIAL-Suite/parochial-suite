@@ -1,243 +1,219 @@
 <?php
-	include "../connection.php";
+include "../config/connection.php";
 
-    $sql = "SELECT COUNT(*) as total_member_in_family FROM family_member WHERE  stationID = '$STATION_CODE'";
-    $result = $conn->query($sql);
-    if ($result) {
-        // Fetch the result as an associative array
-        $row = $result->fetch_assoc();
-         $total_member_in_family = $row['total_member_in_family'];
-        if ($total_member_in_family == 0) {
-            // code...
-            $total_member_in_family = 1;
-        }elseif ($total_member_in_family > 0) {
-            // code...
-            $total_member_in_family = 1;
-        }        
-    } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
-    }	
+// Fetch family count
+$sql = "SELECT COUNT(*) as family_count FROM family_master_table WHERE stationID = '$STATION_CODE'";
+$result = $conn->query($sql);
+if ($result) {
+	$row = $result->fetch_assoc();
+	$family_count = $row['family_count'] + 1; // Increment count for new family
+} else {
+	echo "Error: " . $sql . "<br>" . $conn->error;
+	$family_count = 1; // Default to 1 if query fails
+}
 
+// Inserting family
+if (isset($_POST['register_family'])) {
+	$date = date("d/m/Y");
+	$family_name = mysqli_real_escape_string($conn, $_POST['family_name']);
+	$address = $_POST['address'];
+	$area_code = $_POST['area_code'];
+	$family_ID = $STATION_CODE . $family_count; // Generate family ID
 
-    // inserting family
-	if (isset($_POST['register_family'])) {
-		// code...
-		$date = date("d/m/Y");
-		$family_name = mysqli_real_escape_string($conn,$_POST['family_name']);
-		$address = $_POST['address'];
-		$area_code = $_POST['area_code'];
-		$family_ID = $STATION_CODE.$family_count; // gon1
+	// Insert into family_master_table
+	$sql = "INSERT INTO family_master_table VALUES(
+            '', '$family_ID', '$STATION_CODE', 'ACTIVE', '$family_name', '$address', '$area_code',
+            '$date', '', '')";
 
-		$sql = "SELECT * FROM family_master_table WHERE family_ID = '$family_ID'";	
-		$result = $conn->query($sql); 
-    	$users_Exist = mysqli_num_rows($result);
+	try {
+		if (mysqli_query($conn, $sql)) {
+			echo "<script>alert('A new family has been created.');</script>";
+		} else {
+			throw new Exception(mysqli_error($conn));
+		}
+	} catch (Exception $e) {
+		if (strpos($e->getMessage(), '1062') !== false) {
+			echo "<script>alert('Duplicate entry detected. The family ID already exists.');</script>";
+		} else {
+			echo "ERROR: " . $e->getMessage();
+		}
+	}
 
-    	if ($users_Exist == 1) {
-    		echo "<script>Duplicate entry.</script>";
+	// Adding family head to family_member table
+	$name = $_POST['name'];
+	$contact_no = $_POST['contact_no'];
 
-    	}else{
+	$sql = "INSERT INTO `family_member` (`ID`, `family_ID`, `stationID`, `area_code`, `status`, `status_remark`, `name`, `surname`, `dob`, `gender`, `blood_group`, `occupation`, `qualification`, `address`, `contact_no`, `email`, `relation_with_head`, `relationship_status`, `lang`, `other_lang`, `baptism`, `confirmation`, `eucharist`, `anointing_of_the_sick`, `marriage`, `ration_card`, `pan_card`, `adhar_card`, `aayushman_bharat`, `ladki_bahin`, `old_age_pension`, `differently_able`, `voter_id`, `driving_license`, `monthly_income`, `any_other`, `modify_date`, `edited_by`) VALUES
+ (NULL, '$family_ID', '$STATION_CODE', '$area_code', 'ACTIVE', '', '$name', '$family_name', '', '', '', '', '', '$address', '$contact_no', '', 'Head', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '')";
 
-    	}
-		
-		if(mysqli_query($conn, $sql)){			
-			//header("Location: success_reg_dialog.php?query=$fam_ID");
-		} else{
-			echo "ERROR: <code>UNABLE_TO_REG_FAMILY</code>";
-		    echo "$sql. " . mysqli_error($conn);
-		}   
-
-		$sql = "INSERT INTO family_master_table VALUES(
-			'','$family_ID','$STATION_CODE','ACTIVE', '$family_name','$address', '$area_code',
-			 '$date', '', '')";	
-		
-		if(mysqli_query($conn, $sql)){			
-			//header("Location: success_reg_dialog.php?query=$fam_ID");
-		} else{
-			echo "ERROR: <code>UNABLE_TO_REG_FAMILY</code>";
-		    echo "$sql. " . mysqli_error($conn);
-		}   
-
-		// Adding heading of the family to family_member table.
-		$name = $_POST['name'];
-		$contact_no = $_POST['contact_no'];
-
-	
-		$sql = "INSERT INTO family_member VALUES(
-				'',
-				'$family_ID',
-				'$STATION_CODE',
-				'$area_code',		 
-				'ACTIVE',
-				'',		
-				'$name',
-				'$family_name',
-				'',
-				'',
-				'',
-				'',
-				'',
-				'$address', 
-				'$contact_no',
-				'',
-				'Head',
-				'',
-				'',
-				'',
-				'',
-				'',
-				'',
-				'',
-				'',
-				'',
-				'', 
-				'',
-				'',
-				'',
-				'',
-				'',
-				'', 
-				'',
-				'',
-				'', 
-				'', 
-				'')";
-					
-				if(mysqli_query($conn, $sql)){			
-			    echo "
-			    <script>
-			    	alert('A new family has been created.');
-			    </script>"; 	 					
-					//header("Location: success_reg_dialog.php?query=$fam_ID");
-				} else{
-					echo "ERROR: <code>UNABLE_TO_REG_FAMILY</code>";
-				    echo "$sql. " . mysqli_error($conn);
-				}   		
-			}
+	try {
+		if (mysqli_query($conn, $sql)) {
+			echo "<script>alert('Family head has been added successfully.');</script>";
+		} else {
+			throw new Exception(mysqli_error($conn));
+		}
+	} catch (Exception $e) {
+		if (strpos($e->getMessage(), '1062') !== false) {
+			echo "<script>alert('Duplicate entry detected. The family head already exists.');</script>";
+		} else {
+			echo "ERROR: " . $e->getMessage();
+		}
+	}
+}
 
 ?>
 
 <!DOCTYPE html>
 <html>
+
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" type="text/css" href="../css/ui.css">
-	<link rel="stylesheet" type="text/css" href="../css/baptism.css">
-	<link rel="stylesheet" type="text/css" href="print.css">
+	<link rel="stylesheet" type="text/css" href="../css/parochialUI.css">
 	<title></title>
 </head>
+
 <body style="overflow: auto;">
-	<?php include '../nav/global_nav.php';  ?>
+	<?php include '../nav/global_nav.php'; ?>
 	<br><br>
-	<div class="pageName card-heading">
-		<table border="0">
-			<tr>
-				<td width="40%"><h3>CREATE FAMILY</h3></td>
-			</tr>
-		</table>
+	<div class="pageName">
+		<h3>FAMILY REGISTRATION</h3>
 	</div>
 	<br>
-	<form id="" class="" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-		<table width="100%"  border="0" cellspacing="10" class="form">
-			<tr>
-				<td colspan="6" ><h4>Basic Details</h4></td>
-			</tr>
-		
-				<td> <?php// echo $family_count ?> </td>
-			
-			<tr>
-				<td width="14%"><p>HEAD OF THE FAMILY</p></td>
-				<td width="20%"><input placeholder="Name" type="text" id="head_name" name="name" required>			
-				</td>
-				<TD></TD>
-			<td width="200px">	
-				<input type="text" placeholder="Surname" id="family_name" name="family_name" required></td>	
-			</tr>
-			<TR>
-				<td width="220px"><p>UNIT/AREA CODE</p></td>
-				<td><select name="area_code"  required>
-					<option hidden>--</option>
-					<?php
-		  				include "../connection.php";		  			
-		            	$sql = "SELECT * FROM area_mapping";
-		            	$result = $conn->query($sql);
-		            	
-						while ($rows=$result->fetch_assoc()) { 
+	<!-- form to add new family -->
+	<form id="addNewPriestForm" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST"
+		enctype="multipart/form-data">
+		<div class="form-section">
+			<div class="form-section-header">
+				<h3>Details of Family Head</h3>
+			</div>
+			<div class="form-grid">
+				<div class="form-group">
+					<label for="Pries Name">Name</label>
+					<input placeholder="Name" type="text" id="head_name" name="name" required>
+				</div>
+				<div class="form-group">
+					<label for="status">Surname</label>
+					<input type="text" placeholder="Surname" id="family_name" name="family_name" required>
+				</div>
+				<div class="form-group">
+					<label for="startYear">Contact</label>
+					<!-- <input type="number" pattern="\d{4}" maxlength="4" inputmode="numeric"
+						oninput="this.value=this.value.slice(0,4)" placeholder="YYYY" name="start_date" required> -->
+					<input type="number" pattern="\d{10}" maxlength="10" inputmode="numeric" inputmode="numeric"
+						oninput="this.value=this.value.slice(0,10)" placeholder="10 Digits" id="family_name"
+						name="contact_no" required>
+				</div>
+
+
+			</div>
+			<div class="form-grid">
+				<div class="form-group">
+					<label for="status">Address</label>
+					<input type="text" placeholder="Address" id="address" name="address" required>
+				</div>
+				<div class="form-group">
+					<label for="status">Area Code</label>
+					<select name="area_code" id="" required>
+						<option hidden>Area Code</option>
+						<?php
+						include "../config/connection.php";
+						$sql = "SELECT * FROM area_mapping 
+		            	 ORDER BY area_code ASC";
+						$result = $conn->query($sql);
+						$conn->close();
+						while ($rows = $result->fetch_assoc()) {
 							$area_Code = $rows['area_code'];
 							$area_Name = $rows['area_name'];
-						?>
-					<option value="<?php echo $rows['area_code']; ?>"> 
-						<?php echo $rows['area_code'] .' - (' .  $rows['area_name'] . ")"; } ?> 
-					</option>
+							?>
+							<option value="<?php echo $rows['area_code']; ?>">
+								<?php echo $rows['area_code'] . ' - [' . $rows['area_name'] . "]";
+						} ?>
+						</option>
 					</select>
-				</td>				
-			<td width="4%">CONTACT</td>
-			<td>
-				<input type="text" placeholder="contact" id="" name="contact_no" required></td>
-			</tr>
-			<tr>
-				<td><p>ADDRESS</p></td>
-				<td colspan="4"><input type="text" name="address" id="address" style="width: 72.3%;"></td>						
-			</tr>
-			<tr>
-				<td></td>
-				<td><input type="submit" name="register_family" value="CREATE">  </td>
-			</tr>
-	</table>
-	<br>
-		
-					
-	<div class="searchContainer">
-        <table>
-				<td colspan="5">
-					<i style="font-size:15px; margin-left: 10px; margin-right:10px;" class="fa">&#xf002;</i>
-					<input type="text" name="query" id="searchbox" placeholder="Search by name, surname, dob, etc." style="width: 400px;">
-				</td>			
-			</tr>          		
-        </table>	
-	</div>	
-	
-	<div  class="recordDisplayContainer" style="height:45%;">			
-		<table class="recordDisplay" id="table" width="100%">
-			<tr>
-				<th></th>
-				<th>FAMILY ID</th>
-				<th>FAMILY NAME</th>
-				<th>AREA CODE</th>
-				<th>ADDRESS</th>
-				<th hidden>PARISH ID</th>
-				<th>ACTION</th>
-			</tr>
-			<?php
-			    include '../connection.php';
+				</div>
+				<div></div>
+			</div>
+		</div>
+		<div class="form-header">
+			<div class="form-actions">
+				<button type="submit" class="btn-primary" name="register_family">
+					<i class="fas fa-save"></i> Save
+				</button>
+				<button class="btn-secondary" onclick="location.reload()">
+					<i class="fas fa-times"></i> Reset
+				</button>
+			</div>
+		</div>
+		<br>
+	</form>
+	<div class="form-header">
+		<div class="form-actions">
 
-				//$id = $_GET['id'];
-			    $sql = "SELECT * FROM family_master_table WHERE stationID = '$STATION_CODE' ";    
-			    $result = $conn->query($sql);  
-			            
-			    while ($rows=$result->fetch_assoc()){
-			?>
-			<tr>
-				<td></td>
-				<td><?php echo $rows['family_ID'];  ?></td>
-				<td><?php echo $rows['family_name']; ?></td>
-				<td><?php echo $rows['area_code']; ?></td>
-				<td><?php echo $rows['address'];     ?></td>								
-				<td>
-					<a href="edit_family.php?id=<?php echo $rows['family_ID'];  ?>">Edit</a>
-					&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-					<a href="create_member.php?id=<?php echo  $rows['family_ID'];?>">Add Member</a> 
-					&nbsp;&nbsp;&nbsp;|
-					&nbsp;&nbsp;&nbsp;
-					<a href="edit_family_head.php?id=<?php echo $rows['family_ID'];  ?>">Edit Family Head</a>
-				</td>
-			</tr>
-			<?php } ?>
-		</table>
+
+		</div>
 	</div>
-	<script src="../js/tab-page-script.js"></script>
+
+	<!-- Disply data -->
+	<div class="container-widgets">
+		<!-- Recent Transactions -->
+		<div class="widget-row">
+			<div class="widget table-widget" style="max-height: 55%;">
+				<div class="widget-header">
+					<h3>Recently Created Records</h3>
+					<a href="family_list.php" class="btn-link">
+						Show All Records
+					</a>
+				</div>
+				<div class="widget-content">
+					<table class="data-table">
+						<thead>
+							<tr>
+								<th>ACTION</th>
+								<th onclick="sortTable(1)">FAMILY ID</th>
+								<th>FAMILY NAME</th>
+								<th onclick="sortTable(3)">AREA CODE</th>
+								<th>ADDRESS</th>
+								<th hidden>PARISH ID</th>
+
+							</tr>
+						</thead>
+						<tbody>
+							<?php
+							include "../config/connection.php";
+							$sql = "SELECT * FROM family_master_table WHERE stationID = '$STATION_CODE'";
+							$result = $conn->query($sql);
+							while ($rows = $result->fetch_assoc()) {
+								$id = $rows['family_ID'];
+								?>
+								<tr>
+									<td>
+										<a href="edit_family.php?id=<?php echo $rows['family_ID']; ?>">Edit</a>
+										|
+										<a href="create_member.php?id=<?php echo $rows['family_ID']; ?>">Add Member</a>
+										|
+										<a href="edit_family_head.php?id=<?php echo $rows['family_ID']; ?>">Edit Family
+											Head</a>
+									</td>
+									<td><?php echo $rows['family_ID']; ?></td>
+									<td><?php echo $rows['family_name']; ?></td>
+									<td><?php echo $rows['area_code']; ?></td>
+									<td><?php echo $rows['address']; ?></td>
+								</tr>
+							<?php } ?>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
 	<script src="../js/search_script.js"></script>
 </body>
+
 </html>
 
 

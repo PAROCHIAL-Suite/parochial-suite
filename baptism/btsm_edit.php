@@ -1,141 +1,239 @@
 <?php
-    include '../connection.php';
-    $id = $_GET['id'];
-    $sql = "SELECT * FROM baptism WHERE reg_no = '$id' and stationID = '$STATION_CODE'";
-    $result = $conn->query($sql); 
-    while ($rows=$result->fetch_assoc()) { 
-        $last_update = $rows['last_update'];
-        $name = $rows['name'];
-        $surname = $rows['surname'];
-?>   
+include '../config/connection.php';
+$id = $_GET['id'];
+$sql = "SELECT * FROM baptism WHERE reg_no = '$id' and stationID = '$STATION_CODE'";
+$result = $conn->query($sql);
+while ($rows = $result->fetch_assoc()) {
+    $last_update = $rows['last_update'];
+    $name = $rows['name'];
+    $surname = $rows['surname'];
+    $dob = $rows['dob'];
+    $gender = $rows['gender'];
+    $address = $rows['address'];
+    $father_name = $rows['father_name'];
+    $mother_name = $rows['mother_name'];
+    $father_nationality = $rows['father_nationality'];
+    $father_occupation = $rows['father_occupation'];
+    $godfather_name = $rows['godfather_name'];
+    $godfather_address = $rows['godfather_address'];
+    $godmother_name = $rows['godmother_name'];
+    $godmother_address = $rows['godmother_address'];
+    $place_of_baptism = $rows['church_name'];
+    $minister_name = $rows['minister_name'];
+    $communion = $rows['communion'];
+    $confirmation = $rows['confirmation'];
+    $marriage = $rows['marriage'];
+    $remarks = $rows['remarks'];
+    $reg_no = $rows['reg_no'];
+    $baptism_dt = $rows['baptism_date'];
+    $created_on = $rows['created_on'];
 
+}
+?>
 <!DOCTYPE html>
 <html>
+
 <head>
-    <link rel="stylesheet" type="text/css" href="../css/ui.css">        
-    <link rel="stylesheet" type="text/css" href="../css/baptism.css">        
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">    
+    <link rel="stylesheet" type="text/css" href="../css/ui.css">
+    <link rel="stylesheet" type="text/css" href="../css/baptism.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
 </head>
+
 <body>
     <?php include '../nav/global_nav.php'; ?>
     <br><br>
     <div class="pageName card-heading">
         <table border="0">
             <tr>
-                <td width="40%"><h3>EDIT BAPTISM</h3></td>
+                <td width="40%">
+                    <h3>UPDATE RECORD - BAPTISM</h3>
+                </td>
             </tr>
         </table>
-    </div>    
+    </div>
     <Br>
-         
-        <!-- <div class="legend" style="float: left; width: 59.2%;">Edit baptism information</div>  -->
-    <div style="" class="">   
-        <form id="" method="post" action="update_btsm_data.php?id=<?php echo $_GET['id']; ?>" class="form ">
-           <table width="100%"  border="0" cellspacing="10" class="" style="font-family: 'Source Sans 3',sans-serif; margin: auto; ">
-                <tr>
-                    <td colspan="6"><h4>Registration Details</h4></td>                                         
-                </tr>            
-                <tr>
-                    <td><p>REGISTRATION NO.</p></td>                   
-                    <td><input type="text" name="reg_no" value="<?php echo $rows['reg_no']; ?>"> </td>    
-                    <td><p>DATE OF BAPTISM</p></td>                   
-                    <td><input type="text" name="baptism_dt" class="auto-format-date" value="<?php echo $rows['baptism_date']; ?>"></td>
-                </tr>    
-                <tr>
-                    <td><p>SEX</p></td>                    
-                    <td>
-                        <select name="gender">
-                            <option hidden><?php echo $rows['gender']; ?></option>
-                            <option>Male</option>
-                            <option>Female</option>
-                        </select>
-                    </td>  
-                </tr>           
-                <tr></tr><tr></tr><tr></tr>
-                <tr>
-                <td colspan="6"><h4>Neophytes Details</h4></td>
-                </tr><tr></tr>                                     
-                <tr>
-                    <td><p>NAME</p></td>                    
-                    <td><input type="text" name="name" value="<?php echo $rows['name']; ?>"></td>          
-                    <td><p>SURNAME</p></td>                       
-                    <td><input type="text" name="surname" value="<?php echo $rows['surname']; ?>"></td>
-                </tr>   
-                <tr>
-                    <td><p>DATE OF BIRTH</p></td>                        
-                    <td><input type="text" name="dob" class="auto-format-date" value="<?php echo $rows['dob']; ?>"></td>
-                </tr>  
-                <tr>
-                    <td><p>FATHER'S NAME</p></td>                
-                    <td><input type="text" name="father_name" value="<?php echo $rows['father_name']; ?>"></td>             
-                    <td><p>MOTHER'S NAME</p></td>                        
-                    <td><input type="text" name="mother_name" value="<?php echo $rows['mother_name']; ?>"></td>
-                </tr> 
-                <tr>
-                    <td><p>Address</p></td>                    
-                    <td><input type="text" name="address" value="<?php echo $rows['address']; ?>"></td>
-                </tr>
-                <tr>
-                    <td><p>FATHER'S OCCUPATION</p></td>                        
-                    <td><input type="text" name="father_occupation" value="<?php echo $rows['father_occupation']; ?>"></td>
-                    
-                    <td><p>FATHER'S NATIONALITY</p></td>
-                    
-                    <td><input type="text" name="father_nationality" value="<?php echo $rows['father_nationality']; ?>"></td>
-                </tr>
-                <tr></tr><tr></tr><tr></tr>
-                <tr>
-                    <td colspan="6"><h4>Godparent's Details</h4></td>
-                </tr><tr></tr>                    
-                <tr>
-                    <td><p>GODFATHER'S NAME</p></td>                
-                    <td><input type="text" name="godfather_name" value="<?php echo $rows['godfather_name']; ?>"></td>
-                   
-                    <td><p>HIS ADDRESS</p></td>                        
-                    <td><input type="text" name="godfather_address" value="<?php echo $rows['godmother_address']; ?>"></td>
-                </tr>    
-                <tr>
-                    <td><p>GONDMOTHER'S NAME</p></td>                        
-                    <td><input type="text" name="godmother_name" value="<?php echo $rows['godmother_name']; ?>"></td>                  
-                    <td><p>HER ADDRESS</p></td>                        
-                    <td><input type="text" name="godmother_address" value="<?php echo $rows['godmother_address']; ?>"></td>
-                </tr>   
-                <tr></tr><tr></tr><tr></tr>
-                <tr>
-                    <td colspan="6"><h4>Sacrament Details</h4></td>
-                </tr><tr></tr>                    
-                <tr>
-                    <td><p>PLACE OF BAPTISM</p></td>                        
-                    <td><input type="text" name="church_name" value="<?php echo $rows['church_name']; ?>"></td>
-                    
-                    <td><p>MINISTER'S NAME</p></td>
-                        
-                    <td><input type="text" name="minister_name" value="<?php echo $rows['minister_name']; ?>"></td>
-                    </tr>           
-                    <tr>
-                        <td><p>FIRST COMMUNION</p></td>                        
-                        <td><input type="text" name="communion" value="<?php echo $rows['communion']; ?>"></td>
-                    
-                        <td><p>CONFIRMATION</p></td>                        
-                        <td><input type="text" name="confirmation" value="<?php echo $rows['confirmation']; ?>"></td>
-                    </tr>     
-                    <tr>
-                        <td><p>MARRAIGE</p></td>                        
-                        <td><input type="text" name="marriage" value="<?php echo $rows['marriage']; ?>"></td>                    
-                        <td><p>REMARKS</p></td>                        
-                        <td><input type="text" name="remarks" value="<?php echo $rows['remarks']; ?>"></td>
-                    </tr>       
-                    <tr></tr><tr></tr><tr></tr><tr></tr><tr></tr>
-                    <tr>
-                        <td></td>                        
-                        <td><input type="submit" name="update_btsm_info" value="Update" style="float: left;"></p></td>
-                    </tr>                          
-                    <?php } ?>  
-                 </table>
+    <div class="form-header">
+        <div class="form-actions">
+            <button type="submit" class="btn-primary" onclick="document.getElementById('update_btsm_info').click()">
+                <i class="fas fa-save"></i> Save
+            </button>
+            <button class="btn-secondary" onclick="location.reload()">
+                <i class="fas fa-times"></i> Reset
+            </button>
+        </div>
+        <div class="form-actions">
+            <div class="">
+                <label><b>Create On</b></label>
+                <h3 style="color: var(--accent-color);"><span style="font-weight: normal; "></span>
+                    <?php echo $created_on; ?></h3>
             </div>
         </div>
 
+    </div>
+
+    <!-- Form for baptism registration -->
+    <form id="baptismFrom" method="post" action="update_btsm_data.php?id=<?php echo $_GET['id']; ?>"
+        enctype="multipart/form-data">
+        <div class="form-section">
+            <div class="form-section-header">
+                <h3>Registration Information</h3>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="Pries Name">REGISTRATION NUMBER</label>
+                    <input type="text" name="reg_no" placeholder="Number" value="<?php echo $reg_no; ?> " required>
+                </div>
+
+                <div class="form-group">
+                    <label for="Pries Name">DATE OF BAPTISM</label>
+                    <input type="text" name="baptism_dt" class="auto-format-date" placeholder="dd/mm/yyyy"
+                        value="<?php echo $baptism_dt; ?>" required>
+                </div>
+                <div class="form-group">
+                    <!-- <label for="Pries Name">YEAR OF REGISTRATION</label>
+                    <input type="text" name="reg_year" placeholder="Year" required> -->
+                </div>
+            </div>
+
+            <div class="form-section-header">
+                <h3>Basic Information</h3>
+            </div>
+            <!-- NEW ROWS -->
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="Name">NAME</label>
+                    <input type="text" name="name" value="<?php echo $name; ?>" required>
+                </div>
+                <div class="form-group">
+                    <label for="Name">SURNAME</label>
+                    <input type="text" name="surname" value="<?php echo $surname; ?>">
+                </div>
+                <div class="form-group">
+                    <label for="Name">DATE OF BIRTH</label>
+                    <input type="text" name="dob" class="auto-format-date" placeholder="dd/mm/yyyy">
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="Name">GENDER</label>
+                    <select name="gender">
+                        <option value="" hidden required>Select</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="Name">FATHER'S NAME</label>
+                    <input type="text" name="father_name">
+                </div>
+                <div class="form-group">
+                    <label for="Name">MOTHER'S NAME</label>
+                    <input type="text" name="mother_name">
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="Name">NATIONALITY</label>
+                    <input type="text" name="nationality">
+                </div>
+                <div class="form-group">
+                    <label for="Name">ADDRESS</label>
+                    <textarea id="address" rows="3" name="address"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="Name">FATHER'S OCCUPATION</label>
+                    <input type="text" name="occupation">
+                </div>
+            </div>
+
+            <div class="form-section-header">
+                <h3>Godparents Information</h3>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="Name">GODFATHER'S NAME</label>
+                    <input type="text" name="gofther_name">
+                </div>
+                <div class="form-group">
+                    <label for="Name">HIS ADDRESS</label>
+                    <textarea id="address" rows="3" name="godfather_address"></textarea>
+                </div>
+                <div class="form-group"></div>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="Name">GODMOTHER'S NAME</label>
+                    <input type="text" name="godmother_name">
+                </div>
+                <div class="form-group">
+                    <label for="Name">HER ADDRESS</label>
+                    <textarea id="address" rows="3" name="godmother_address"></textarea>
+                </div>
+                <div class="form-group"></div>
+            </div>
+            <div class="form-section-header">
+                <h3>Godparents Information</h3>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="Name">PLACE OF BAPTISM</label>
+                    <input type="text" name="church_name" value="<?php echo $place_of_baptism; ?>">
+                </div>
+
+                <div class="form-group">
+                    <label for="Name">MINISTER'S NAME</label>
+                    <input type="text" name="minister_name">
+                </div>
+                <div class="form-group"></div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="Name">COMMUNION</label>
+                    <textarea id="communion" rows="3" name="communion"></textarea>
+
+                </div>
+                <div class="form-group">
+                    <label for="Name">CONFIRMATION</label>
+                    <textarea id="place_of_baptism" rows="3" name="place_of_baptism"></textarea>
+
+                </div>
+
+                <div class="form-group">
+                    <label for="Name">MARRIAGE</label>
+                    <textarea id="marriage" rows="3" name="marriage"></textarea>
+                </div>
+
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="Name">REMARKS</label>
+                    <textarea id="address" rows="3" name="remarks"></textarea>
+                </div>
+                <div class="form-group"></div>
+                <div class="form-group"></div>
+            </div>
+        </div>
+        <div class="form-header">
+            <div class="form-actions">
+                <button type="submit" class="btn-primary" name="update_btsm_info" id="update_btsm_info">
+                    <i class="fas fa-save"></i> Save
+                </button>
+                <button class="btn-secondary" onclick="location.reload()">
+                    <i class="fas fa-times"></i> Reset
+                </button>
+            </div>
+        </div>
+    </form>
+
+
+
 </body>
+
 </html>

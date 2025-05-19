@@ -1,39 +1,38 @@
-@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap');
 
 *{
 	margin: 0px;
 	padding: 0px;
 }
-
+/* f0f1f6 */
 nav{
   z-index: 4;
-  background-color: #fff;
+  background-color: #484c53;
 	width: 100%;
 	border: none;
 	color: white;
 	position: fixed;
 	margin: 0px;
-	border-bottom: 1px solid lightgray;
+font-family: "Archivo", sans-serif;
 	padding-left: 22px;
-}
+	height: 40px;
+	box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;}
 
 nav button{
 	background: transparent;
 	border: none;
 	border-radius: 0;
 	bottom: 0;
-	margin: 7;
-	font-size: 17px;
-
+	font-size: 22px;
 	letter-spacing: 1;
-	color: black;
+	color: rgb(255, 255, 255);
 	font-weight: 550;
 	
 }
 
 nav button a{
 	text-decoration: none;
-	color: black;
+	color: rgb(255, 255, 255);
 	padding: 29px;
 }
 
@@ -45,19 +44,32 @@ nav button:hover, nav button:active{
 	outline: none;
 }
 
+.btnNav {
+	background: transparent;
+	color: #fff;
+	cursor: pointer;
+	display: inline-block;
+	font-family: "Titillium Web", sans-serif;
+	font-size: 16px;
+	font-weight: normal;
+	height: 40px;
+	outline: 0;
+	overflow: hidden;
+	padding: 0px 16px 0px;
+	text-align: center;
+	text-decoration: none;
+	background: transparent;
+	touch-action: manipulation;
+	white-space: nowrap;
 
-nav input[type="text"]{
-	padding: 7px 3px;
-	border: 1px solid lightgray;
-	border-radius: 5px;
-	width: 400px;
-	margin: auto;
 }
 
-.pageTitle{
-	color: #3b5998;
-	font-weight: bold;
+.btnNav:hover {
+	background: var(--accent-color);
+	color: #fff;
 }
+
+
 
 
 #home:hover, #recent:hover{
@@ -79,34 +91,34 @@ nav input[type="text"]{
   display: none;
   border: 1px solid lightgray;
   position: absolute;
- 	background-color: whitesmoke;
-  min-width: 200px;
-	box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+  background-color: whitesmoke;
+  min-width: 300px;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
   z-index: -1;
   border-radius: 0px;
   padding: 0px;
-  color: black;  
+
  }
 
 /* Links inside the dropdown */
 .dropdown-content a {
-	border-radius: 0px;
+  border-radius: 0px;
   color: black;
   text-decoration: none;
   display: block;
-  font-size: 16px;
+  font-size: 16.45678px;
   border: none;
   padding-top: 7px;
   padding-bottom: 7px;
   padding-left: 20px;
-  font-weight: 560;
+
 }
 
 /* Change color of dropdown links on hover */
-.dropdown-content a:hover {background: var(--txtblue); 	color: white; border: none;}
+.dropdown-content a:hover {background: rgb(220, 220, 220) ;	color: rgb(0, 0, 0); border: none;}
 
 /* Show the dropdown menu on hover */
-.dropdown:hover .dropdown-content {display: block;}
+.dropdown:hover .dropdown-content {display: block; color: black;}
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
 /*.dropdown:hover .dropbtn {background-color: red;}*/
