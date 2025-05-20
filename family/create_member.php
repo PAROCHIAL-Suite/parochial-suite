@@ -2,16 +2,37 @@
 include '../config/connection.php';
 $id = $_GET['id'];
 
-$sql = "SELECT * FROM family_member WHERE family_ID = '$id' AND relation_with_head = 'Head'";
-$result = $conn->query($sql);
+// Fetch family details
+$sql_for_family = "SELECT * FROM family_master_table WHERE family_ID = '$id'";
+$result = $conn->query($sql_for_family);
+if ($result->num_rows > 0) {
+	while ($rows = $result->fetch_assoc()) {
+		$family_name = $rows['family_name'];
+		$family_ID = $rows['family_ID'];
+		$area = $rows['area_code'];
+		$contact_no = @$rows['contact_no'];
+		$address = $rows['address'];
+	}
+} else {
+	echo "No family found with ID: $id";
+	exit;
+}
 
-while ($rows = $result->fetch_assoc()) {
-	$family_name = $rows['surname'];
-	$family_ID = $rows['family_ID'];
-	$area = $rows['area_code'];
-	$head = $rows['name'] . " " . $rows['surname'];
-	$contact_no = $rows['contact_no'];
-	$address = $rows['address'];
+// Fetch family head details from family_member
+$head = '';
+$head_contact = '';
+$sql_head = "SELECT name, contact_no, relation_with_head FROM family_member WHERE family_ID = '$id' AND relation_with_head = 'Head' LIMIT 1";
+$result_head = $conn->query($sql_head);
+if ($result_head && $result_head->num_rows > 0) {
+	$row_head = $result_head->fetch_assoc();
+	$head = $row_head['name'];
+	$head_contact = $row_head['contact_no'];
+	$relation_with_head_value = '';
+	$relation_with_head_readonly = '';
+} else {
+	// No head found, so this member will be the head
+	$relation_with_head_value = 'Head';
+	$relation_with_head_readonly = 'readonly';
 }
 
 if (isset($_POST['register_member'])) {
@@ -90,6 +111,8 @@ if (isset($_POST['register_member'])) {
 
 	if (mysqli_query($conn, $sql)) {
 		echo "<script>alert('A new member has been added.');</script>";
+		echo "<script>window.location.href='view_family.php?id=$fid';</script>";
+		exit;
 	} else {
 		echo "ERROR: Unable to register member.<br>";
 		echo "SQL Query: " . $sql . "<br>";
@@ -124,19 +147,19 @@ if (isset($_POST['register_member'])) {
 		<div class="form-grid">
 			<div class="form-group">
 				<label for="">Family ID</label>
-				<?php echo $family_ID; ?>
+				<?php echo @$family_ID; ?>
 			</div>
 			<div class="form-group">
 				<label for="">Family Name</label>
-				<?php echo $family_name; ?>
+				<?php echo @$family_name; ?>
 			</div>
 			<div class="form-group">
 				<label for="">Family Head Name</label>
-				<?php echo $head; ?>
+				<?php echo @$head; ?>
 			</div>
 			<div class="form-group">
 				<label for="">Contact</label>
-				<?php echo $contact_no; ?>
+				<?php echo $head_contact ? $head_contact : $contact_no; ?>
 			</div>
 			<div class="form-group">
 				<label for="">Area Code</label>
@@ -250,36 +273,36 @@ if (isset($_POST['register_member'])) {
 				</div>
 
 				<div class="form-group">
-					<label for="">Relation with Head (<?php echo $head; ?>)</label>
-					<select id="relations" name="relation_with_head">
-						<option hidden>--</option>
-						<option>Husband</option>
-						<option>Wife</option>
-						<option>Father</option>
-						<option>Mother</option>
-						<option>Son</option>
-						<option>Daughter</option>
-						<option>Brother</option>
-						<option>Sister</option>
-						<option>Grandfather</option>
-						<option>Grandmother</option>
-						<option>Uncle</option>
-						<option>Aunt</option>
-						<option>Cousin</option>
-						<option>Nephew</option>
-						<option>Niece</option>
-						<option>Son-in-Law</option>
-						<option>Daughter-in-Law</option>
-						<option>Daughter-in-Law</option>
-						<option>Father-in-Law</option>
-						<option>Mother-in-Law</option>
-						<option>Brother-in-Law</option>
-						<option>Sister-in-Law</option>
-						<option>Step Father</option>
-						<option>Step Mother</option>
-						<option>Step Brother</option>
-						<option>Step Sister</option>
-					</select>
+					<label for="">Relation with Head (<?php echo @$head; ?>)</label>
+					<?php if (isset($relation_with_head_readonly) && $relation_with_head_readonly): ?>
+						<input type="text" id="relations" name="relation_with_head" value="Head" readonly
+							placeholder="Relation with Head">
+					<?php else: ?>
+						<select id="relations" name="relation_with_head" required>
+							<option value="" hidden>Select Relation</option>
+							<option value="Husband">Husband</option>
+							<option value="Wife">Wife</option>
+							<option value="Father">Father</option>
+							<option value="Mother">Mother</option>
+							<option value="Son">Son</option>
+							<option value="Daughter">Daughter</option>
+							<option value="Brother">Brother</option>
+							<option value="Sister">Sister</option>
+							<option value="Grandfather">Grandfather</option>
+							<option value="Grandmother">Grandmother</option>
+							<option value="Uncle">Uncle</option>
+							<option value="Aunt">Aunt</option>
+							<option value="Cousin">Cousin</option>
+							<option value="Nephew">Nephew</option>
+							<option value="Niece">Niece</option>
+							<option value="Son-in-Law">Son-in-Law</option>
+							<option value="Daughter-in-Law">Daughter-in-Law</option>
+							<option value="Brother-in-Law">Brother-in-Law</option>
+							<option value="Sister-in-Law">Sister-in-Law</option>
+							<option value="Father-in-Law">Father-in-Law</option>
+							<option value="Mother-in-Law">Mother-in-Law</option>
+						</select>
+					<?php endif; ?>
 				</div>
 				<div class="form-group">
 					<label for="">Relationship Status</label>

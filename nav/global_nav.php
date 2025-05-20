@@ -61,13 +61,22 @@
 		.caret-right {
 			text-align: right;
 			margin-left: 55px;
-
 			color: var(--accent-color);
 		}
 	</style>
 </head>
 
 <body>
+	<!-- this code is get the user refrence id from session and when the user open any modules in new tab it will load within the iframe -->
+
+	<?php
+	$refID = $_COOKIE['userID'];
+	if ($refID == null) {
+		header("Location: ../index.php");
+		exit();
+
+	}
+	?>
 	<nav class="global_nav">
 
 		<a href="../home/index.php"><button id="home" class="btnNav"><i class="fa fa-home"></i></button></a>
@@ -135,9 +144,7 @@
 
 		<div class="dropdown">
 			<button class="btnNav">Setup</button>
-
 			<div class="dropdown-content">
-
 				<!-- <a href="../prefrences/parish_setup.php">Parish</a> -->
 				<a href="../prefrences/edit_report_header.php">Edit Report Header</a>
 			</div>

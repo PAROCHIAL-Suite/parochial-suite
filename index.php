@@ -49,16 +49,18 @@ if (isset($_POST['login'])) {
 
         $cookie_name = "username";
         $cookie_value = @$email;
-        setcookie($cookie_name, $cookie_value, time() + 86400); // 86400 = 1 day       
+        setcookie($cookie_name, $cookie_value, time() + 86400); // 86400 = 1 day     
 
+        $cookie_name = "userID";
+        $cookie_value = @$id;
+        setcookie($cookie_name, $cookie_value, time() + 86400); // 86400 = 1 day    
 
         if (@$role == 'Adminstrator') {
-            header("Location: ./admin/default.php?ref=$id");
+            header("Location: ./admin/default.php?ref=$id&page=../home/index.php");
         } else if (@$role == 'Superuser') {
-            header("Location: ./superuser/default.php?ref=$id");
+            header("Location: ./superuser/default.php?ref=$id&page=");
         } else {
             echo "<script>alert('User does not exist')</script>";
-
         }
 
     } else {

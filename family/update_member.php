@@ -24,11 +24,13 @@ $relation_with_head = mysqli_real_escape_string($conn, $_REQUEST['relation_with_
 $relationship_status = mysqli_real_escape_string($conn, $_REQUEST['relationship_status']);
 $lang = mysqli_real_escape_string($conn, $_REQUEST['lang']);
 $other_lang = mysqli_real_escape_string($conn, $_REQUEST['other_lang']);
+
 $baptism = mysqli_real_escape_string($conn, $_REQUEST['baptism']);
 $confirmation = mysqli_real_escape_string($conn, $_REQUEST['confirmation']);
 $eucharist = mysqli_real_escape_string($conn, $_REQUEST['eucharist']);
 $marriage = mysqli_real_escape_string($conn, $_REQUEST['marriage']);
-$anointing_of_the_sick = mysqli_real_escape_string($conn, $_REQUEST['anointing_of_the_sick']);
+$anointing_of_the_sick = mysqli_real_escape_string($conn, $_REQUEST['annointing_of_the_sick']);
+
 $ration_card = mysqli_real_escape_string($conn, $_REQUEST['ration_card']);
 $pan_card = mysqli_real_escape_string($conn, $_REQUEST['pan_card']);
 $adhar_card = mysqli_real_escape_string($conn, $_REQUEST['adhar_card']);
@@ -81,7 +83,14 @@ $sql = "UPDATE family_member set
 		WHERE ID = '$mid' AND stationID = '$STATION_CODE'";
 
 if (mysqli_query($conn, $sql)) {
-	header("Location: member_list.php");
+	echo "<script>alert('Member details updated successfully!');</script>";
+	echo "<script>window.location.href='view_member.php?famID=$family_ID';</script>";
+} elseif (mysqli_errno($conn) == 1062) {
+	echo "<script>alert('ERROR: Duplicate entry for member ID. Please check the details and try again.');</script>";
+	echo "<script>window.location.href='view_member.php?family_ID=$family_ID';</script>";
+} elseif (mysqli_errno($conn) == 1452) {
+	echo "<script>alert('ERROR: Foreign key constraint fails. Please check the family ID and try again.');</script>";
+	echo "<script>window.location.href='view_member.php?family_ID=$family_ID';</script>";
 } else {
 	echo "ERROR: <code>UNABLE_TO_REG_MEMBER</code>\n";
 	echo "\n\n$sql. " . mysqli_error($conn);

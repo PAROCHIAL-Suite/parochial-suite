@@ -4,8 +4,7 @@ include '../config/connection.php';
 $id1 = $_GET['id'];
 $sql = "SELECT * FROM eucharist WHERE reg_no = '$id1' and stationID = '$STATION_CODE'";
 $result = $conn->query($sql);
-while ($rows = $result->fetch_assoc()) {
-
+if ($rows = $result->fetch_assoc()) {
 	?>
 	<!DOCTYPE html>
 	<html>
@@ -13,146 +12,109 @@ while ($rows = $result->fetch_assoc()) {
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="stylesheet" type="text/css" href="../css/ui.css">
-		<link rel="stylesheet" type="text/css" href="../css/baptism.css">
-		<title></title>
+		<link rel="stylesheet" type="text/css" href="../css/parochialUI.css">
+		<title>Edit Holy Communion Record</title>
 	</head>
 
 	<body>
 		<?php include '../nav/global_nav.php'; ?>
 		<br><br>
 		<div class="pageName card-heading">
-			<table border="0">
-				<tr>
-					<td width="40%">
-						<h3>EDIT HOLY COMMUNION RECORD</h3>
-					</td>
-				</tr>
-			</table>
-
+			<h3>EDIT HOLY COMMUNION RECORD</h3>
 		</div>
 		<br>
+		<form id="eucharist_form" method="post" action="edit_script.php?id=<?php echo $rows['id']; ?>" class="form-section">
+			<div class="form-section-header">
+				<h4>Certificate Details</h4>
+			</div>
+			<div class="form-grid">
+				<div class="form-group">
+					<label>REGISTRATION NO.</label>
+					<input type="text" name="reg_no" value="<?php echo htmlspecialchars($rows['reg_no']); ?>" readonly>
+				</div>
+				<div class="form-group">
+					<label>NAME</label>
+					<input type="text" name="name" value="<?php echo htmlspecialchars($rows['name']); ?>">
+				</div>
+				<div class="form-group">
+					<label>SURNAME</label>
+					<input type="text" name="surname" value="<?php echo htmlspecialchars($rows['surname']); ?>">
+				</div>
+			</div>
+			<div class="form-grid">
+				<div class="form-group">
+					<label>DATE OF BIRTH</label>
+					<input type="text" name="dob" class="auto-format-date"
+						value="<?php echo htmlspecialchars($rows['dob']); ?>" placeholder="dd/mm/yyyy">
+				</div>
+				<div class="form-group">
+					<label>FATHER'S NAME</label>
+					<input type="text" name="father_name" value="<?php echo htmlspecialchars($rows['father_name']); ?>">
+				</div>
+				<div class="form-group">
+					<label>MOTHER'S NAME</label>
+					<input type="text" name="mother_name" value="<?php echo htmlspecialchars($rows['mother_name']); ?>">
+				</div>
+			</div>
+			<div class="form-grid">
+				<div class="form-group">
+					<label>BAPTISM DATE</label>
+					<input type="text" name="baptism_date" class="auto-format-date"
+						value="<?php echo htmlspecialchars($rows['baptism_date']); ?>" placeholder="dd/mm/yyyy">
+				</div>
+				<div class="form-group">
+					<label>BAPTISM REGISTRATION NO.</label>
+					<input type="text" name="baptism_reg" value="<?php echo htmlspecialchars($rows['baptism_reg_no']); ?>">
+				</div>
+				<div class="form-group">
+					<label>BAPTISM PARISH NAME</label>
+					<input type="text" name="baptism_parish"
+						value="<?php echo htmlspecialchars($rows['baptism_parish']); ?>">
+				</div>
+			</div>
+			<div class="form-grid">
+				<div class="form-group">
+					<label>PARISH ADDRESS</label>
+					<input type="text" name="p_address" value="<?php echo htmlspecialchars($rows['parish_address']); ?>">
+				</div>
+				<div class="form-group">
+					<label>CHURCH OF HOLY COMMUNION</label>
+					<input type="text" name="church_of_eucharist"
+						value="<?php echo htmlspecialchars($rows['church_of_comunion']); ?>">
+				</div>
+				<div class="form-group">
+					<label>DATE OF HOLY COMMUNION</label>
+					<input type="text" name="date" class="auto-format-date"
+						value="<?php echo htmlspecialchars($rows['date_of_communion']); ?>" placeholder="dd/mm/yyyy">
+				</div>
+			</div>
+			<div class="form-section-header">
+				<h4>Parochial Details</h4>
+			</div>
+			<div class="form-grid">
+				<div class="form-group">
+					<label>MINISTER'S NAME</label>
+					<input type="text" name="minister_name" value="<?php echo htmlspecialchars($rows['minister']); ?>">
+				</div>
+				<div class="form-group">
+					<label>PARISH PRIEST</label>
+					<input type="text" name="parish_priest" value="<?php echo htmlspecialchars($rows['parish_priest']); ?>">
+				</div>
+				<div class="form-group"></div>
+			</div>
 
-		<form id="baptism_form" method="post" action="edit_script.php?id=<?php echo $rows['id']; ?>">
-			<table width="100%" border="0" cellspacing="10" class="form">
-				<tr>
-					<td colspan="4">
-						<h4>Certificate Details</h4>
-					</td>
-				</tr>
-				<tr></tr>
-				<tr>
-					<td>
-						<p>REGISTRATION NO.</p>
-					</td>
-					<td><input type="text" name="reg_no" value="<?php echo $rows['reg_no']; ?>" readonly></td>
-				</tr>
-				<tr>
-					<td>
-						<p>NAME</p>
-					</td>
-					<td><input type="text" name="name" value="<?php echo $rows['name']; ?>"></td>
-				</tr>
-				<tr>
-					<td>
-						<p>SURNAME</p>
-					</td>
-					<td><input type="text" name="surname" value="<?php echo $rows['surname']; ?>"></td>
-				</tr>
-				<tr>
-					<td>
-						<p>DATE OF BIRTH</p>
-					</td>
-					<td><input type="text" name="dob" class="auto-format-date" value="<?php echo $rows['dob']; ?>"></td>
-				</tr>
-				<tr>
-					<td>
-						<p>FATHER'S NAME</p>
-					</td>
-					<td><input type="text" name="father_name" value="<?php echo $rows['father_name']; ?>"></td>
-				</tr>
-				<tr>
-					<td>
-						<p>MOTHER'S NAME</p>
-					</td>
-					<td><input type="text" name="mother_name" value="<?php echo $rows['mother_name']; ?>"></td>
-				</tr>
+		</form>
+		<div class="form-header">
+			<div class="form-actions">
+				<button type="submit" class="btn-primary" name="edit_eucharist_from" id="saveFrm">
+					<i class="fas fa-save"></i> Save</button>
+				<button class="btn-secondary" onclick="history.back();">
+					<i class="fas fa-times"></i> Back
+				</button>
+			</div>
+		</div>
+		<br><br>
+	</body>
 
-				<tr>
-					<td>
-						<p>BAPTISM DATE</p>
-					</td>
-					<td><input type="text" name="baptism_date" class="auto-format-date"
-							value="<?php echo $rows['baptism_date']; ?>" placeholder="dd/mm/yyyy"></td>
-				</tr>
-				<tr>
-					<td>
-						<p>BAPTISM REGISTRATION NO.</p>
-					</td>
-					<td><input type="text" name="baptism_reg" value="<?php echo $rows['baptism_reg_no']; ?>"></td>
-				</tr>
-				<tr>
-					<td>
-						<p>BAPTISM PARISH NAME</p>
-					</td>
-					<td><input type="text" name="baptism_parish" value="<?php echo $rows['baptism_parish']; ?>"></td>
-				</tr>
-				<tr>
-					<td>
-						<p>PARISH ADDRESS</p>
-					</td>
-					<td><input type="text" name="p_address" value="<?php echo $rows['parish_address']; ?>"></td>
-				</tr>
-				<tr>
-					<td>
-						<p>CHURCH OF HOLY COMMUNION</p>
-					</td>
-					<td><input type="text" name="church_of_eucharist" value="<?php echo $rows['church_of_comunion']; ?>">
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<p>DATE OF HOLY COMMUNION</p>
-					</td>
-					<td><input type="text" name="date" class="auto-format-date"
-							value="<?php echo $rows['date_of_communion']; ?>" placeholder="dd/mm/yyyy"></td>
-				</tr>
-				<tr></tr>
-				<tr></tr>
-				<tr></tr>
-				<tr>
-					<td colspan="4">
-						<h4>Parochial Details</h4>
-					</td>
-				</tr>
-				<tr></tr>
-				<tr>
-					<td>
-						<p>MINISTER'S NAME</p>
-					</td>
-					<td><input type="text" name="minister_name" value="<?php echo $rows['minister']; ?>"></td>
-				</tr>
-				<tr>
-					<td>
-						<p>PARISH PRIEST</p>
-					</td>
-					<td><input type="text" name="parish_priest" value="<?php echo $rows['parish_priest'];
-} ?>"></td>
-			</tr>
-
-			<tr></tr>
-			<tr></tr>
-			<tr></tr>
-			<tr>
-				<td></td>
-				<td>
-					<button>Cancel</button>
-					<input type="submit" name="edit_eucharist_from" id="saveFrm" value="Save">
-				</td>
-				<td></td>
-			</tr>
-		</table>
-	</form><br><br>
-</body>
-
-</html>
+	</html>
+<?php } ?>

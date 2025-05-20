@@ -84,6 +84,9 @@ if ($result) {
 
 <body>
     <script>
+        var USERNAME = "<?php echo isset($USERNAME) ? addslashes($USERNAME) : ''; ?>";
+    </script>
+    <script>
         // Function to capitalize the first letter of every word and after every space
         function capitalizeFirstCharacter(event) {
             const target = event.target;

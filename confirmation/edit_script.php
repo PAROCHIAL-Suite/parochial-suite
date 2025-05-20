@@ -36,9 +36,17 @@ $sql = "UPDATE confirmation SET
 		parish_priest = '$parish_priest',
 		updated_on = '$todayDate', author = '$USERNAME'
 		WHERE reg_no = '$rID' and stationID = '$STATION_CODE'";
-if (mysqli_query($conn, $sql)) {
 
-	header("Location: search_confirmation.php");
+if (mysqli_query($conn, $sql)) {
+	// Check if the record was updated successfully
+	if (mysqli_affected_rows($conn) > 0) {
+		echo "<script>alert('Record updated successfully!');</script>";
+	} else {
+		echo "<script>alert('No changes made to the record.');</script>";
+	}
+	echo "<script>window.location.href='search.php';</script>";
+	mysqli_close($conn);
+	exit();
 
 } else {
 	echo "ERROR: Hush! Sorry $sql. " . mysqli_error($conn);

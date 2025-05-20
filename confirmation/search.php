@@ -47,7 +47,7 @@
 							while ($rows = $result->fetch_assoc()) {
 								?>
 								<tr>
-									<td><a href="edit_eucharist.php?id=<?php echo $rows['reg_no']; ?>">Edit</a>
+									<td><a href="edit_confirmation.php?id=<?php echo $rows['reg_no']; ?>">Edit</a>
 										|
 										<a href="notify.php?id=<?php echo $rows['id'] ?>">Nofify</a>
 									</td>

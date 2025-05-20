@@ -29,8 +29,10 @@
 								<th onclick="sortTable(1);">FAMILY ID</th>
 								<th onclick="sortTable(2);">AREA CODE</th>
 								<th onclick="sortTable(3);">FAMILY NAME</th>
-
 								<th>ADDRESS</th>
+								<th onclick="sortTable(5);">CREATED ON</th>
+
+
 							</tr>
 						</thead>
 						<tbody>
@@ -50,6 +52,7 @@
 									<td><?php echo $rows['area_code']; ?></td>
 									<td><?php echo $rows['family_name']; ?></td>
 									<td><?php echo $rows['address']; ?></td>
+									<td><?php echo $rows['registered_on']; ?></td>
 
 								</tr>
 							<?php } ?>

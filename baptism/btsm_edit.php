@@ -112,7 +112,8 @@ while ($rows = $result->fetch_assoc()) {
                 </div>
                 <div class="form-group">
                     <label for="Name">DATE OF BIRTH</label>
-                    <input type="text" name="dob" class="auto-format-date" placeholder="dd/mm/yyyy">
+                    <input type="text" name="dob" class="auto-format-date" placeholder="dd/mm/yyyy"
+                        value="<?php echo $dob; ?>">
                 </div>
             </div>
 
@@ -121,32 +122,34 @@ while ($rows = $result->fetch_assoc()) {
                     <label for="Name">GENDER</label>
                     <select name="gender">
                         <option value="" hidden required>Select</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
+                        <option value="Male" <?php if ($gender == "Male")
+                            echo "selected"; ?>>Male</option>
+                        <option value="Female" <?php if ($gender == "Female")
+                            echo "selected"; ?>>Female</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="Name">FATHER'S NAME</label>
-                    <input type="text" name="father_name">
+                    <input type="text" name="father_name" value="<?php echo htmlspecialchars($father_name); ?>">
                 </div>
                 <div class="form-group">
                     <label for="Name">MOTHER'S NAME</label>
-                    <input type="text" name="mother_name">
+                    <input type="text" name="mother_name" value="<?php echo htmlspecialchars($mother_name); ?>">
                 </div>
             </div>
 
             <div class="form-grid">
                 <div class="form-group">
                     <label for="Name">NATIONALITY</label>
-                    <input type="text" name="nationality">
+                    <input type="text" name="nationality" value="<?php echo htmlspecialchars($father_nationality); ?>">
                 </div>
                 <div class="form-group">
                     <label for="Name">ADDRESS</label>
-                    <textarea id="address" rows="3" name="address"></textarea>
+                    <textarea id="address" rows="3" name="address"><?php echo htmlspecialchars($address); ?></textarea>
                 </div>
                 <div class="form-group">
                     <label for="Name">FATHER'S OCCUPATION</label>
-                    <input type="text" name="occupation">
+                    <input type="text" name="occupation" value="<?php echo htmlspecialchars($father_occupation); ?>">
                 </div>
             </div>
 
@@ -157,37 +160,39 @@ while ($rows = $result->fetch_assoc()) {
             <div class="form-grid">
                 <div class="form-group">
                     <label for="Name">GODFATHER'S NAME</label>
-                    <input type="text" name="gofther_name">
+                    <input type="text" name="godfather_name" value="<?php echo htmlspecialchars($godfather_name); ?>">
                 </div>
                 <div class="form-group">
                     <label for="Name">HIS ADDRESS</label>
-                    <textarea id="address" rows="3" name="godfather_address"></textarea>
+                    <textarea id="godfather_address" rows="3"
+                        name="godfather_address"><?php echo htmlspecialchars($godfather_address); ?></textarea>
                 </div>
                 <div class="form-group"></div>
             </div>
             <div class="form-grid">
                 <div class="form-group">
                     <label for="Name">GODMOTHER'S NAME</label>
-                    <input type="text" name="godmother_name">
+                    <input type="text" name="godmother_name" value="<?php echo htmlspecialchars($godmother_name); ?>">
                 </div>
                 <div class="form-group">
                     <label for="Name">HER ADDRESS</label>
-                    <textarea id="address" rows="3" name="godmother_address"></textarea>
+                    <textarea id="godmother_address" rows="3"
+                        name="godmother_address"><?php echo htmlspecialchars($godmother_address); ?></textarea>
                 </div>
                 <div class="form-group"></div>
             </div>
             <div class="form-section-header">
-                <h3>Godparents Information</h3>
+                <h3>Other Information</h3>
             </div>
             <div class="form-grid">
                 <div class="form-group">
                     <label for="Name">PLACE OF BAPTISM</label>
-                    <input type="text" name="church_name" value="<?php echo $place_of_baptism; ?>">
+                    <input type="text" name="church_name" value="<?php echo htmlspecialchars($place_of_baptism); ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="Name">MINISTER'S NAME</label>
-                    <input type="text" name="minister_name">
+                    <input type="text" name="minister_name" value="<?php echo htmlspecialchars($minister_name); ?>">
                 </div>
                 <div class="form-group"></div>
             </div>
@@ -195,18 +200,21 @@ while ($rows = $result->fetch_assoc()) {
             <div class="form-grid">
                 <div class="form-group">
                     <label for="Name">COMMUNION</label>
-                    <textarea id="communion" rows="3" name="communion"></textarea>
+                    <textarea id="communion" rows="3"
+                        name="communion"><?php echo htmlspecialchars($communion); ?></textarea>
 
                 </div>
                 <div class="form-group">
                     <label for="Name">CONFIRMATION</label>
-                    <textarea id="place_of_baptism" rows="3" name="place_of_baptism"></textarea>
+                    <textarea id="confirmation" rows="3"
+                        name="confirmation"><?php echo htmlspecialchars($confirmation); ?></textarea>
 
                 </div>
 
                 <div class="form-group">
                     <label for="Name">MARRIAGE</label>
-                    <textarea id="marriage" rows="3" name="marriage"></textarea>
+                    <textarea id="marriage" rows="3"
+                        name="marriage"><?php echo htmlspecialchars($marriage); ?></textarea>
                 </div>
 
             </div>
@@ -214,7 +222,7 @@ while ($rows = $result->fetch_assoc()) {
             <div class="form-grid">
                 <div class="form-group">
                     <label for="Name">REMARKS</label>
-                    <textarea id="address" rows="3" name="remarks"></textarea>
+                    <textarea id="remarks" rows="3" name="remarks"><?php echo htmlspecialchars($remarks); ?></textarea>
                 </div>
                 <div class="form-group"></div>
                 <div class="form-group"></div>
@@ -225,8 +233,8 @@ while ($rows = $result->fetch_assoc()) {
                 <button type="submit" class="btn-primary" name="update_btsm_info" id="update_btsm_info">
                     <i class="fas fa-save"></i> Save
                 </button>
-                <button class="btn-secondary" onclick="location.reload()">
-                    <i class="fas fa-times"></i> Reset
+                <button class="btn-secondary" onclick="history.back();">
+                    <i class="fas fa-times"></i> Back
                 </button>
             </div>
         </div>

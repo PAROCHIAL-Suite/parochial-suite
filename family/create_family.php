@@ -42,9 +42,10 @@ if (isset($_POST['register_family'])) {
 	// Adding family head to family_member table
 	$name = $_POST['name'];
 	$contact_no = $_POST['contact_no'];
+	$date = date("d/m/Y");
 
 	$sql = "INSERT INTO `family_member` (`ID`, `family_ID`, `stationID`, `area_code`, `status`, `status_remark`, `name`, `surname`, `dob`, `gender`, `blood_group`, `occupation`, `qualification`, `address`, `contact_no`, `email`, `relation_with_head`, `relationship_status`, `lang`, `other_lang`, `baptism`, `confirmation`, `eucharist`, `anointing_of_the_sick`, `marriage`, `ration_card`, `pan_card`, `adhar_card`, `aayushman_bharat`, `ladki_bahin`, `old_age_pension`, `differently_able`, `voter_id`, `driving_license`, `monthly_income`, `any_other`, `modify_date`, `edited_by`) VALUES
- (NULL, '$family_ID', '$STATION_CODE', '$area_code', 'ACTIVE', '', '$name', '$family_name', '', '', '', '', '', '$address', '$contact_no', '', 'Head', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '')";
+ (NULL, '$family_ID', '$STATION_CODE', '$area_code', 'ACTIVE', '', '$name', '$family_name', '', '', '', '', '', '$address', '$contact_no', '', 'Head', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '$date', '$USERNAME')";
 
 	try {
 		if (mysqli_query($conn, $sql)) {
@@ -169,8 +170,8 @@ if (isset($_POST['register_family'])) {
 					<table class="data-table">
 						<thead>
 							<tr>
-								<th>ACTION</th>
 								<th onclick="sortTable(1)">FAMILY ID</th>
+								<th onclick="sortTable(1)">CREATED ON</th>
 								<th>FAMILY NAME</th>
 								<th onclick="sortTable(3)">AREA CODE</th>
 								<th>ADDRESS</th>
@@ -181,21 +182,14 @@ if (isset($_POST['register_family'])) {
 						<tbody>
 							<?php
 							include "../config/connection.php";
-							$sql = "SELECT * FROM family_master_table WHERE stationID = '$STATION_CODE'";
+							$sql = "SELECT * FROM family_master_table WHERE stationID = '$STATION_CODE'  ORDER BY sr_no DESC LIMIT 5";
 							$result = $conn->query($sql);
 							while ($rows = $result->fetch_assoc()) {
 								$id = $rows['family_ID'];
 								?>
 								<tr>
-									<td>
-										<a href="edit_family.php?id=<?php echo $rows['family_ID']; ?>">Edit</a>
-										|
-										<a href="create_member.php?id=<?php echo $rows['family_ID']; ?>">Add Member</a>
-										|
-										<a href="edit_family_head.php?id=<?php echo $rows['family_ID']; ?>">Edit Family
-											Head</a>
-									</td>
 									<td><?php echo $rows['family_ID']; ?></td>
+									<td><?php echo $rows['registered_on']; ?></td>
 									<td><?php echo $rows['family_name']; ?></td>
 									<td><?php echo $rows['area_code']; ?></td>
 									<td><?php echo $rows['address']; ?></td>
