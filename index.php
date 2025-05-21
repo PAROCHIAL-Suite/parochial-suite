@@ -1,8 +1,8 @@
 <?php
 
 $servername = "localhost";
-$database = "u381709061_parochial_db";
-$username = "u381709061_Ecclesiastical";
+$database = "parochial_cloud";
+$username = "root";
 
 // Create connection
 $conn = mysqli_connect('localhost', 'root', '', 'parochial_cloud');
@@ -10,9 +10,11 @@ if ($conn->connect_error) {
     echo "\'<h2>Running Status :<b> Active</b></h2>";
     die("Connection failed. " . $conn->connect_error);
 }
-// $conn = mysqli_connect($servername, $username, '/vV+q6=C', $database);
+
 
 // Check connection
+
+
 
 if (!$conn) {
     die("Unable to connect: " . mysqli_connect_error());
@@ -21,10 +23,10 @@ if (isset($_POST['login'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    $sql = "SELECT COUNT(*) FROM users WHERE email = '$username' AND password = '$password'";
+    $sql = "SELECT COUNT(*) as cnt FROM users WHERE email = '$username' AND password = '$password'";
     $result = $conn->query($sql);
-    $users_Exist = mysqli_num_rows($result);
-
+    $row = $result->fetch_assoc();
+    $users_Exist = $row['cnt'];
 
     if ($users_Exist == 1) {
         //  echo "The user is valid.";
@@ -34,10 +36,10 @@ if (isset($_POST['login'])) {
 
         while ($rows = $result->fetch_assoc()) {
             @$id = $rows['ID'];
-            @$role = $rows['role'];
+            echo @$role = $rows['role'];
             @$url = $rows['url'];
-            @$email = $rows['email'];
-            @$p = $rows['password'];
+            echo "<br>" . @$email = $rows['email'];
+            echo "<br>" . @$p = $rows['password'];
             @$stationCode = $rows['stationCode'];
             @$parishID = $rows['parishID'];
             @$login_Status = $rows['login_status'];
@@ -45,18 +47,19 @@ if (isset($_POST['login'])) {
 
         $cookie_name = "user";
         $cookie_value = @$stationCode;
-        setcookie($cookie_name, $cookie_value, time() + 86400); // 86400 = 1 day   
+        setcookie($cookie_name, $cookie_value, time() + 86400);         // 86400 = 1 day   
 
         $cookie_name = "username";
         $cookie_value = @$email;
-        setcookie($cookie_name, $cookie_value, time() + 86400); // 86400 = 1 day     
+        setcookie($cookie_name, $cookie_value, time() + 86400);         // 86400 = 1 day     
 
         $cookie_name = "userID";
         $cookie_value = @$id;
-        setcookie($cookie_name, $cookie_value, time() + 86400); // 86400 = 1 day    
+        setcookie($cookie_name, $cookie_value, time() + 86400);         // 86400 = 1 day    
 
-        if (@$role == 'Adminstrator') {
-            header("Location: ./admin/default.php?ref=$id&page=../home/index.php");
+        if (@$role == "Administrator") {
+            header("Location: admin/default.php?ref=$id");
+            //echo "<script>alert('Adminstrator')</script>";
         } else if (@$role == 'Superuser') {
             header("Location: ./superuser/default.php?ref=$id&page=");
         } else {
@@ -181,7 +184,7 @@ if (isset($_POST['login'])) {
     <div class="partition left-partition">
         <!-- Logo Section -->
         <div class="logo-container">
-            <img src="./res/nagpur_logo.jpg" alt="Company Logo" class="logo"><br>
+            <img src="./res/nagpur_logo.jpg" alt="Company Logo" class="logo" width="500"><br>
             <center>
                 <h2>Archdiocese of Nagpur</h2>
             </center>

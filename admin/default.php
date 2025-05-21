@@ -14,26 +14,8 @@
 
 	<div class="main">
 		<main>
-			<?php
-			// Default page if none specified
-			$defaultPage = "../home/index.php";
-			// Get the requested page from the URL, or use default
-			$page = isset($_GET['page']) ? $_GET['page'] : $defaultPage;
-			// Optional: Security - allow only certain pages
-			$allowed = [
-				"../home/index.php",
-				"../family/family_list.php",
-				"../family/member_list.php",
-				"../council/create_tenure.php",
-				"../council/add_council_member.php",
-				"../council/member_list.php",
-				// ...add more allowed pages here
-			];
-			if (!in_array($page, $allowed)) {
-				$page = $defaultPage;
-			}
-			?>
-			<iframe src="<?php echo htmlspecialchars($page); ?>" width="100%" height="100%" id="iframe"></iframe>
+
+			<iframe src="../home/index.php" width="100%" height="100%" id="iframe"></iframe>
 		</main>
 	</div>
 </body>

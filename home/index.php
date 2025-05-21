@@ -24,6 +24,12 @@ $events = [
     ['date' => '2025-05-25', 'title' => 'Parish Council Meeting'],
     ['date' => '2025-05-28', 'title' => 'Youth Group Gathering'],
     ['date' => '2025-06-01', 'title' => 'Community Outreach'],
+    ['date' => '2025-05-25', 'title' => 'Parish Council Meeting'],
+    ['date' => '2025-05-28', 'title' => 'Youth Group Gathering'],
+    ['date' => '2025-06-01', 'title' => 'Community Outreach'],
+    ['date' => '2025-05-25', 'title' => 'Parish Council Meeting'],
+    ['date' => '2025-05-28', 'title' => 'Youth Group Gathering'],
+    ['date' => '2025-06-01', 'title' => 'Community Outreach'],
 ];
 
 // Example reminders/tasks
@@ -96,7 +102,7 @@ $quickLinks = [
         .ps-widget-header {
             padding: 16px 20px 10px 20px;
             border-bottom: 1px solid #e6e8eb;
-            font-size: 1.08rem;
+            font-size: 1rem;
             font-weight: 600;
             color: var(--primary);
             /* Title uses primary color */
@@ -144,6 +150,7 @@ $quickLinks = [
             background: #f6f8fa;
             /* Default soft background */
             box-shadow: 0 1px 4px rgba(60, 64, 67, 0.04);
+
         }
 
         .ps-kpi:nth-child(1) {
@@ -152,7 +159,7 @@ $quickLinks = [
         }
 
         .ps-kpi:nth-child(2) {
-            background: rgb(195, 219, 195);
+            background: rgb(255, 238, 216);
             /* Soft green */
         }
 
@@ -177,7 +184,7 @@ $quickLinks = [
         }
 
         .ps-kpi-value {
-            font-size: 1.35rem;
+            font-size: 1rem;
             font-weight: bold;
             color: #2a3b4d;
         }
@@ -186,6 +193,9 @@ $quickLinks = [
             list-style: none;
             padding: 0;
             margin: 0;
+            overflow: auto;
+            max-height: 500px;
+            position: relative;
         }
 
         .ps-list li {
@@ -212,6 +222,7 @@ $quickLinks = [
             flex-wrap: wrap;
             gap: 14px;
             margin-top: 8px;
+
         }
 
         .ps-quicklink {
@@ -294,44 +305,13 @@ $quickLinks = [
                     </ul>
                 </div>
             </div>
-            <div class="ps-widget">
-                <div class="ps-widget-header"><i class="fa fa-bell"></i> Reminders & Tasks</div>
-                <div class="ps-widget-content">
-                    <ul class="ps-list">
-                        <?php if (count($tasks)): ?>
-                            <?php foreach ($tasks as $task): ?>
-                                <li>
-                                    <i class="fa fa-check-circle"></i>
-                                    <span
-                                        style="min-width:90px;display:inline-block;"><?php echo date('M d, Y', strtotime($task['due'])); ?></span>
-                                    <span><?php echo htmlspecialchars($task['task']); ?></span>
-                                </li>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <li>No pending tasks.</li>
-                        <?php endif; ?>
-                    </ul>
-                </div>
-            </div>
+
         </div>
         <!-- Center Column (wider) -->
         <div>
             <div class="ps-widget">
                 <div class="ps-widget-header"><i class="fa fa-chart-bar"></i> Key Metrics</div>
                 <div class="ps-widget-content">
-                    <div class="ps-kpi-row">
-                        <div class="ps-kpi">
-                            <div class="ps-kpi-label">Total Families</div>
-                            <div class="ps-kpi-value"><?php echo $totalFamilyCount; ?></div>
-                            <div class="ps-kpi-sub">Active: <?php echo $activeFamilies; ?> | Inactive:
-                                <?php echo $inactiveFamilies; ?>
-                            </div>
-                        </div>
-                        <div class="ps-kpi">
-                            <div class="ps-kpi-label">Total Members</div>
-                            <div class="ps-kpi-value"><?php echo $totalUsers; ?></div>
-                        </div>
-                    </div>
                     <div class="ps-kpi-row">
                         <div class="ps-kpi">
                             <div class="ps-kpi-label">Baptism</div>
@@ -352,11 +332,12 @@ $quickLinks = [
                     </div>
                 </div>
             </div>
+
             <div class="ps-widget">
                 <div class="ps-widget-header"><i class="fa fa-chart-pie"></i> Sacraments Distribution</div>
                 <div class="ps-widget-content">
                     <div class="ps-chart-container">
-                        <canvas id="sacramentChart" width="320" height="200"></canvas>
+                        <canvas id="sacramentChart" width="120" height="50"></canvas>
                     </div>
                 </div>
             </div>
@@ -364,15 +345,18 @@ $quickLinks = [
         <!-- Right Column -->
         <div>
             <div class="ps-widget">
-                <div class="ps-widget-header"><i class="fa fa-link"></i> Quick Links</div>
+                <div class="ps-widget-header"> People & Groups</div>
                 <div class="ps-widget-content">
-                    <div class="ps-quicklinks">
-                        <?php foreach ($quickLinks as $link): ?>
-                            <a class="ps-quicklink" href="<?php echo $link['url']; ?>">
-                                <i class="fa <?php echo $link['icon']; ?>"></i>
-                                <?php echo htmlspecialchars($link['label']); ?>
-                            </a>
-                        <?php endforeach; ?>
+                    <div class="ps-kpi">
+                        <div class="ps-kpi-label">Total Families</div>
+                        <div class="ps-kpi-value"><?php echo $totalFamilyCount; ?></div>
+                        <br>
+                        <div class="ps-kpi-value">Active <?php echo $activeFamilies; ?></div>
+                        <div class="ps-kpi-value">In-Active <?php echo $inactiveFamilies; ?></div>
+                    </div>
+                    <div class="ps-kpi">
+                        <div class="ps-kpi-label">Total Members</div>
+                        <div class="ps-kpi-value"><?php echo $total_member; ?></div>
                     </div>
                 </div>
             </div>
