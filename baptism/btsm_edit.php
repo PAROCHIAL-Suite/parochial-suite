@@ -56,14 +56,6 @@ while ($rows = $result->fetch_assoc()) {
     <Br>
     <div class="form-header">
         <div class="form-actions">
-            <button type="submit" class="btn-primary" onclick="document.getElementById('update_btsm_info').click()">
-                <i class="fas fa-save"></i> Save
-            </button>
-            <button class="btn-secondary" onclick="location.reload()">
-                <i class="fas fa-times"></i> Reset
-            </button>
-        </div>
-        <div class="form-actions">
             <div class="">
                 <label><b>Create On</b></label>
                 <h3 style="color: var(--accent-color);"><span style="font-weight: normal; "></span>

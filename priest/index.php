@@ -38,7 +38,7 @@ if (isset($_POST['add_priest'])) {
 	<?php include '../nav/global_nav.php'; ?>
 	<br><br>
 	<div class="pageName">
-		<h3>PRIEST RECORDS</h3>
+		<h3>ADD A PRIEST</h3>
 	</div>
 	<br>
 

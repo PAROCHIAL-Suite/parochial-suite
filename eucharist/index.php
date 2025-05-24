@@ -208,9 +208,10 @@ if (isset($_POST['post_eucharist_from'])) {
 		'$baptism_parish' ,
 		'$address ',
 		'$church_of_eucharist' ,
+		'$date', 
 		'$minister_name',
 		'$parish_priest',
-		'$date', '$curr_date', '$USERNAME')";
+		'$curr_date', '$USERNAME')";
 	if (mysqli_query($conn, $sql)) {
 		echo "
 			<script>

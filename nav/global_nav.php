@@ -112,7 +112,9 @@
 			<button class="btnNav">Priests</button>
 			<div class="dropdown-content">
 				<a href="../priest/index.php">Add A Priest</a>
+				<a href="../priest/priest_list.php">List of Priest</a>
 			</div>
+
 		</div>
 
 		<div class="dropdown">
@@ -145,7 +147,7 @@
 		<div class="dropdown">
 			<button class="btnNav">Setup</button>
 			<div class="dropdown-content">
-				<!-- <a href="../prefrences/parish_setup.php">Parish</a> -->
+				<a href="../account_center/index.php">Account Center</a>
 				<a href="../prefrences/edit_report_header.php">Edit Report Header</a>
 			</div>
 		</div>

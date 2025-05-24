@@ -171,7 +171,9 @@ if (!isset($_COOKIE['user'])) {
 						</button>
 					</div>
 					<div class="nav-user-dropdown-content">
-						<a href="#"><button class="logout-btn">Account Center</button></a>
+						<a href="../account_center/index.php?ref=<?php echo $_GET['ref']; ?>" target="_blank"><button
+								class="logout-btn">Account
+								Center</button></a>
 						<a href="#"><button class="logout-btn">Parish Profile</button></a>
 						<hr>
 						<a href="../logout.php?id=<?php echo $id; ?>"><button class="logout-btn">Logout</button></a>

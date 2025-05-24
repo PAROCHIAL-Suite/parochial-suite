@@ -1,87 +1,96 @@
 <?php
-
 include '../config/connection.php';
-$id = $_GET['id'];
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['id'])) {
+	$id = $_GET['id'];
 
+	// Sanitize and fetch form data
+	$reg_no = trim($_POST['reg_no']);
+	$baptism_dt = trim($_POST['baptism_dt']);
+	$name = trim($_POST['name']);
+	$surname = trim($_POST['surname']);
+	$dob = trim($_POST['dob']);
+	$gender = trim($_POST['gender']);
+	$father_name = trim($_POST['father_name']);
+	$mother_name = trim($_POST['mother_name']);
+	$father_nationality = trim($_POST['nationality']);
+	$address = trim($_POST['address']);
+	$father_occupation = trim($_POST['occupation']);
+	$godfather_name = trim($_POST['godfather_name']);
+	$godfather_address = trim($_POST['godfather_address']);
+	$godmother_name = trim($_POST['godmother_name']);
+	$godmother_address = trim($_POST['godmother_address']);
+	$place_of_baptism = trim($_POST['church_name']);
+	$minister_name = trim($_POST['minister_name']);
+	$communion = trim($_POST['communion']);
+	$confirmation = trim($_POST['confirmation']);
+	$marriage = trim($_POST['marriage']);
+	$remarks = trim($_POST['remarks']);
 
-if (isset($_POST['add_remark'])) {
-	$rmk = $_POST['new_remarks'];
-	$sql = "UPDATE baptism SET remarks = '$rmk' WHERE reg_no = '$id'";
-	if (mysqli_query($conn, $sql)) {
-		header("Location: btsm_detail.php?id=$id");
+	// Prepare and execute update query
+	$stmt = $conn->prepare(
+		"UPDATE baptism SET 
+            reg_no = ?, 
+            baptism_date = ?, 
+            name = ?, 
+            surname = ?, 
+            dob = ?, 
+            gender = ?, 
+            father_name = ?, 
+            mother_name = ?, 
+            father_nationality = ?, 
+            address = ?, 
+            father_occupation = ?, 
+            godfather_name = ?, 
+            godfather_address = ?, 
+            godmother_name = ?, 
+            godmother_address = ?, 
+            church_name = ?, 
+            minister_name = ?, 
+            communion = ?, 
+            confirmation = ?, 
+            marriage = ?, 
+            remarks = ?, 
+            last_update = NOW()
+        WHERE reg_no = ?"
+	);
+
+	$stmt->bind_param(
+		"ssssssssssssssssssssss",
+		$reg_no,
+		$baptism_dt,
+		$name,
+		$surname,
+		$dob,
+		$gender,
+		$father_name,
+		$mother_name,
+		$father_nationality,
+		$address,
+		$father_occupation,
+		$godfather_name,
+		$godfather_address,
+		$godmother_name,
+		$godmother_address,
+		$place_of_baptism,
+		$minister_name,
+		$communion,
+		$confirmation,
+		$marriage,
+		$remarks,
+		$id
+	);
+
+	if ($stmt->execute()) {
+		echo "<script>alert('Baptism record updated successfully!');window.location.href='btsm_edit.php?id=$reg_no';</script>";
 	} else {
-		echo "ERROR: Hush! Sorry $sql. " . mysqli_error($conn);
-	}
-}
-
-
-if (isset($_POST['update_btsm_info'])) {
-	echo $reg_no = mysqli_real_escape_string($conn, $_POST['reg_no']);
-
-	$baptism_date = $_REQUEST['baptism_dt'];
-
-	$dob = $_REQUEST['dob'];
-
-	$gender = $_POST['gender'];
-	$name = $_POST['name'];
-	$surname = mysqli_real_escape_string($conn, $_POST['surname']);
-	$father_name = mysqli_real_escape_string($conn, $_POST['father_name']);
-	$mother_name = mysqli_real_escape_string($conn, $_POST['mother_name']);
-	$father_nationality = $_POST['father_nationality'];
-	$address = mysqli_real_escape_string($conn, $_POST['address']);
-	$father_occupation = $_POST['father_occupation'];
-	$godfather_name = mysqli_real_escape_string($conn, $_POST['godfather_name']);
-	$godfather_address = mysqli_real_escape_string($conn, $_POST['godfather_address']);
-	$godmother_name = mysqli_real_escape_string($conn, $_POST['godmother_name']);
-	$godmother_address = mysqli_real_escape_string($conn, $_POST['godmother_address']);
-	$church_name = mysqli_real_escape_string($conn, $_POST['church_name']);
-	$minister_name = mysqli_real_escape_string($conn, $_POST['minister_name']);
-	$communion = mysqli_real_escape_string($conn, $_POST['communion']);
-	$confirmation = mysqli_real_escape_string($conn, $_POST['confirmation']);
-	$marriage = mysqli_real_escape_string($conn, $_POST['marriage']);
-	$remarks = mysqli_real_escape_string($conn, $_POST['remarks']);
-
-	$last_update = date("d" . "-" . "M" . '-' . "Y");
-	$sql = "
-			UPDATE baptism 
-			SET 
-			reg_no ='$reg_no',
-			stationID = '$STATION_CODE',						
-			baptism_date = '$baptism_date',
-			dob = '$dob',
-			gender = '$gender',
-			name = '$name',
-			surname = '$surname',
-			father_name = '$father_name',
-			mother_name = '$mother_name',
-			father_nationality = '$father_nationality',	
-			address = '$address',		
-			father_occupation = '$father_occupation', 		
-			godfather_name  = '$godfather_name', 
-			godfather_address = '$godfather_address',
-			godmother_name = '$godmother_name', 
-			godmother_address = '$godmother_address', 
-			church_name = '$church_name', 
-			minister_name = '$minister_name',
-			communion = '$communion', 
-			confirmation = '$confirmation',
-			marriage = '$marriage', 
-			remarks = '$remarks',
-			last_update = '$last_update'
-			WHERE reg_no = '$id'";
-
-	if (mysqli_query($conn, $sql)) {
-		echo "
-			    <script>
-			    	alert('Record updated successfully.');
-					window.location.href = 'btsm_edit.php?id=$id';							
-			    </script>";
-
-	} else {
-		echo "ERROR: Hush! Sorry $sql. " . mysqli_error($conn);
+		echo "<script>alert('Update failed. Please try again.');window.history.back();</script>";
 	}
 
+	$stmt->close();
+	$conn->close();
+} else {
+	header("Location: btsm_edit.php");
+	exit();
 }
-
 ?>

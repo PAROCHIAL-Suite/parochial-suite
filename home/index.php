@@ -15,6 +15,10 @@ $communionCount = $conn->query("SELECT COUNT(*) AS communionCount FROM eucharist
 $confirmationCount = $conn->query("SELECT COUNT(*) AS confirmationCount FROM confirmation")->fetch_assoc()['confirmationCount'] ?? 0;
 $burialCount = $conn->query("SELECT COUNT(*) AS burialCount FROM burial")->fetch_assoc()['burialCount'] ?? 0;
 
+// Add these queries to get male and female counts
+$maleCount = $conn->query("SELECT COUNT(*) AS male FROM family_member WHERE gender='Male'")->fetch_assoc()['male'] ?? 0;
+$femaleCount = $conn->query("SELECT COUNT(*) AS female FROM family_member WHERE gender='Female'")->fetch_assoc()['female'] ?? 0;
+
 // Active/Inactive families
 $activeFamilies = $conn->query("SELECT COUNT(*) AS active FROM family_master_table WHERE status='ACTIVE'")->fetch_assoc()['active'] ?? 0;
 $inactiveFamilies = $conn->query("SELECT COUNT(*) AS inactive FROM family_master_table WHERE status='IN-ACTIVE'")->fetch_assoc()['inactive'] ?? 0;
@@ -99,15 +103,15 @@ $quickLinks = [
             /* Adjust this if your primary color is different */
         }
 
+        /* Replace the solid background with a beautiful gradient */
         .ps-widget-header {
-            padding: 16px 20px 10px 20px;
+            padding: 10px 20px 10px 20px;
             border-bottom: 1px solid #e6e8eb;
             font-size: 1rem;
             font-weight: 600;
             color: var(--primary);
             /* Title uses primary color */
-            background: #f8fafc;
-            border-radius: 10px 10px 0 0;
+            background: linear-gradient(90deg, #dde4ed 0%, #e3f0ff 100%);
             display: flex;
             align-items: center;
             gap: 10px;
@@ -121,7 +125,7 @@ $quickLinks = [
         }
 
         .ps-widget-content {
-            padding: 18px 20px 18px 20px;
+            padding: 12px;
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -130,17 +134,17 @@ $quickLinks = [
 
         .ps-kpi-row {
             display: flex;
-            gap: 24px;
+            gap: 4px;
             flex-wrap: wrap;
-            margin-bottom: 10px;
+            margin-bottom: 0px;
         }
 
         /* Make KPI widget colors softer and more eye-friendly */
         .ps-kpi {
             flex: 1 1 120px;
-            min-width: 120px;
-            border-radius: 6px;
-            padding: 12px 10px 10px 10px;
+            min-width: 160px;
+            /* border-radius: 6px; */
+            padding: 20px;
             margin-bottom: 8px;
             display: flex;
             flex-direction: column;
@@ -154,28 +158,23 @@ $quickLinks = [
         }
 
         .ps-kpi:nth-child(1) {
-            background: #e3f0ff;
-            /* Soft blue */
+            background: linear-gradient(135deg, #e3f0ff 70%, #f7fafd 100%);
         }
 
         .ps-kpi:nth-child(2) {
-            background: rgb(255, 238, 216);
-            /* Soft green */
+            background: linear-gradient(135deg, #ffe0b2 70%, #fffde7 100%);
         }
 
         .ps-kpi:nth-child(3) {
-            background: #fff8e1;
-            /* Soft yellow */
+            background: linear-gradient(135deg, #e1f5fe 70%, #e0f7fa 100%);
         }
 
         .ps-kpi:nth-child(4) {
-            background: #ffeceb;
-            /* Soft coral */
+            background: linear-gradient(135deg, #fce4ec 70%, #f3e5f5 100%);
         }
 
         .ps-kpi:nth-child(5) {
-            background: #f3e8fd;
-            /* Soft purple */
+            background: linear-gradient(135deg, #e8f5e9 70%, #f1f8e9 100%);
         }
 
         .ps-kpi-label,
@@ -325,6 +324,10 @@ $quickLinks = [
                             <div class="ps-kpi-label">Confirmation</div>
                             <div class="ps-kpi-value"><?php echo $confirmationCount; ?></div>
                         </div>
+                        <!-- <div class="ps-kpi">
+                            <div class="ps-kpi-label">Marriage</div>
+                            <div class="ps-kpi-value"><?php echo $marriageCount; ?></div>
+                        </div> -->
                         <div class="ps-kpi">
                             <div class="ps-kpi-label">Burial</div>
                             <div class="ps-kpi-value"><?php echo $burialCount; ?></div>
@@ -334,39 +337,41 @@ $quickLinks = [
             </div>
 
             <div class="ps-widget">
-                <div class="ps-widget-header"><i class="fa fa-chart-pie"></i> Sacraments Distribution</div>
+                <div class="ps-widget-header"><i class="fa fa-chart-bar"></i> Key Metrics</div>
                 <div class="ps-widget-content">
-                    <div class="ps-chart-container">
-                        <canvas id="sacramentChart" width="120" height="50"></canvas>
+                    <div class="ps-kpi-row">
+                        <div class="ps-kpi">
+                            <div class="ps-kpi-label">Total Family</div>
+                            <div class="ps-kpi-value"><?php echo $family_count; ?></div>
+                        </div>
+                        <div class="ps-kpi">
+                            <div class="ps-kpi-label">Total Member</div>
+                            <div class="ps-kpi-value"><?php echo $total_member; ?></div>
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
         <!-- Right Column -->
         <div>
+
             <div class="ps-widget">
-                <div class="ps-widget-header"> People & Groups</div>
+                <div class="ps-widget-header"><i class="fa fa-chart-pie"></i> Sacraments Distribution</div>
                 <div class="ps-widget-content">
-                    <div class="ps-kpi">
-                        <div class="ps-kpi-label">Total Families</div>
-                        <div class="ps-kpi-value"><?php echo $totalFamilyCount; ?></div>
-                        <br>
-                        <div class="ps-kpi-value">Active <?php echo $activeFamilies; ?></div>
-                        <div class="ps-kpi-value">In-Active <?php echo $inactiveFamilies; ?></div>
-                    </div>
-                    <div class="ps-kpi">
-                        <div class="ps-kpi-label">Total Members</div>
-                        <div class="ps-kpi-value"><?php echo $total_member; ?></div>
+                    <div class="ps-chart-container" style="min-height:120px; max-width:320px; margin:0 auto;">
+                        <canvas id="sacramentChart" width="180" height="120" style="max-width:100%;"></canvas>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    </div>
     <script>
-        // Pie chart for Sacraments
+        // Doughnut chart for Sacraments
         const ctx = document.getElementById('sacramentChart').getContext('2d');
         new Chart(ctx, {
-            type: 'bar',
+            type: 'doughnut',
             data: {
                 labels: ['Baptism', 'Communion', 'Confirmation', 'Burial'],
                 datasets: [{
@@ -377,12 +382,18 @@ $quickLinks = [
                         <?php echo $burialCount; ?>
                     ],
                     backgroundColor: [
-                        '#e3eafc', '#e8eaf6', '#ede7f6', '#ffebee'
+                        'rgba(34, 90, 162, 0.6)',   // Blue
+                        'rgba(255, 193, 7, 0.6)',   // Amber
+                        'rgba(76, 175, 80, 0.6)',   // Green
+                        'rgba(233, 30, 99, 0.6)'    // Pink
                     ],
                     borderColor: [
-                        '#2a7ae2', '#1976d2', '#8e24aa', '#c62828'
+                        'rgba(34, 90, 162, 1)',
+                        'rgba(255, 193, 7, 1)',
+                        'rgba(76, 175, 80, 1)',
+                        'rgba(233, 30, 99, 1)'
                     ],
-                    borderWidth: 1
+                    borderWidth: 2
                 }]
             },
             options: {
@@ -391,7 +402,8 @@ $quickLinks = [
                     legend: {
                         position: 'bottom'
                     }
-                }
+                },
+                cutout: '65%'
             }
         });
     </script>

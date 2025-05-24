@@ -24,7 +24,7 @@ if (isset($_POST['modify_priest'])) {
 	if (mysqli_query($conn, $sql)) {
 		echo "<script>
 					alert('A priest record has been modified.');			
-					location.href = '../priest/index.php';		
+					window.location.href = document.referrer;
 			</script>";
 		// header("Location: ../priest/index.php");
 	} else {

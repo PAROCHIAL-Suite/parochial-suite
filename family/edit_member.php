@@ -381,7 +381,7 @@ while ($rows = $result->fetch_assoc()) {
 			<button type="submit" class="btn-primary" name="update_member" id="saveFrm">
 				<i class="fas fa-save"></i> Save
 			</button>
-			<button class="btn-secondary" onclick="history.reload()">
+			<button class="btn-secondary" onclick="history.back()">
 				<i class="fas fa-times"></i> Reset
 			</button>
 		</div>
