@@ -21,7 +21,7 @@
     <div class="container-widgets">
         <!-- Recent Transactions -->
         <div class="widget-row">
-            <div class="widget table-widget" style="max-height: 82%;">
+            <div class="widget table-widget" style="max-height: 80%;">
                 <div class="widget-content">
                     <table class="data-table" id="table">
                         <thead>

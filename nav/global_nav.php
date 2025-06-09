@@ -16,7 +16,7 @@
 			position: absolute;
 			display: none;
 			background: #fff;
-			min-width: 250px;
+			min-width: 270px;
 			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 			z-index: 100;
 		}
@@ -44,13 +44,15 @@
 		.global_nav .dropdown-content .dropdown>button.btnNav {
 			display: block;
 			padding: 8px 16px;
-			color: #333;
+			color: rgb(59, 76, 120);
 			text-decoration: none;
 			background: none;
 			border: none;
 			width: 100%;
 			text-align: left;
 			cursor: pointer;
+			font-size: 15px;
+			font-weight: 500;
 		}
 
 		.global_nav .dropdown-content a:hover,
@@ -87,6 +89,8 @@
 				<a href="../baptism/baptism_reg.php" target="_self">Baptism</a>
 				<a href="../eucharist/index.php">Holy Communion</a>
 				<a href="../confirmation/index.php">Confirmation</a>
+				<a href="../anointing_of_sick/index.php">Annointing of the Sick</a>
+				<a href="../burial/burial_reg.php">Burial</a>
 			</div>
 		</div>
 
@@ -111,7 +115,7 @@
 		<div class="dropdown">
 			<button class="btnNav">Priests</button>
 			<div class="dropdown-content">
-				<a href="../priest/index.php">Add A Priest</a>
+				<a href="../priest/index.php" target="main-iframe">Add A Priest</a>
 				<a href="../priest/priest_list.php">List of Priest</a>
 			</div>
 
@@ -139,6 +143,9 @@
 						<a href="../baptism/search.php">Baptism Records</a>
 						<a href="../eucharist/search.php">Holy Communion Records</a>
 						<a href="../confirmation/search.php">Confirmation Records</a>
+						<a href="../anointing_of_sick/search.php">Anointing of the Sick</a>
+						<a href="../burial/search.php">Burial</a>
+
 					</div>
 				</div>
 			</div>
@@ -149,6 +156,16 @@
 			<div class="dropdown-content">
 				<a href="../account_center/index.php">Account Center</a>
 				<a href="../prefrences/edit_report_header.php">Edit Report Header</a>
+			</div>
+		</div>
+
+
+
+		<div class="dropdown">
+			<button class="btnNav">Support</button>
+			<div class="dropdown-content">
+				<a href="../support/index.php">Raise Ticket</a>
+				<a href="../support/ticket_history.php">Ticket History</a>
 			</div>
 		</div>
 	</nav>

@@ -17,7 +17,7 @@
 	<div class="container-widgets">
 		<!-- Report Table Section -->
 		<div class=" widget-row">
-			<div class="widget table-widget" style="max-height: 82.7%;">
+			<div class="widget table-widget" style="max-height: 80%;">
 				<div class="widget-content">
 					<table class="data-table" id="table" style="width: 100%;">
 						<thead>
@@ -36,42 +36,48 @@
 							<?php
 							include '../config/connection.php';
 							$sql = "SELECT 
-		    cmt.ID AS term_id,
-		    cg.ID AS group_id,
-		    cm.ID AS member_id,
-		    cmt.start_date,
-		    cmt.end_date,
-		    cm.name, cm.contact_no, cm.elected_nominated, cm.gender,
-		    cm.designation,
-		    cg.ID as cgID,
-		    cg.group_name
-			FROM 
-				council_master_table cmt
-			INNER JOIN 
-				council_group cg ON cg.termID = cmt.ID AND cg.stationID = cmt.stationID
-			INNER JOIN 
-				council_member cm ON cm.groupID = cg.ID AND cm.stationID = cg.stationID
-			WHERE 
-				cmt.stationID = '$STATION_CODE'";
+    cmt.ID AS term_id,
+    cg.ID AS group_id,
+    cm.ID AS member_id,
+    cmt.start_date,
+    cmt.end_date,
+    cm.name, cm.contact_no, cm.nominated_elected, cm.gender,
+    cm.designation,
+    cg.ID as cgID,
+    cg.group_name
+FROM 
+    council_master_table cmt
+INNER JOIN 
+    council_group cg ON cg.termID = cmt.ID AND cg.stationID = cmt.stationID
+INNER JOIN 
+    council_member cm ON cm.groupID = cg.ID AND cm.stationID = cg.stationID
+WHERE 
+    cmt.stationID = '$STATION_CODE'";
 
 							$result = $conn->query($sql);
-							while ($rows = $result->fetch_assoc()) {
-								?>
-								<tr>
-									<td><a
-											href="edit_member.php?mem_id=<?php echo $rows['member_id']; ?>&groupID=<?php echo $rows['group_id']; ?>">Edit</a>
-										<b>|</b>
-										<a href="delete_c_member.php?id=<?php echo $rows['member_id']; ?>">Delete</a>
-									</td>
-									<td><?php echo $rows['start_date'] . "-" . $rows['end_date']; ?></td>
-									<td><?php echo $rows['group_name']; ?></td>
-									<td><?php echo $rows['name']; ?></td>
-									<td><?php echo $rows['gender']; ?></td>
-									<td><?php echo $rows['contact_no']; ?></td>
-									<td><?php echo $rows['designation']; ?></td>
-									<td><?php echo $rows['elected_nominated']; ?></td>
-								</tr>
-							<?php } ?>
+							if (!$result) {
+								echo "<tr><td colspan='8' style='color:red;'>SQL Error: " . $conn->error . "</td></tr>";
+							} else {
+								while ($rows = $result->fetch_assoc()) {
+									?>
+									<tr>
+										<td><a
+												href="edit_member.php?mem_id=<?php echo $rows['member_id']; ?>&groupID=<?php echo $rows['group_id']; ?>">Edit</a>
+
+										</td>
+										<td><?php echo $rows['start_date'] . "-" . $rows['end_date']; ?></td>
+										<td><?php echo $rows['group_name']; ?></td>
+										<td><?php echo $rows['name']; ?></td>
+										<td><?php echo $rows['gender']; ?></td>
+										<td><?php echo $rows['contact_no']; ?></td>
+										<td><?php echo $rows['designation']; ?></td>
+										<td><?php echo $rows['nominated_elected']; ?></td>
+									</tr>
+									<?php
+								}
+							}
+
+							?>
 						</tbody>
 					</table>
 				</div>

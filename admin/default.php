@@ -15,9 +15,10 @@
 	<div class="main">
 		<main>
 
-			<iframe src="../home/index.php" width="100%" height="100%" id="iframe"></iframe>
+			<iframe src="../home/index.php" width="100%" height="100%" id="iframe" name="main-iframe"></iframe>
 		</main>
 	</div>
+
 </body>
 
 </html>

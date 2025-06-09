@@ -1,8 +1,8 @@
 <?php
 include '../config/connection.php';
 
-echo "MEMBER " . $memberID = $_GET['mem_id'];
-echo "<br> GRP " . $groupID = $_GET['group'];
+$memberID = $_GET['mem_id'];
+$groupID = $_GET['group'];
 
 
 $name = $_POST['name'];
@@ -18,11 +18,14 @@ $sql = "UPDATE council_member SET
 			designation = '$designation', 
 			contact_no = '$contact_no', 
 			remarks = '$remarks', 
-			elected_nominated = '$elected_nominated' 
+			nominated_elected = '$elected_nominated' 
 			WHERE ID = '$memberID' and stationID  = '$STATION_CODE'";
 
 if (mysqli_query($conn, $sql)) {
-	header("Location:  committee_info.php?gID=$groupID");
+	// header("Location:  committee_info.php?gID=$groupID");
+	echo "<script>alert('Member details updated successfully');</script>";
+	echo "<script>window.location.href='member_list.php?gID=$groupID';</script>";
+	exit;
 } else {
 	echo "<br>ERROR: Hush! Sorry $sql. " . mysqli_error($conn);
 }

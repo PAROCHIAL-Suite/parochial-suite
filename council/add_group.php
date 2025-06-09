@@ -124,7 +124,7 @@ if (isset($_POST['create_group'])) {
 
 
 	<script src="../js/search_script.js"></script>
-
+	<script src="../js/export.js"></script>
 </body>
 
 </html>

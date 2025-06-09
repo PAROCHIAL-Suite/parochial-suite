@@ -149,9 +149,9 @@ if (!isset($_COOKIE['user'])) {
 			style="display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.07); padding: 0 5px; min-height: 54px;">
 			<div style="text-align: left;">
 				<p
-					style="margin:0; font-family: 'Archivo'; font-size:1.3rem; font-weight: normal; letter-spacing: 1px; color:rgb(195, 7, 36);">
+					style="margin:0; font-family: 'Archivo'; font-size:1.3rem; font-weight: 600; letter-spacing: 1px; color:rgb(205, 0, 31);">
 					PAROCHIAL<span class="span"
-						style="color:rgb(20, 89, 193); font-weight: 500; margin-left: 2px;">Suite</span>
+						style="color:rgb(46, 47, 49); font-weight: 500; margin-left: 2px;">Suite</span>
 				</p>
 			</div>
 			<div style="display: flex; align-items: center;">
@@ -174,7 +174,6 @@ if (!isset($_COOKIE['user'])) {
 						<a href="../account_center/index.php?ref=<?php echo $_GET['ref']; ?>" target="_blank"><button
 								class="logout-btn">Account
 								Center</button></a>
-						<a href="#"><button class="logout-btn">Parish Profile</button></a>
 						<hr>
 						<a href="../logout.php?id=<?php echo $id; ?>"><button class="logout-btn">Logout</button></a>
 					</div>

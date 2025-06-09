@@ -35,40 +35,39 @@ if ($result && $rows = $result->fetch_assoc()) {
 		}
 
 		.logo-box {
-			width: 110px;
+			width: 120px;
 			text-align: center;
 		}
 
 		.logo-box img {
 			width: 100px;
 			height: auto;
+			margin-left: 40px;
 		}
 
 		.header-content {
 			flex: 1;
 			text-align: center;
+			font-family: 'Times New Roman', Times, serif;
 		}
 
-		.title {
-			font-size: 32px;
-			font-family: 'Arial', sans-serif;
-			font-weight: bold;
-			margin-bottom: 5px;
-		}
+
 
 		.diocese_name {
 			font-size: 22px;
 			font-family: 'Arial', sans-serif;
 			margin-bottom: 5px;
+			font-weight: 500;
 		}
 
 		.adrs_line {
 			font-family: 'Arial', sans-serif;
 			margin-bottom: 5px;
+			margin-top: 10px;
 		}
 
 		.parish_name {
-			font-size: 26px;
+			font-size: 28px;
 			font-family: 'Arial', sans-serif;
 			font-weight: bold;
 			margin-bottom: 5px;
@@ -101,6 +100,7 @@ if ($result && $rows = $result->fetch_assoc()) {
 			</div>
 		</div>
 	</div>
+	<hr style="border: 1px double ; margin-top: 10px;">
 </body>
 
 

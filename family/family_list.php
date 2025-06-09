@@ -20,39 +20,40 @@
 	<div class="container-widgets">
 		<!-- Report Table Section -->
 		<div class=" widget-row">
-			<div class="widget table-widget" style="max-height: 82.7%;">
+			<div class="widget table-widget" style="max-height: 80%;">
 				<div class="widget-content">
 					<table class="data-table" id="table" style="width: 100%;">
 						<thead>
 							<tr>
 								<th>ACTION</th>
-								<th onclick="sortTable(1);">FAMILY ID</th>
-								<th onclick="sortTable(2);">AREA CODE</th>
-								<th onclick="sortTable(3);">FAMILY NAME</th>
+								<th onclick="sortTable(1);">AREA CODE</th>
+								<th onclick="sortTable(2);">STATUS</th>
+								<th onclick="sortTable(3);">FAMILY ID</th>
+								<th onclick="sortTable(4);">NAME</th>
 								<th>ADDRESS</th>
-								<th onclick="sortTable(5);">CREATED ON</th>
-
-
+								<th onclick="sortTable(5);">ROLE</th>
 							</tr>
 						</thead>
 						<tbody>
 							<?php
 							include '../config/connection.php';
-							$sql = " SELECT * FROM family_master_table WHERE stationID = '$STATION_CODE'";
+							$sql = " SELECT * FROM family_members WHERE stationID = '$STATION_CODE' AND relation_with_head = 'Head' ORDER BY ID ASC";
 							$result = $conn->query($sql);
 							while ($rows = $result->fetch_assoc()) {
 								?>
 								<tr>
 									<td>
-										<a href="edit_family.php?id=<?php echo $rows['family_ID']; ?>">Edit</a>
-										<b>|</b>
-										<a href="view_family.php?id=<?php echo $rows['family_ID']; ?>">View</a>
+										<a href="edit_family.php?id=<?php echo $rows['contact_no']; ?>">Edit</a>
+										|
+										<a href="view_family.php?id=<?php echo $rows['contact_no']; ?>">View</a>
 									</td>
-									<td><?php echo $rows['family_ID']; ?></td>
 									<td><?php echo $rows['area_code']; ?></td>
-									<td><?php echo $rows['family_name']; ?></td>
+									<td><?php echo $rows['status']; ?></td>
+									<td><?php echo $rows['family_ID']; ?></td>
+									<td><?php echo $rows['name'] . " " . $rows['surname']; ?></td>
+									<td><?php echo $rows['contact_no'] ?></td>
 									<td><?php echo $rows['address']; ?></td>
-									<td><?php echo $rows['registered_on']; ?></td>
+
 
 								</tr>
 							<?php } ?>

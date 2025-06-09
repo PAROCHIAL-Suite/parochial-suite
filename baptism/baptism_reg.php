@@ -3,91 +3,99 @@ include '../config/connection.php';
 // Get the current user's username from the session
 $sql = "SELECT * FROM parish_info WHERE stationID = '$STATION_CODE'";
 $result = $conn->query($sql);
-if ($result) {
-	// Fetch the result as an associative array
+$parishName = '';
+if ($result && $result->num_rows > 0) {
 	$row = $result->fetch_assoc();
-	@$parishName = $row['p_name'];
+	$parishName = $row['p_name'];
 }
 
 // Get the last created date from the baptism table
 $sql = "SELECT reg_no FROM baptism WHERE stationID = '$STATION_CODE' ORDER BY created_on DESC LIMIT 1";
 $result = $conn->query($sql);
-if ($result) {
-	// Fetch the result as an associative array
+if ($result && $result->num_rows > 0) {
 	$row = $result->fetch_assoc();
-	@$lastCreated = $row['reg_no'];
+	$lastCreated = $row['reg_no'];
 } else {
 	$lastCreated = "No records found";
 }
 
+$form_error_message = '';
 // Code to handle form submission
 if (isset($_POST['post_bpt_frm'])) {
 	$reg_no = mysqli_real_escape_string($conn, $_REQUEST['reg_no']);
-	$baptism_date = $_REQUEST['baptism_dt'];
-	$dob = $_REQUEST['dob'];
-	$gender = $_REQUEST['gender'];
-	$name = $_REQUEST['name'];
-	$surname = mysqli_real_escape_string($conn, $_REQUEST['surname']);
-	$father_name = mysqli_real_escape_string($conn, $_REQUEST['father_name']);
-	$mother_name = mysqli_real_escape_string($conn, $_REQUEST['mother_name']);
-	$father_nationality = $_REQUEST['nationality'];
-	$address = mysqli_real_escape_string($conn, $_REQUEST['address']);
-	$father_occupation = $_REQUEST['father_occupation'];
-	$godfather_name = mysqli_real_escape_string($conn, $_REQUEST['godfather_name']);
-	$godfather_address = mysqli_real_escape_string($conn, $_REQUEST['godfather_address']);
-	$godmother_name = mysqli_real_escape_string($conn, $_REQUEST['godmother_name']);
-	$godmother_address = mysqli_real_escape_string($conn, $_REQUEST['godmother_address']);
-	$church_name = mysqli_real_escape_string($conn, $_REQUEST['place_of_baptism']);
-	$minister_name = mysqli_real_escape_string($conn, $_REQUEST['minister_name']);
-	$communion = mysqli_real_escape_string($conn, $_REQUEST['communion']);
-	$confirmation = mysqli_real_escape_string($conn, $_REQUEST['confirmation']);
-	$marriage = mysqli_real_escape_string($conn, $_REQUEST['marriage']);
-	$remarks = mysqli_real_escape_string($conn, $_REQUEST['remarks']);
+	// Check for duplicate reg_no for this station
+	$dup_sql = "SELECT COUNT(*) as cnt FROM baptism WHERE reg_no = '$reg_no' AND stationID = '$STATION_CODE'";
+	$dup_result = $conn->query($dup_sql);
+	$dup_row = $dup_result ? $dup_result->fetch_assoc() : ['cnt' => 0];
 
-	$created_on = date("d" . "-" . "m" . "-" . "y" . " " . "h:i a");
-
-	// Performing insert query 
-
-	$sql = "INSERT INTO baptism VALUES(			
-				'$reg_no',
-				'$STATION_CODE',
-				'$baptism_date',
-				'$dob',
-				'$gender',
-				'$name',
-				'$surname',
-				'$father_name',
-				'$mother_name',
-				'$father_nationality',	
-				'$address',		
-				'$father_occupation', 		
-				'$godfather_name', 
-				'$godfather_address',
-				'$godmother_name', 
-				'$godmother_address', 
-				'$church_name', 
-				'$minister_name',
-				'$communion', 
-				'$confirmation',
-				'$marriage', 
-				'$remarks',
-				'','$created_on', '$USERNAME')";
-	try {
-		$conn->query($sql);
-	} catch (Exception $e) {
-		echo "Error: " . $e->getMessage();
-	}
-
-	if (mysqli_query($conn, $sql)) {
-		echo "
-			    <script>
-			    	alert('A new baptism record has been created.');
-			    </script>";
-		header("Location: baptism_reg.php");
+	if ($dup_row['cnt'] > 0) {
+		$form_error_message = "A burial record with this Registration Number already exists for this station.";
 	} else {
-		echo "ERROR: Hush! Sorry $sql. " . mysqli_error($conn);
+		$baptism_date = $_REQUEST['baptism_dt'];
+		$dob = $_REQUEST['dob'];
+		$gender = $_REQUEST['gender'];
+		$name = $_REQUEST['name'];
+		$surname = mysqli_real_escape_string($conn, $_REQUEST['surname']);
+		$father_name = mysqli_real_escape_string($conn, $_REQUEST['father_name']);
+		$mother_name = mysqli_real_escape_string($conn, $_REQUEST['mother_name']);
+		$father_nationality = $_REQUEST['nationality'];
+		$address = mysqli_real_escape_string($conn, $_REQUEST['address']);
+		$father_occupation = $_REQUEST['occupation'];
+		$godfather_name = mysqli_real_escape_string($conn, $_REQUEST['godfather_name']);
+		$godfather_address = mysqli_real_escape_string($conn, $_REQUEST['godfather_address']);
+		$godmother_name = mysqli_real_escape_string($conn, $_REQUEST['godmother_name']);
+		$godmother_address = mysqli_real_escape_string($conn, $_REQUEST['godmother_address']);
+		$church_name = mysqli_real_escape_string($conn, $_REQUEST['place_of_baptism']);
+		$minister_name = mysqli_real_escape_string($conn, $_REQUEST['minister_name']);
+		$communion = mysqli_real_escape_string($conn, $_REQUEST['communion']);
+		$confirmation = mysqli_real_escape_string($conn, $_REQUEST['confirmation']);
+		$marriage = mysqli_real_escape_string($conn, $_REQUEST['marriage']);
+		$remarks = mysqli_real_escape_string($conn, $_REQUEST['remarks']);
+
+		$created_on = date("d-m-Y H:i:s");
+
+		$sql = "INSERT INTO baptism VALUES(			
+			'$reg_no',
+			'$STATION_CODE',
+			'$baptism_date',
+			'$dob',
+			'$gender',
+			'$name',
+			'$surname',
+			'$father_name',
+			'$mother_name',
+			'$father_nationality',	
+			'$address',		
+			'$father_occupation', 		
+			'$godfather_name', 
+			'$godfather_address',
+			'$godmother_name', 
+			'$godmother_address', 
+			'$church_name', 
+			'$minister_name',
+			'$communion', 
+			'$confirmation',
+			'$marriage', 
+			'$remarks',
+			'','$created_on', '$USERNAME')";
+		if ($conn->query($sql)) {
+			echo "
+				<script>
+					alert('A new baptism record has been created.');
+					window.location.href = 'baptism_reg.php';
+				</script>";
+			exit;
+		} else {
+			$form_error_message = "ERROR: Hush! Sorry $sql. " . $conn->error;
+		}
 	}
+
+
+
 }
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -96,8 +104,7 @@ if (isset($_POST['post_bpt_frm'])) {
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-
-	<link rel="stylesheet" type="text/css" href="../css/baptism.css">
+	<link rel="stylesheet" type="text/css" href="../css/parochailUI.css">
 	<title></title>
 </head>
 
@@ -106,12 +113,16 @@ if (isset($_POST['post_bpt_frm'])) {
 	<?php include '../nav/global_nav.php'; ?>
 	<br><br>
 	<div class="pageName">
-		<a href="sacrament_search_index.php" class="" style="float: right; margin-right: 50px; ">
+		<!-- <a href="sacrament_search_index.php" class="" style="float: right; margin-right: 50px; ">
 			<i class="fas fa-search"></i> Search - Baptism Reports
-		</a>
+		</a> -->
 		<h3>REGISTRATION OF BAPTISM</h3>
-
 	</div>
+	<br>
+
+	<!-- Error dialog include -->
+	<?php include '../dialog/form_error_dialog.php'; ?>
+
 
 	<div class="form-header">
 		<div class="form-actions">
@@ -212,7 +223,7 @@ if (isset($_POST['post_bpt_frm'])) {
 			<div class="form-grid">
 				<div class="form-group">
 					<label for="Name">GODFATHER'S NAME</label>
-					<input type="text" name="gofther_name">
+					<input type="text" name="godfather_name">
 				</div>
 				<div class="form-group">
 					<label for="Name">HIS ADDRESS</label>
@@ -251,12 +262,10 @@ if (isset($_POST['post_bpt_frm'])) {
 				<div class="form-group">
 					<label for="Name">COMMUNION</label>
 					<textarea id="communion" rows="3" name="communion"></textarea>
-
 				</div>
 				<div class="form-group">
 					<label for="Name">CONFIRMATION</label>
-					<textarea id="place_of_baptism" rows="3" name="place_of_baptism"></textarea>
-
+					<textarea id="place_of_baptism" rows="3" name="confirmation"></textarea>
 				</div>
 
 				<div class="form-group">

@@ -34,7 +34,7 @@ input.addEventListener("keyup", function(event) {
 });
 
 
-// TO FILTER TABLE UNITE WISE
+// TO FILTER TABLE UNIT WISE
 document.getElementById('filterByArea').addEventListener('change', function() {
   const filterValue = this.value.toLowerCase(); // Get the selected value and convert to lowercase
   const table = document.getElementById('table');

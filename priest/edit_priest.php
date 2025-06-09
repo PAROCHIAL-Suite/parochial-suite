@@ -32,6 +32,18 @@ if (isset($_POST['modify_priest'])) {
 	}
 }
 
+if (isset($_POST['delete_priest'])) {
+    $sql = "DELETE FROM priest WHERE ID = '$priest_id' AND stationID = '$STATION_CODE'";
+    if (mysqli_query($conn, $sql)) {
+        echo "<script>
+            alert('Priest record deleted.');
+            window.location.href = '../priest/index.php';
+        </script>";
+        exit;
+    } else {
+        echo "<script>alert('Failed to delete priest record.');</script>";
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -97,12 +109,18 @@ if (isset($_POST['modify_priest'])) {
 				<button type="submit" class="btn-primary" name="modify_priest">
 					<i class="fas fa-save"></i> Save
 				</button>
-				<button class="btn-secondary" onclick="location.reload()">
-					<i class="fas fa-times"></i> Reset
+				<!-- Change Reset button to Delete button -->
+				<button type="button" class="btn-secondary" onclick="if(confirm('Are you sure you want to delete this priest record?')) { document.getElementById('deletePriestForm').submit(); }">
+					<i class="fas fa-trash"></i> Delete
 				</button>
 			</div>
 		</div>
 		<br><br>
+	</form>
+
+	<!-- Hidden form for delete action -->
+	<form id="deletePriestForm" method="POST" action="">
+		<input type="hidden" name="delete_priest" value="1">
 	</form>
 
 </body>

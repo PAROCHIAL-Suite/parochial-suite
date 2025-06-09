@@ -3,11 +3,11 @@ include '../config/connection.php';
 $id = $_GET['id'];
 
 // Fetch family details
-$sql_for_family = "SELECT * FROM family_master_table WHERE family_ID = '$id'";
+$sql_for_family = "SELECT * FROM family_members WHERE family_ID = '$id'";
 $result = $conn->query($sql_for_family);
 if ($result->num_rows > 0) {
 	while ($rows = $result->fetch_assoc()) {
-		$family_name = $rows['family_name'];
+		$family_name = $rows['surname'];
 		$family_ID = $rows['family_ID'];
 		$area = $rows['area_code'];
 		$contact_no = @$rows['contact_no'];
@@ -21,7 +21,7 @@ if ($result->num_rows > 0) {
 // Fetch family head details from family_member
 $head = '';
 $head_contact = '';
-$sql_head = "SELECT name, contact_no, relation_with_head FROM family_member WHERE family_ID = '$id' AND relation_with_head = 'Head' LIMIT 1";
+$sql_head = "SELECT name, contact_no, relation_with_head FROM family_members WHERE family_ID = '$id' AND relation_with_head = 'Head' LIMIT 1";
 $result_head = $conn->query($sql_head);
 if ($result_head && $result_head->num_rows > 0) {
 	$row_head = $result_head->fetch_assoc();
@@ -58,7 +58,7 @@ if (isset($_POST['register_member'])) {
 	$confirmation = mysqli_real_escape_string($conn, $_POST['confirmation']);
 	$eucharist = mysqli_real_escape_string($conn, $_POST['eucharist']);
 	$marriage = mysqli_real_escape_string($conn, $_POST['marriage']);
-	$annointing_of_the_sick = mysqli_real_escape_string($conn, $_POST['annointing_of_the_sick']);
+	$anointing_of_the_sick = mysqli_real_escape_string($conn, $_POST['annointing_of_the_sick']);
 	$ration_card = mysqli_real_escape_string($conn, $_POST['ration_card']);
 	$pan_card = mysqli_real_escape_string($conn, $_POST['pan_card']);
 	$adhar_card = mysqli_real_escape_string($conn, $_POST['adhar_card']);
@@ -69,46 +69,53 @@ if (isset($_POST['register_member'])) {
 	$voter_id = mysqli_real_escape_string($conn, $_POST['voter_id']);
 	$driving_license = mysqli_real_escape_string($conn, $_POST['driving_license']);
 	$monthly_income = mysqli_real_escape_string($conn, $_POST['monthly_income']);
+	$samagra_id = mysqli_real_escape_string($conn, $_POST['samagra_id']);
 	$any_other = mysqli_real_escape_string($conn, $_POST['any_other']);
 
-	$sql = "INSERT INTO family_member VALUES(
-        '',
-        '$fid',
-        '$STATION_CODE',
-        '$area_code',
-        '$status',    
-        '$status_remark',            
-        '$name',
-        '$surname',
-        '$dob',
-        '$gender',
-        '$blood_grp',
-        '$occupation',
-        '$qualification',
-        '$address', 
-        '$contact_no',
-        '$email',
-        '$relation_with_head',
-        '$relationship_status',
-        '$lang',
-        '$other_lang',
-        '$baptism',
-        '$confirmation',
-        '$eucharist',
-        '$annointing_of_the_sick',
-        '$marriage',
-        '$ration_card',
-        '$pan_card', 
-        '$adhar_card',
-        '$aayushman_bharat',
-        '$ladki_bahin_yogana',
-        '$old_age_pension',
-        '$differently_able',
-        '$voter_id', 
-        '$driving_license',
-        '$monthly_income',
-        '$any_other','','$USERNAME')";
-
+	$sql = "INSERT INTO `family_members` (
+    `ID`, `family_ID`, `stationID`, `area_code`, `status`, `status_remark`, `name`, `surname`, `dob`, `gender`, `blood_group`, `occupation`, `qualification`, `address`, `contact_no`, `email`, `relation_with_head`, `relationship_status`, `lang`, `other_lang`, `baptism`, `confirmation`, `eucharist`, `anointing_of_the_sick`, `marriage`, `ration_card`, `pan_card`, `adhar_card`, `aayushman_bharat`, `ladki_bahin`, `old_age_pension`, `differently_able`, `voter_id`, `driving_license`, `monthly_income`, `any_other`, `modify_date`, `edited_by`, `poc`, `samagra_id`
+) VALUES (
+    NULL,
+    '$family_ID',
+    '$STATION_CODE',
+    '$area_code',
+    '$status',
+    '$status_remark',
+    '$name',
+    '$surname',
+    '$dob',
+    '$gender',
+    '$blood_grp',
+    '$occupation',
+    '$qualification',
+    '$address',
+    '$contact_no',
+    '$email',
+    '$relation_with_head',
+    '$relationship_status',
+    '$lang',
+    '$other_lang',
+    '$baptism',
+    '$confirmation',
+    '$eucharist',
+    '$anointing_of_the_sick',
+    '$marriage',
+    '$ration_card',
+    '$pan_card',
+    '$adhar_card',
+    '$aayushman_bharat',
+    '$ladki_bahin_yogana',
+    '$old_age_pension',
+    '$differently_able',
+    '$voter_id',
+    '$driving_license',
+    '$monthly_income',
+    '$any_other',
+    NOW(),
+    '$USERNAME',
+    '$head_contact',
+    '$samagra_id'
+)";
 	if (mysqli_query($conn, $sql)) {
 		echo "<script>alert('A new member has been added.');</script>";
 		echo "<script>window.location.href='view_family.php?id=$fid';</script>";
@@ -149,10 +156,7 @@ if (isset($_POST['register_member'])) {
 				<label for="">Family ID</label>
 				<?php echo @$family_ID; ?>
 			</div>
-			<div class="form-group">
-				<label for="">Family Name</label>
-				<?php echo @$family_name; ?>
-			</div>
+
 			<div class="form-group">
 				<label for="">Family Head Name</label>
 				<?php echo @$head; ?>
@@ -331,7 +335,7 @@ if (isset($_POST['register_member'])) {
 				</div>
 				<div class="form-group">
 					<label for="">Phone No.</label>
-					<input type="text" name="contact_no" id="contact_no">
+					<input type="text" name="contact_no" id="contact_no" class="auto-format-contact">
 				</div>
 				<div class="form-group">
 					<label for="">address</label>
@@ -465,10 +469,14 @@ if (isset($_POST['register_member'])) {
 					<input type="text" name="monthly_income">
 				</div>
 				<div class="form-group">
+					<label for="">Samagra ID</label>
+					<input type="text" name="samagra_id" placeholder="Only for the recidents of Madhya Pradesh">
+				</div>
+				<div class="form-group">
 					<label for="">Any Other/Remark</label>
 					<textarea name="any_other" id="any_other" rows="2" cols="20"></textarea>
 				</div>
-				<div></div>
+
 			</div>
 
 

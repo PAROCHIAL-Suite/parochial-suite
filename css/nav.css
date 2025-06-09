@@ -7,7 +7,7 @@
 /* f0f1f6 */
 nav{
   z-index: 4;
- 	 background-color: #3d3b3c;
+	background-color: #343f4c; /* Professional blue, similar to Microsoft/Oracle branding */
 	width: 100%;
 	border: none;
 	color: white;
@@ -27,6 +27,7 @@ nav button{
 	letter-spacing: 1;
 	color: rgb(255, 255, 255);
 	font-weight: 550;
+	padding: 10px;
 	
 }
 
@@ -66,7 +67,7 @@ nav button:hover, nav button:active{
 }
 
 .btnNav:hover{
-	background: var(--accent-color);
+	background: rgb(194, 12, 12);
 	color: #fff;
 }
 
@@ -82,7 +83,6 @@ nav button:hover, nav button:active{
 .dropdown {
   position: relative;
   display: inline-block;
-  color: black;
 
 
 }
@@ -98,13 +98,15 @@ nav button:hover, nav button:active{
   z-index: -1;
   border-radius: 0px;
   padding: 0px;
+  text-transform: uppercase;
+
 
  }
 
 /* Links inside the dropdown */
 .dropdown-content a {
   border-radius: 0px;
-  color: black;
+   color: rgb(54, 88, 174);
   text-decoration: none;
   display: block;
   font-size: 16.45678px;
@@ -112,14 +114,15 @@ nav button:hover, nav button:active{
   padding-top: 7px;
   padding-bottom: 7px;
   padding-left: 20px;
+ 
 
 }
 
 /* Change color of dropdown links on hover */
-.dropdown-content a:hover {background: rgb(220, 220, 220) ;	color: rgb(0, 0, 0); border: none;}
+.dropdown-content a:hover {background: rgb(220, 220, 220) ;	  color: rgb(54, 88, 174);border: none;}
 
 /* Show the dropdown menu on hover */
-.dropdown:hover .dropdown-content {display: block; color: black;}
+.dropdown:hover .dropdown-content {display: block;   color: rgb(54, 88, 174);}
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
 /*.dropdown:hover .dropbtn {background-color: red;}*/

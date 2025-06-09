@@ -3,45 +3,48 @@ include "../config/connection.php";
 
 $idR = $_GET['id'];
 
+
+// GET the family ID of the head of the family
+$sql_head = "SELECT family_id FROM family_members WHERE relation_with_head = 'Head' AND poc = '$idR' AND stationID = '$STATION_CODE' LIMIT 1";
+$result_head = $conn->query($sql_head);
+$family_id = '';
+if ($row_head = $result_head->fetch_assoc()) {
+	$family_id = $row_head['family_id'];
+}
+
+
+// Updating family details this will also update the family members
 if (isset($_POST['update_member'])) {
-	$family_name = isset($_POST['family_name']) ? mysqli_real_escape_string($conn, $_POST['family_name']) : '';
-	$address = isset($_POST['address']) ? mysqli_real_escape_string($conn, $_POST['address']) : '';
-	$area_code = isset($_POST['area_code']) ? mysqli_real_escape_string($conn, $_POST['area_code']) : '';
-	$status = isset($_POST['status']) ? mysqli_real_escape_string($conn, $_POST['status']) : '';
+	$area_code = mysqli_real_escape_string($conn, $_POST['area_code']);
+	$status = mysqli_real_escape_string($conn, $_POST['status']);
+	$address = mysqli_real_escape_string($conn, $_POST['address']);
 
-	// Update family_master_table
-	$sql1 = "UPDATE family_master_table SET 
-    family_name = '$family_name', 
-    address = '$address', 
-    area_code = '$area_code',
-    modify_date = '$date', 
-    edited_by = '$USERNAME' 
-    WHERE family_ID = '$idR'";
+	$sql = "UPDATE family_members SET area_code='$area_code', family_id='$family_id' WHERE poc='$idR' AND stationID = '$STATION_CODE'";
 
-	if (!mysqli_query($conn, $sql1)) {
-		echo "ERROR: <code>UNABLE_TO_UPDATE_FAMILY</code><br>";
-		echo "$sql1<br>" . mysqli_error($conn);
-		exit;
+	if (mysqli_query($conn, $sql)) {
+		echo "<script>
+			alert('Family details updated successfully.');
+			window.location.href = 'view_family.php?id=$idR';
+		</script>";
+	} else {
+		echo "<script>alert('Error updating family details: " . mysqli_error($conn) . "');</script>";
 	}
+}
 
-	// Update family_member table
-	$sql2 = "UPDATE family_member SET 
-    surname = '$family_name', 
-    status = '$status',
-    address = '$address', 
-    area_code = '$area_code', 
-    modify_date = '$date', 
-    edited_by = '$USERNAME' 
-    WHERE family_ID = '$idR'";
+// Handle delete
+if (isset($_POST['delete_family'])) {
+	// Delete all members first
+	$sql_del_members = "DELETE FROM family_members WHERE family_ID = '$family_id' AND stationID = '$STATION_CODE'";
+	mysqli_query($conn, $sql_del_members);
 
-	if (!mysqli_query($conn, $sql2)) {
-		echo "ERROR: <code>UNABLE_TO_UPDATE_FAMILY_MEMBER</code><br>";
-		echo "$sql2<br>" . mysqli_error($conn);
-		exit;
-	}
+	// If you have a family_master table, delete from it as well (uncomment and set correct table name)
+	// $sql_del_family = "DELETE FROM family_master WHERE family_ID = '$family_id' AND stationID = '$STATION_CODE'";
+	// mysqli_query($conn, $sql_del_family);
 
-	echo "<script>alert('Family details updated successfully!');</script>";
-	echo "<script>window.location.href='family_list.php';</script>";
+	echo "<script>
+        alert('Family record and all its members have been deleted.');
+        window.location.href = 'family_list.php';
+    </script>";
 	exit;
 }
 ?>
@@ -117,12 +120,12 @@ if (isset($_POST['update_member'])) {
 	</div>
 	<BR>
 	<?php
-	$sql = "SELECT * FROM family_master_table 
-                WHERE stationID = '$STATION_CODE' AND family_ID = '$idR'";
+	$sql = "SELECT * FROM family_members WHERE stationID = '$STATION_CODE' AND poc = '$idR'";
+
 	$result = $conn->query($sql);
 	while ($rows = $result->fetch_assoc()) {
 		$area_code = $rows['area_code'];
-		$family_name = $rows['family_name'];
+		$family_name = $rows['name'];
 		$address = $rows['address'];
 		$status = $rows['status'];
 	}
@@ -151,11 +154,7 @@ if (isset($_POST['update_member'])) {
 						<?php } ?>
 					</select>
 				</div>
-				<div class="form-group">
-					<label for="family_name">NAME OF THE FAMILY</label>
-					<input type="text" placeholder="Surname" value="<?php echo $family_name; ?>" id="family_name"
-						name="family_name" required class="input">
-				</div>
+
 				<div class="form-group">
 					<label for="status">STATUS</label>
 					<select name="status" id="status" class="select">
@@ -164,28 +163,46 @@ if (isset($_POST['update_member'])) {
 						<option>IN-ACTIVE</option>
 					</select>
 				</div>
-				<div></div>
-			</div>
-			<div class="form-grid">
 				<div class="form-group">
 					<label for="address">ADDRESS</label>
-					<input type="text" value="<?php echo $address; ?>" name="address" id="address" class="input">
+					<textarea name="address" id="address" rows="3"
+						placeholder="Address"><?php echo $address; ?></textarea>
 				</div>
 			</div>
-		</div>
+			<div class="form-grid">
 
+
+				<div></div>
+				<div></div>
+			</div>
+		</div>
+		<br>
+		<div class="form-section" style="background-color: transparent; border: none;">
+			<i>
+				<p><b>NOTE:</b> Deleting a family will also delete it's family members.</p>
+			</i>
+		</div>
 		<div class="form-header">
+
 			<div class="form-actions">
 				<button type="submit" class="btn-primary" name="update_member" id="saveFrm">
 					<i class="fas fa-save"></i> Save
 				</button>
-				<button class="btn-secondary" onclick="history.back()">
-					<i class="fas fa-times"></i> Reset
+				<!-- Enhanced Delete button with warning -->
+				<button type="button" class="btn-danger"
+					onclick="if(confirm('Warning: Deleting this family will also delete ALL its members. Do you want to continue?')) { document.getElementById('deleteFamilyForm').submit(); }">
+					<i class="fas fa-trash"></i> Delete
 				</button>
+
+
 			</div>
+
 		</div>
+		<br><br>
 	</form>
 
-</body>
-
-</html>
+	<!-- Hidden form for delete action -->
+	<form id="deleteFamilyForm" method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>?id=<?php echo $idR; ?>">
+		<input type="hidden" name="delete_family" value="1">
+	</form>
+	...

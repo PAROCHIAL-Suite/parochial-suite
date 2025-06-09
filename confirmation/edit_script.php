@@ -53,4 +53,20 @@ if (mysqli_query($conn, $sql)) {
 }
 
 
+
+// handles delete
+if (isset($_GET['delete']) && $_GET['delete'] == 'confirmed') {
+	$delete_id = $_GET['id'];
+	$delete_sql = "DELETE FROM confirmation WHERE reg_no = '$delete_id' AND stationID = '$STATION_CODE'";
+	if ($conn->query($delete_sql) === TRUE) {
+		echo "<script>
+            alert('Record deleted successfully.');
+            window.location.href = 'search.php';
+        </script>";
+		exit();
+	} else {
+		echo "<div style='color:red;'>Error deleting record: " . $conn->error . "</div>";
+	}
+}
+
 ?>

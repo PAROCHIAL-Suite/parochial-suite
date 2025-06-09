@@ -1,25 +1,48 @@
 <?php
+
 include '../config/connection.php';
+
+// Get group ID from URL
+$groupID = isset($_GET['id']) ? $_GET['id'] : '';
+
+// Handle form submission
 if (isset($_POST['add_member'])) {
-	$group_name = $_POST['group_name'];
-	$gender = $_POST['gender'];
-	$contact_no = $_POST['contact_no'];
-	$designation = $_POST['designation'];
-	$nominated_elected = $_POST['nominated_elected'];
-	$remarks = $_POST['remarks'];
+	// Sanitize inputs
+	$group_id = mysqli_real_escape_string($conn, $_POST['group_id']);
+	$group_name = mysqli_real_escape_string($conn, $_POST['group_name']);
+	$gender = mysqli_real_escape_string($conn, $_POST['gender']);
+	$contact_no = mysqli_real_escape_string($conn, $_POST['contact_no']);
+	$designation = mysqli_real_escape_string($conn, $_POST['designation']);
+	$nominated_elected = mysqli_real_escape_string($conn, $_POST['nominated_elected']);
+	$remarks = mysqli_real_escape_string($conn, $_POST['remarks']);
+	$apc_member = mysqli_real_escape_string($conn, $_POST['apc_member']);
 
-	$group_id = $_POST['group_id'];
+	// Prevent duplicate: check if same member already exists in this group
+	$dup_sql = "SELECT * FROM council_member 
+        WHERE groupID = '$group_id' 
+        AND name = '$group_name' 
+        AND designation = '$designation'
+        AND stationID = '$STATION_CODE'
+        LIMIT 1";
+	$dup_result = $conn->query($dup_sql);
 
-	$sql = "INSERT INTO council_member values('', '$STATION_CODE', '$group_id', '$group_name', '$gender', '$contact_no', '$designation', '$nominated_elected', '$remarks')";
-	if (mysqli_query($conn, $sql)) {
-		echo "<script>alert('New group member created successfully');</script>";
-		echo "<script>window.location.href='add_member.php?id=$group_id';</script>";
+	if ($dup_result && $dup_result->num_rows > 0) {
+		echo "<script>alert('This member already exists in this group.');</script>";
 	} else {
-		echo "<script>alert('Error: " . $sql . "<br>" . $conn->error . "');</script>";
+		$sql = "INSERT INTO council_member 
+            (stationID, groupID, name, gender, contact_no, designation, nominated_elected, remarks, apc_member) 
+            VALUES 
+            ('$STATION_CODE', '$group_id', '$group_name', '$gender', '$contact_no', '$designation', '$nominated_elected', '$remarks', '$apc_member')";
+		if (mysqli_query($conn, $sql)) {
+			echo "<script>alert('New group member created successfully');</script>";
+			echo "<script>window.location.href='add_member.php?id=$group_id';</script>";
+			exit;
+		} else {
+			echo "<script>alert('Error: " . addslashes(mysqli_error($conn)) . "');</script>";
+		}
 	}
 }
 ?>
-
 
 <!DOCTYPE html>
 <html>
@@ -28,13 +51,11 @@ if (isset($_POST['add_member'])) {
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" type="text/css" href="../css/parochialui.css">
-
-	<title></title>
+	<title>Add Group Member</title>
 </head>
 
 <body>
-	<?php include '../nav/global_nav.php';
-	$groupID = $_GET['id']; ?>
+	<?php include '../nav/global_nav.php'; ?>
 	<br><br>
 	<div class="pageName card-heading">
 		<table border="0">
@@ -47,31 +68,38 @@ if (isset($_POST['add_member'])) {
 	</div>
 	<br>
 
-	<form id="addNewPriestForm" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST"
+	<form id="addNewPriestForm"
+		action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) . '?id=' . urlencode($groupID); ?>" method="POST"
 		enctype="multipart/form-data">
 		<div class="form-section">
 			<div class="form-section-header">
-				<h3>Group ID: <?php echo $groupID; ?></h3>
+				<h3>Group ID: <?php echo htmlspecialchars($groupID); ?></h3>
 			</div>
 			<div class="form-grid">
 				<div class="form-group">
 					<label for="">GROUP ID</label>
-					<input type="text" name="group_id" placeholder="" value="<?php echo $groupID; ?>" readonly>
+					<input type="text" name="group_id" value="<?php echo htmlspecialchars($groupID); ?>" readonly>
 				</div>
-				<div></div>
+				<div class="form-group">
+					<label for="">APC Member</label>
+					<select name="apc_member" required>
+						<option hidden>--</option>
+						<option value="No" selected>No</option>
+						<option value="Yes">Yes</option>
+					</select>
+				</div>
 				<div></div>
 			</div>
 			<div class="form-grid">
 				<div class="form-group">
 					<label for="">NAME</label>
-					<input type="text" name="group_name" placeholder="" required>
+					<input type="text" name="group_name" required>
 				</div>
-
 				<div class="form-group">
 					<label for="">GENDER</label>
 					<select name="gender">
-						<option>Male</option>
-						<option>Female</option>
+						<option value="Male">Male</option>
+						<option value="Female">Female</option>
 					</select>
 				</div>
 				<div class="form-group">
@@ -84,47 +112,39 @@ if (isset($_POST['add_member'])) {
 					<label for="">DESIGNATION</label>
 					<select name="designation" required>
 						<option hidden>--</option>
-						<option selected>Member</option>
-						<option>President</option>
-						<option>Vice President</option>
-						<option>Secretary</option>
-						<option>Treserur</option>
+						<option value="Member" selected>Member</option>
+						<option value="President">President</option>
+						<option value="Vice President">Vice President</option>
+						<option value="Secretary">Secretary</option>
+						<option value="Treserur">Treserur</option>
 					</select>
 				</div>
-
 				<div class="form-group">
 					<label for="">NOMINATED/ELECTED</label>
 					<select name="nominated_elected">
 						<option hidden>--</option>
-						<option>Nomination</option>
-						<option>Elected</option>
-						<option>Ex Officio</option>
+						<option value="Nomination">Nomination</option>
+						<option value="Elected">Elected</option>
+						<option value="Ex Officio">Ex Officio</option>
 					</select>
 				</div>
-
 				<div class="form-group">
 					<label for="">REMARKS</label>
 					<input type="text" name="remarks">
 				</div>
 			</div>
-
 		</div>
 		<div class="form-header">
 			<div class="form-actions">
 				<button type="submit" class="btn-primary" name="add_member">
 					<i class="fas fa-save"></i> Save
 				</button>
-				<button class="btn-secondary" onclick="location.reload()">
+				<button type="button" class="btn-secondary" onclick="location.reload()">
 					<i class="fas fa-times"></i> Reset
 				</button>
 			</div>
 		</div>
-
-
 	</form>
-
-
-
 
 	<br><br>
 	<?php include '../simpleSearchBox.php'; ?>
@@ -145,35 +165,33 @@ if (isset($_POST['add_member'])) {
 						</thead>
 						<tbody>
 							<?php
-							include '../config/connection.php';
 							$sql = "SELECT 
-								cmt.ID AS term_id,
-								cg.ID AS group_id,
-								cm.ID AS member_id,
-								cmt.start_date,
-								cmt.end_date,
-								cm.name,
-								cm.designation,
-								cg.ID as cgID,
-								cg.group_name
-							FROM 
-								council_master_table cmt
-							INNER JOIN 
-								council_group cg ON cg.termID = cmt.ID AND cg.stationID = cmt.stationID
-							INNER JOIN 
-								council_member cm ON cm.groupID = cg.ID AND cm.stationID = cg.stationID
-							WHERE 
-								cmt.stationID = '$STATION_CODE'  AND cg.ID = '$groupID' ORDER BY cg.ID DESC";
+                                cmt.ID AS term_id,
+                                cg.ID AS group_id,
+                                cm.ID AS member_id,
+                                cmt.start_date,
+                                cmt.end_date,
+                                cm.name,
+                                cm.designation,
+                                cg.ID as cgID,
+                                cg.group_name
+                            FROM 
+                                council_master_table cmt
+                            INNER JOIN 
+                                council_group cg ON cg.termID = cmt.ID AND cg.stationID = cmt.stationID
+                            INNER JOIN 
+                                council_member cm ON cm.groupID = cg.ID AND cm.stationID = cg.stationID
+                            WHERE 
+                                cmt.stationID = '$STATION_CODE'  AND cg.ID = '$groupID' ORDER BY cg.ID DESC";
 
 							$result = $conn->query($sql);
 							while ($rows = $result->fetch_assoc()) {
-
 								?>
 								<tr>
-									<td><?php echo $rows['start_date'] . "-" . $rows['end_date']; ?></td>
-									<td><?php echo $rows['group_name']; ?></td>
-									<td><?php echo $rows['name']; ?></td>
-									<td><?php echo $rows['designation']; ?></td>
+									<td><?php echo htmlspecialchars($rows['start_date'] . "-" . $rows['end_date']); ?></td>
+									<td><?php echo htmlspecialchars($rows['group_name']); ?></td>
+									<td><?php echo htmlspecialchars($rows['name']); ?></td>
+									<td><?php echo htmlspecialchars($rows['designation']); ?></td>
 								</tr>
 							<?php } ?>
 						</tbody>

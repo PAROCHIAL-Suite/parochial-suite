@@ -29,6 +29,34 @@ while ($rows = $result->fetch_assoc()) {
     $created_on = $rows['created_on'];
 
 }
+
+if (isset($_GET['delete']) && $_GET['delete'] == '1') {
+    // Show confirmation prompt before deleting
+    echo "<script>
+        if (confirm('Are you sure you want to delete this record?')) {
+            window.location.href = '" . $_SERVER['PHP_SELF'] . "?id=" . urlencode($id) . "&delete=confirmed';
+        } else {
+            window.location.href = '" . $_SERVER['PHP_SELF'] . "?id=" . urlencode($id) . "';
+        }
+    </script>";
+}
+
+if (isset($_GET['delete']) && $_GET['delete'] == 'confirmed') {
+    $delete_id = $conn->real_escape_string($id);
+    $delete_sql = "DELETE FROM baptism WHERE reg_no = '$delete_id' AND stationID = '$STATION_CODE'";
+    if ($conn->query($delete_sql) === TRUE) {
+        echo "<script>
+            alert('Record deleted successfully.');
+            window.location.href = 'search.php';
+        </script>";
+        exit();
+    } else {
+        echo "<div style='color:red;'>Error deleting record: " . $conn->error . "</div>";
+    }
+}
+
+
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -55,14 +83,19 @@ while ($rows = $result->fetch_assoc()) {
     </div>
     <Br>
     <div class="form-header">
+
         <div class="form-actions">
             <div class="">
                 <label><b>Create On</b></label>
                 <h3 style="color: var(--accent-color);"><span style="font-weight: normal; "></span>
                     <?php echo $created_on; ?></h3>
             </div>
-        </div>
+            <div style="float: right; right: 0; position: relative;">
+                <form>
 
+                </form>
+            </div>
+        </div>
     </div>
 
     <!-- Form for baptism registration -->
@@ -225,8 +258,10 @@ while ($rows = $result->fetch_assoc()) {
                 <button type="submit" class="btn-primary" name="update_btsm_info" id="update_btsm_info">
                     <i class="fas fa-save"></i> Save
                 </button>
-                <button class="btn-secondary" onclick="history.back();">
-                    <i class="fas fa-times"></i> Back
+                <button type="button" class="btn-danger"
+                    onclick="if(confirm('Are you sure you want to delete this record?')){ window.location.href='<?php echo $_SERVER['PHP_SELF']; ?>?id=<?php echo urlencode($id); ?>&delete=confirmed'; }"
+                    name="delete" id="delete_btsm_info">
+                    <i class="fas fa-trash"></i> Delete
                 </button>
             </div>
         </div>

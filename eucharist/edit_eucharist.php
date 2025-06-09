@@ -72,6 +72,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	}
 }
 
+
+if (isset($_GET['delete']) && $_GET['delete'] == 'confirmed') {
+	$delete_id = $_GET['id'];
+	$delete_sql = "DELETE FROM eucharist WHERE reg_no = '$delete_id' AND stationID = '$STATION_CODE'";
+	if ($conn->query($delete_sql) === TRUE) {
+		echo "<script>
+            alert('Record deleted successfully.');
+            window.location.href = 'search.php';
+        </script>";
+		exit();
+	} else {
+		echo "<div style='color:red;'>Error deleting record: " . $conn->error . "</div>";
+	}
+}
+
+
+
+
 // Fetch the record again for display
 $sql = "SELECT * FROM eucharist WHERE reg_no = '$id1' and stationID = '$STATION_CODE'";
 $result = $conn->query($sql);
@@ -94,97 +112,105 @@ if ($rows = $result->fetch_assoc()) {
 			<h3>EDIT HOLY COMMUNION RECORD</h3>
 		</div>
 		<br>
-		<form id="eucharist_form" method="post" class="form-section">
-			<div class="form-section-header">
-				<h4>Certificate Details</h4>
-			</div>
-			<div class="form-grid">
-				<div class="form-group">
-					<label>REGISTRATION NO.</label>
-					<input type="text" name="reg_no" value="<?php echo htmlspecialchars($rows['reg_no']); ?>" readonly>
+		<form id="eucharist_form" method="post"
+			action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) . '?id=' . urlencode($id1); ?>">
+			<div class="form-section">
+				<div class="form-section-header">
+					<h4>Certificate Details</h4>
 				</div>
-				<div class="form-group">
-					<label>NAME</label>
-					<input type="text" name="name" value="<?php echo htmlspecialchars($rows['name']); ?>">
+
+				<div class="form-grid">
+					<div class="form-group">
+						<label>REGISTRATION NO.</label>
+						<input type="text" name="reg_no" value="<?php echo htmlspecialchars($rows['reg_no']); ?>" readonly>
+					</div>
+					<div class="form-group">
+						<label>NAME</label>
+						<input type="text" name="name" value="<?php echo htmlspecialchars($rows['name']); ?>">
+					</div>
+					<div class="form-group">
+						<label>SURNAME</label>
+						<input type="text" name="surname" value="<?php echo htmlspecialchars($rows['surname']); ?>">
+					</div>
 				</div>
-				<div class="form-group">
-					<label>SURNAME</label>
-					<input type="text" name="surname" value="<?php echo htmlspecialchars($rows['surname']); ?>">
+				<div class="form-grid">
+					<div class="form-group">
+						<label>DATE OF BIRTH</label>
+						<input type="text" name="dob" class="auto-format-date"
+							value="<?php echo htmlspecialchars($rows['dob']); ?>" placeholder="dd/mm/yyyy">
+					</div>
+					<div class="form-group">
+						<label>FATHER'S NAME</label>
+						<input type="text" name="father_name" value="<?php echo htmlspecialchars($rows['father_name']); ?>">
+					</div>
+					<div class="form-group">
+						<label>MOTHER'S NAME</label>
+						<input type="text" name="mother_name" value="<?php echo htmlspecialchars($rows['mother_name']); ?>">
+					</div>
 				</div>
-			</div>
-			<div class="form-grid">
-				<div class="form-group">
-					<label>DATE OF BIRTH</label>
-					<input type="text" name="dob" class="auto-format-date"
-						value="<?php echo htmlspecialchars($rows['dob']); ?>" placeholder="dd/mm/yyyy">
+				<div class="form-grid">
+					<div class="form-group">
+						<label>BAPTISM DATE</label>
+						<input type="text" name="baptism_date" class="auto-format-date"
+							value="<?php echo htmlspecialchars($rows['baptism_date']); ?>" placeholder="dd/mm/yyyy">
+					</div>
+					<div class="form-group">
+						<label>BAPTISM REGISTRATION NO.</label>
+						<input type="text" name="baptism_reg"
+							value="<?php echo htmlspecialchars($rows['baptism_reg_no']); ?>">
+					</div>
+					<div class="form-group">
+						<label>BAPTISM PARISH NAME</label>
+						<input type="text" name="baptism_parish"
+							value="<?php echo htmlspecialchars($rows['baptism_parish']); ?>">
+					</div>
 				</div>
-				<div class="form-group">
-					<label>FATHER'S NAME</label>
-					<input type="text" name="father_name" value="<?php echo htmlspecialchars($rows['father_name']); ?>">
+				<div class="form-grid">
+					<div class="form-group">
+						<label>PARISH ADDRESS</label>
+						<input type="text" name="p_address"
+							value="<?php echo htmlspecialchars($rows['parish_address']); ?>">
+					</div>
+					<div class="form-group">
+						<label>CHURCH OF HOLY COMMUNION</label>
+						<input type="text" name="church_of_eucharist"
+							value="<?php echo htmlspecialchars($rows['church_of_comunion']); ?>">
+					</div>
+					<div class="form-group">
+						<label>DATE OF HOLY COMMUNION</label>
+						<input type="text" name="date" class="auto-format-date"
+							value="<?php echo htmlspecialchars($rows['date_of_communion']); ?>" placeholder="dd/mm/yyyy">
+					</div>
 				</div>
-				<div class="form-group">
-					<label>MOTHER'S NAME</label>
-					<input type="text" name="mother_name" value="<?php echo htmlspecialchars($rows['mother_name']); ?>">
+				<div class="form-section-header">
+					<h4>Parochial Details</h4>
 				</div>
-			</div>
-			<div class="form-grid">
-				<div class="form-group">
-					<label>BAPTISM DATE</label>
-					<input type="text" name="baptism_date" class="auto-format-date"
-						value="<?php echo htmlspecialchars($rows['baptism_date']); ?>" placeholder="dd/mm/yyyy">
+
+				<div class="form-grid">
+					<div class="form-group">
+						<label>MINISTER'S NAME</label>
+						<input type="text" name="minister_name" value="<?php echo htmlspecialchars($rows['minister']); ?>">
+					</div>
+					<div class="form-group">
+						<label>PARISH PRIEST</label>
+						<input type="text" name="parish_priest"
+							value="<?php echo htmlspecialchars($rows['parish_priest']); ?>">
+					</div>
+					<div class="form-group"></div>
 				</div>
-				<div class="form-group">
-					<label>BAPTISM REGISTRATION NO.</label>
-					<input type="text" name="baptism_reg" value="<?php echo htmlspecialchars($rows['baptism_reg_no']); ?>">
-				</div>
-				<div class="form-group">
-					<label>BAPTISM PARISH NAME</label>
-					<input type="text" name="baptism_parish"
-						value="<?php echo htmlspecialchars($rows['baptism_parish']); ?>">
-				</div>
-			</div>
-			<div class="form-grid">
-				<div class="form-group">
-					<label>PARISH ADDRESS</label>
-					<input type="text" name="p_address" value="<?php echo htmlspecialchars($rows['parish_address']); ?>">
-				</div>
-				<div class="form-group">
-					<label>CHURCH OF HOLY COMMUNION</label>
-					<input type="text" name="church_of_eucharist"
-						value="<?php echo htmlspecialchars($rows['church_of_comunion']); ?>">
-				</div>
-				<div class="form-group">
-					<label>DATE OF HOLY COMMUNION</label>
-					<input type="text" name="date" class="auto-format-date"
-						value="<?php echo htmlspecialchars($rows['date_of_communion']); ?>" placeholder="dd/mm/yyyy">
-				</div>
-			</div>
-			<div class="form-section-header">
-				<h4>Parochial Details</h4>
-			</div>
-			<div class="form-grid">
-				<div class="form-group">
-					<label>MINISTER'S NAME</label>
-					<input type="text" name="minister_name" value="<?php echo htmlspecialchars($rows['minister']); ?>">
-				</div>
-				<div class="form-group">
-					<label>PARISH PRIEST</label>
-					<input type="text" name="parish_priest" value="<?php echo htmlspecialchars($rows['parish_priest']); ?>">
-				</div>
-				<div class="form-group"></div>
 			</div>
 			<div class="form-header">
 				<div class="form-actions">
-					<button type="submit" class="btn-primary" name="edit_eucharist_from">
+					<button type="submit" class="btn-primary" name="edit_eucharist_from" id="edit_eucharist_from">
 						<i class="fas fa-save"></i> Save
 					</button>
-					<button class="btn-secondary" type="button" onclick="history.back();">
-						<i class="fas fa-times"></i> Back
+					<button type="button" class="btn-danger"
+						onclick="if(confirm('Are you sure you want to delete this record?')){ window.location.href='<?php echo $_SERVER['PHP_SELF']; ?>?id=<?php echo urlencode($id1); ?>&delete=confirmed'; }"
+						name="delete" id="delete_eucharist_info">
+						<i class="fas fa-trash"></i> Delete
 					</button>
 				</div>
 			</div>
-		</form>
-		<br>
 	</body>
 
 	</html>

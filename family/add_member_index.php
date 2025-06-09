@@ -88,7 +88,7 @@
 							<?php
 							include '../config/connection.php';
 							$sc = $_COOKIE['user'];
-							$sql = "SELECT * FROM family_member WHERE area_code = '$area_Code' AND
+							$sql = "SELECT * FROM family_members WHERE area_code = '$area_Code' AND
 				relation_with_head = 'Head' AND stationID = '$sc'";
 							$result = $conn->query($sql);
 							while ($rows = $result->fetch_assoc()) {

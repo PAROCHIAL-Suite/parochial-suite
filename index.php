@@ -15,6 +15,9 @@ if ($conn->connect_error) {
 if (!$conn) {
     die("Unable to connect: " . mysqli_connect_error());
 }
+
+// ...existing code...
+$login_error = '';
 if (isset($_POST['login'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
@@ -30,10 +33,10 @@ if (isset($_POST['login'])) {
 
         while ($rows = $result->fetch_assoc()) {
             @$id = $rows['ID'];
-            echo @$role = $rows['role'];
+            @$role = $rows['role'];
             @$url = $rows['url'];
-            echo "<br>" . @$email = $rows['email'];
-            echo "<br>" . @$p = $rows['password'];
+            @$email = $rows['email'];
+            @$p = $rows['password'];
             @$stationCode = $rows['stationCode'];
             @$parishID = $rows['parishID'];
             @$login_Status = $rows['login_status'];
@@ -41,30 +44,29 @@ if (isset($_POST['login'])) {
 
         $cookie_name = "user";
         $cookie_value = @$stationCode;
-        setcookie($cookie_name, $cookie_value, time() + 86400);         // 86400 = 1 day   
+        setcookie($cookie_name, $cookie_value, time() + 86400);
 
         $cookie_name = "username";
         $cookie_value = @$email;
-        setcookie($cookie_name, $cookie_value, time() + 86400);         // 86400 = 1 day     
+        setcookie($cookie_name, $cookie_value, time() + 86400);
 
         $cookie_name = "userID";
         $cookie_value = @$id;
-        setcookie($cookie_name, $cookie_value, time() + 86400);         // 86400 = 1 day    
+        setcookie($cookie_name, $cookie_value, time() + 86400);
 
         if (@$role == "Administrator") {
             header("Location: admin/default.php?ref=$id");
         } else if (@$role == 'Superuser') {
             header("Location: ./superuser/default.php?ref=$id&page=");
         } else {
-            echo "<script>alert('User does not exist')</script>";
+            $login_error = "User does not exist.";
         }
-
     } else {
-        header("Location: index.php");
+        $login_error = "Invalid username or password.";
     }
 }
-?>
 
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -72,154 +74,150 @@ if (isset($_POST['login'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | Parochial Suite</title>
+    <link href="https://fonts.googleapis.com/css?family=Segoe+UI:400,600,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
     <style>
         :root {
-            --primary: #2a7ae2;
-            --primary-dark: #1a5ca0;
-            --bg-light: #f5f7fa;
+            --primary: rgb(56, 80, 131);
+            --primary-dark: #1741a6;
+            --primary-light: #e8f0fe;
+            --bg-gradient: linear-gradient(135deg, rgba(19, 50, 113, 0.82) 0%, rgba(19, 63, 133, 0.78) 100%);
             --bg-card: #fff;
             --border: #e0e0e0;
-            --text-main: #2a3b4d;
-            --text-muted: #888;
+            --text-main: #1a202c;
+            --text-muted: #6b7280;
+            --shadow: 0 8px 32px rgba(37, 99, 235, 0.13), 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
         }
 
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
-            margin: 0;
-            padding: 0;
+            background: var(--bg-gradient);
             min-height: 100vh;
-            background: var(--bg-light);
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .login-container {
-            display: flex;
-            flex-direction: row;
-            background: var(--bg-card);
-            border-radius: 18px;
-            box-shadow: 0 4px 32px rgba(42, 122, 226, 0.07), 0 1.5px 6px rgba(0, 0, 0, 0.03);
-            overflow: hidden;
-            max-width: 900px;
+        .login-glass {
+            background: rgba(240, 239, 243, 0.97);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            max-width: 410px;
             width: 100%;
-            min-height: 480px;
-        }
-
-        .login-left {
-            background: linear-gradient(120deg, #e3f0ff 70%, #f5f7fa 100%);
-            flex: 1.1;
+            padding: 48px 38px 32px 38px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 40px 24px;
-            text-align: center;
+            border: 1.5px solid rgba(37, 99, 235, 0.08);
+            backdrop-filter: blur(2.5px);
         }
 
-        .login-left img {
-            max-width: 500px;
+        .login-glass .logo {
             width: 100%;
-            height: auto;
-            margin: 0 auto 24px auto;
-            display: block;
-            /* border-radius: 16px; */
-            /* box-shadow: 0 2px 18px rgba(42, 122, 226, 0.12); */
-        }
+            height: 150px;
 
-        .login-left h2 {
-            color: var(--primary-dark);
-            font-size: 1.5rem;
-            margin: 0;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
+            margin-bottom: 18px;
 
-        .login-right {
-            flex: 1.3;
+            background: #fff;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: var(--bg-card);
-            padding: 40px 32px;
         }
+
+        .login-glass .logo img {
+            width: 100%;
+            height: 80px;
+            object-fit: contain;
+        }
+
+
 
         .login-form {
             width: 100%;
-            max-width: 340px;
-            background: var(--bg-card);
-            border-radius: 12px;
-            box-shadow: none;
-            padding: 0;
         }
 
         .login-form h2 {
-            text-align: center;
-            margin-bottom: 28px;
+            font-size: 26px;
+            margin-bottom: 24px;
             color: var(--primary-dark);
             font-weight: 700;
             letter-spacing: 1px;
         }
 
         .form-group {
-            margin-bottom: 18px;
+            margin-bottom: 20px;
         }
 
         .form-group label {
             display: block;
             margin-bottom: 7px;
-            font-weight: 500;
+            font-weight: 600;
             color: var(--text-main);
             font-size: 1rem;
+            letter-spacing: 0.2px;
         }
 
         .form-group input {
             width: 100%;
-            padding: 12px 14px;
-            border: 1px solid var(--border);
-            border-radius: 6px;
+            padding: 13px 16px;
+            border: 1.5px solid var(--border);
+            border-radius: 5px;
             box-sizing: border-box;
-            font-size: 1rem;
+            font-size: 1.08rem;
             background: #f8fafc;
             color: var(--text-main);
-            transition: border 0.2s;
+            transition: border 0.2s, box-shadow 0.2s;
+            height: 55px;
         }
 
         .form-group input:focus {
             border: 1.5px solid var(--primary);
             outline: none;
             background: #fff;
+            box-shadow: 0 0 0 2px var(--primary-light);
         }
 
         .login-button {
             width: 100%;
-            padding: 12px;
+            padding: 13px;
             background: var(--primary);
             color: #fff;
             border: none;
-            border-radius: 6px;
+            border-radius: 7px;
             cursor: pointer;
             font-size: 1.08rem;
             font-weight: 600;
             margin-top: 8px;
-            transition: background 0.18s;
-            box-shadow: 0 2px 8px rgba(42, 122, 226, 0.07);
+            transition: background 0.18s, box-shadow 0.18s;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.07);
         }
 
-        .login-button:hover {
+        .login-button:hover,
+        .login-button:focus {
             background: var(--primary-dark);
+            box-shadow: 0 4px 16px rgba(37, 99, 235, 0.12);
         }
 
         .forgot-password {
-            text-align: center;
-            margin-top: 16px;
+            text-align: left;
+
+            margin-bottom: 8px;
+            margin-top: 50px;
         }
 
         .forgot-password a {
-            color: var(--primary);
+            color: var(--primary-dark);
             text-decoration: none;
-            font-size: 0.97rem;
+            font-size: 0.98rem;
             transition: color 0.15s;
+
         }
 
         .forgot-password a:hover {
@@ -227,74 +225,94 @@ if (isset($_POST['login'])) {
             color: var(--primary-dark);
         }
 
-        @media (max-width: 900px) {
-            .login-container {
-                flex-direction: column;
-                min-height: unset;
-                max-width: 98vw;
-            }
+        .login-footer {
+            text-align: center;
+            margin-top: 32px;
+            color: var(--text-muted);
+            font-size: 0.97rem;
+            letter-spacing: 0.2px;
+        }
 
-            .login-left,
-            .login-right {
-                flex: unset;
-                width: 100%;
-                padding: 32px 12px;
-            }
+        .login-footer span {
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
 
-            .login-left {
-                border-radius: 18px 18px 0 0;
-            }
+        .login-error {
+            background: #ffeaea;
+            color: #b71c1c;
+            border: 1px solid #f5c6cb;
+            padding: 10px 16px;
+            border-radius: 6px;
+            margin-bottom: 18px;
+            text-align: center;
+            font-weight: 500;
+            font-size: 1rem;
+        }
 
-            .login-right {
-                border-radius: 0 0 18px 18px;
-            }
+        .login-glass .powered {
+            margin-top: 24px;
+            color: var(--primary-dark);
+            font-size: 1.01rem;
+            font-weight: 500;
+            letter-spacing: 0.1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-glass .powered i {
+            margin-right: 7px;
+            color: var(--primary);
         }
 
         @media (max-width: 600px) {
-            .login-form {
+            .login-glass {
+                padding: 18px 4vw 18px 4vw;
                 max-width: 98vw;
-                padding: 0;
-            }
-
-            .login-left,
-            .login-right {
-                padding: 18px 4vw;
-            }
-
-            .login-left img {
-                max-width: 180px;
-                margin: 0 auto 16px auto;
-                height: 200px;
             }
         }
     </style>
 </head>
 
 <body>
-    <div class="login-container">
-        <div class="login-left">
-            <img src="./res/ngp_logo_big.png" alt="Company Logo">
+    <div class="login-glass">
+        <div class="logo">
+            <img src="./res/ngp_logo_big.png" alt="Parochial Suite Logo">
         </div>
-        <div class="login-right">
-            <form class="login-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" autocomplete="on">
-                <h2>Login</h2>
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" name="username" placeholder="Enter your username" required
-                        autocomplete="username">
+
+        <form class="login-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" autocomplete="on">
+            <h2>
+                Login
+            </h2>
+            <?php if (!empty($login_error)): ?>
+                <div class="login-error">
+                    <?php echo htmlspecialchars($login_error); ?>
                 </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" placeholder="Enter your password" required
-                        autocomplete="current-password">
-                </div>
-                <button type="submit" class="login-button" name="login">Login</button>
-                <div class="forgot-password">
-                    <a href="#">Forgot password?</a>
-                </div>
-            </form>
+            <?php endif; ?>
+            <div class="form-group">
+                <input type="text" id="username" name="username" placeholder="Enter your username" required
+                    autocomplete="username">
+            </div>
+            <div class="form-group">
+                <input type="password" id="password" name="password" placeholder="Enter your password" required
+                    autocomplete="current-password">
+            </div>
+            <button type="submit" class="login-button" name="login">
+                Login
+            </button>
+            <!-- <div class="forgot-password">
+                <a href="#"><i class="fa-solid fa-key"></i> Forgot password?</a>
+            </div> -->
+        </form>
+        <div class="powered">
+            <i class="fa-solid fa-shield-halved"></i>
+            Enterprise Security &amp; Reliability
         </div>
     </div>
+    <!-- <div class="login-footer">
+        &copy; <?php //cho date('Y'); ?> <span>Parochial Suite</span> &mdash; All rights reserved.
+    </div> -->
 </body>
 
 </html>

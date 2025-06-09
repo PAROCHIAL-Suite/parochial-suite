@@ -2,7 +2,7 @@
 include '../config/connection.php';
 $id = $_GET['id'];
 
-$sql = "SELECT * FROM family_member WHERE family_ID = '$id' AND relation_with_head = 'Head' AND stationID = '$STATION_CODE'";
+$sql = "SELECT * FROM family_members WHERE poc = '$id' AND relation_with_head = 'Head' AND stationID = '$STATION_CODE'";
 $result = $conn->query($sql);
 
 while ($rows = $result->fetch_assoc()) {
@@ -22,14 +22,25 @@ while ($rows = $result->fetch_assoc()) {
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" type="text/css" href="../css/ui.css">
-	<link rel="stylesheet" type="text/css" href="../print.css">
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="../css/parochialUI.css">
+
+
 	<script src="../print.js"></script>
 	<title>Family View</title>
 	<style type="text/css">
 		.head {
 			font-family: sans-serif;
+		}
+
+		#table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-top: 20px;
+			border: none
+		}
+
+		#table th {
+			padding: 10px;
 		}
 	</style>
 </head>
@@ -37,158 +48,150 @@ while ($rows = $result->fetch_assoc()) {
 <body>
 	<?php include '../nav/global_nav.php'; ?>
 	<br><br>
-	<!-- PAGE TITLE -->
-	<div class="pageName card-heading">
-		<table border="0">
-			<tr>
-				<td width="20%">
-					<h3 class="pageName">FAMILY VIEW</h3>
-				</td>
-			</tr>
-		</table>
+	<div class="pageName">
+		<h3>FAMILY INFORMATION</h3>
 	</div>
 	<br>
-	<div class="searchContainer">
-		<table border="0">
-			<td width="5%" style="text-align: center;">
-			</td>
+	<div class="container-widgets " style="margin-bottom: 65px;">
+		<div class="widget-row ">
+			<div class="widget table-widget ">
+				<div class="widget-header "
+					style="background-color:rgba(231, 236, 249, 0.48); border:none !important; ">
+					<div class="search-actions ">
 
-			<td width="3%">
-				<button onclick="location.reload();">
-					<i style="font-size:17px; color: green" class="fa">&#xf021;</i>
-				</button>
-			</td>
-			<td width="3%">
-				<button style="font-size: 18px;" type="button" onclick="" id="hideBtn">
-					<i class="fa">&#xf02f;</i>
-				</button>
-			</td>
-			<td width="">
-				&nbsp;&nbsp;&nbsp;&nbsp;
-				<a href="create_member.php?id=<?php echo $id; ?>" style="text-decoration: none;">
-					<button>Add Member</button>
-				</a>
-				<a href="edit_family.php?id=<?php echo $id; ?>" style="text-decoration: none;">
-					<button>Edit Family Details</button>
-				</a>
+						<button class="btn btn-secondary-exp " id="exportBtn" onclick="exportToWord('table', 'myData')">
+							<i class="fa fa-file-word-o word" title="Export to Microsoft Word File (.docx)"></i>
+						</button>
+						<button class="btn btn-secondary-exp " id="exportBtn"
+							onclick="exportToPDF('table', 'parochial-data-extract.pdf');">
+							<i class="fa fa-file-pdf-o pdf" title="Export to PDF File (.pdf)"></i>
+						</button>
+						|
+						<button class="btn btn-secondary-exp " id="exportBtn" onclick="printJS('table', 'html')">
+							<i class="fa fa-print print"></i>
+						</button>
+						<button class="btn btn-secondary-exp " id="exportBtn" onclick="location.reload()">
+							<i class="fa fa-refresh refresh reload"></i>
+						</button>
 
-			</td>
-		</table>
-	</div>
-	<br>
-	<div class="container reportPageContainer">
-		<div id="printJS-form">
-			<div style="border-bottom:  double ;text-align: center; font-family: 'Calibri', sans-serif; display: none;"
-				id="show-report-header">
-				<h1 style=" margin-bottom: -10px;">St. Joseph's Church, Gondia</h1>
+						<a href="edit_family.php?id=<?php echo $id; ?>" class=" btn-secondary-exp btn-link"
+							style="float: left; margin-left: 50px;">
+							Edit Family Details
+						</a>
+					</div>
 
-				<table width="100%">
-					<tr>
-						<td width="70%">
-							<p style="float: left;font-size: 20px; font-weight: bold;">Family Summary Report</p>
-						</td>
-						<td>
-							<p style="float: right;"><?php echo date("d-M-Y"); ?></p>
-						</td>
-					</tr>
-				</table>
+				</div>
+
 			</div>
-			<br>
-			<table width="100%" border="1" style="
-				border: 1px solid lightgray; 
-				border-collapse: collapse; 
-				 font-family: 'Titillium Web', calibri;">
-				<tr>
-					<td width="10%"><b>Family ID</b></td>
-					<td width="10%"><b>Area Code</b></td>
-					<td width="20%"><b>Head of family</b></td>
-					<td width="10%"><b>Contact</b></td>
-					<td id="target" width="20%"><b>Address</b></td>
-				</tr>
-
-				<tr>
-					<td><?php echo @$family_ID; ?></td>
-					<td><?php echo @$area; ?></td>
-					<td><?php echo @$head; ?></td>
-					<td><?php echo @$contact_no; ?></td>
-					<td><?php echo @$address; ?></td>
-				</tr>
-			</table>
-			<br>
-			<table width="100%" cellspacing="10px" border="1" style="
-				border: 1px solid lightgray; 
-				border-collapse: collapse; 
-				 font-family: 'Titillium Web', 'calibri'; ">
-				<tr>
-					<th colspan="7" style="height: 50px; color: var(--txtblue);">Members of the family</th>
-				</tr>
-				<tr style="font-size: 14px; height: 30px;;">
-					<th>Status</th>
-					<th>Name</th>
-					<th>D.O.B</th>
-					<th>Gender</th>
-					<th>Contact</th>
-					<th>Relation</th>
-					<th class="column-to-hide">Action</th>
-
-				</tr>
-				<?php
-				$sql = "SELECT * FROM family_member WHERE family_ID = '$id' AND stationID = '$STATION_CODE'";
-				$result = $conn->query($sql);
-
-				while ($rows = $result->fetch_assoc()) {
-
-
-					?>
-					<tr style="height: 40px;">
-						<td width="10%" style="text-align: center;" width="12%"><?php echo $rows['status']; ?></td>
-						<td style="padding-left: 10px;" width="20%"><?php echo $rows['name'] . " " . $rows['surname']; ?>
-						</td>
-						<td style="padding-left: 10px;" width="12%"><?php echo $rows['dob']; ?></td>
-						<td style="padding-left: 10px;" width="12%"><?php echo $rows['gender']; ?></td>
-						<td style="padding-left: 10px;" width="12%"><?php echo $rows['contact_no']; ?></td>
-						<td style="padding-left: 10px;" width="12%"><?php echo $rows['relation_with_head']; ?></td>
-						<td width="10%" class="column-to-hide" style="text-align: center;"><a
-								href="edit_member.php?id=<?php echo $rows['ID']; ?>">Edit</a>
-							<b>|</b>
-							<a
-								href="delete_family_member.php?id=<?php echo $rows['ID']; ?>&famID=<?php echo $id; ?>">Delete</a>
-						</td>
-						</td>
-					</tr>
-				<?php } ?>
-			</table>
-
 		</div>
+		<br><br>
+		<br>
+		<div class="widget widget-container reportPageContainer" id="table"
+			style="width: 100%; margin: auto;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: white; padding: 5px ; " ">
+			
+			<h3 style=" color: var(--accent-color);">Summary Report</h3>
+
+			<span style=" color:black;font-size: 14px; margin-top: 100px; font-family: 'Courier New' , Courier, monospace;
+		">
+
+				<p>Date: <span id="currentDate"></span></p>
+				<script>
+					const now = new Date();
+					const formattedDate = now.toLocaleDateString('en-GB') + ' ' + now.toLocaleTimeString('en-GB');
+					document.getElementById('currentDate').textContent = formattedDate;
+				</script>
+			</span>
+
+			<br>
+			<div class=" widget-header">
+
+				<p><span style="color: dimgrey; font-weight: bold;">Family ID:</span>
+					<span style="color: var(--accent-color); font-weight: normal;"><?php echo $family_ID; ?></span>
+				</p>
+				<p><span style="color: dimgrey; font-weight: bold;">Area Code:</span>
+					<span style="color: var(--accent-color); font-weight: normal;"><?php echo $area; ?></span>
+				</p>
+				<p><span style="color: dimgrey; font-weight: bold;">Head of Family:</span>
+					<span style="color: var(--accent-color); font-weight: normal;"><?php echo $head; ?></span>
+				</p>
+				<p><span style="color: dimgrey; font-weight: bold;">Contact No.:</span>
+					<span style="color: var(--accent-color); font-weight: normal;"><?php echo $contact_no; ?></span>
+				</p>
+				<p><span style="color: dimgrey; font-weight: bold;">Address:</span>
+					<span style="color: var(--accent-color); font-weight: normal;"><?php echo $address; ?></span>
+				</p>
+			</div>
+			<hr>
+			<br>
+			<h4 style="margin-left: 10px; color: var(--accent-color);">Members in the family</h4>
+
+			<div>
+
+				<table width="100%" border="1" class="data-table"
+					style="border-collapse: collapse; font-family:  'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;"
+					cellpadding="10">
+					<tr>
+						<td><b>Name</b></td>
+						<td><b>Gender</b></td>
+						<td><b>Phone No.</b></td>
+						<td><b>Role</b></td>
+
+					</tr>
+
+					<?php
+					$sql = "SELECT * FROM family_members WHERE poc = '$id' AND stationID = '$STATION_CODE'";
+					$result = $conn->query($sql);
+					if ($result->num_rows > 0) {
+						while ($row = $result->fetch_assoc()) {
+							echo "<tr>";
+							echo "<td>" . $row['name'] . " " . $row['surname'] . "</td>";
+							echo "<td>" . $row['gender'] . "</td>";
+							echo "<td>" . $row['contact_no'] . "</td>";
+							echo "<td>" . $row['relation_with_head'] . "</td>";
+							echo "</tr>";
+						}
+					} else {
+						echo "<tr><td colspan='5'>No records found.</td></tr>";
+					}
+					?>
+
+				</table>
+				<br>
 
 
-		<script type="text/javascript">
-			document.getElementById('hideBtn').addEventListener('click', function () {
-				// Get all cells in the column to hide
-				const columnCells = document.querySelectorAll('.column-to-hide');
-				const showHeader = document.getElementById('show-report-header');
 
-				// Hide the column
-				columnCells.forEach(cell => {
-					cell.style.display = 'none';
-					cell.style.border = 'none';
-					showHeader.style.display = 'block';
-					printJS({
-						printable: 'printJS-form', type: 'html'
-					})
 
-				});
+			</div>
 
-				// Show the column after 3 seconds
-				setTimeout(() => {
+
+			<script type="text/javascript">
+				document.getElementById('hideBtn').addEventListener('click', function () {
+					// Get all cells in the column to hide
+					const columnCells = document.querySelectorAll('.column-to-hide');
+					const showHeader = document.getElementById('show-report-header');
+
+					// Hide the column
 					columnCells.forEach(cell => {
-						cell.style.display = '';
-						showHeader.style.display = 'none';
-						cell.style.border = '1px solid lightgrey';
+						cell.style.display = 'none';
+						cell.style.border = 'none';
+						showHeader.style.display = 'block';
+						printJS({
+							printable: 'printJS-form', type: 'html'
+						})
+
 					});
-				}, 1000);
-			});
-		</script>
+
+					// Show the column after 3 seconds
+					setTimeout(() => {
+						columnCells.forEach(cell => {
+							cell.style.display = '';
+							showHeader.style.display = 'none';
+							cell.style.border = '1px solid lightgrey';
+						});
+					}, 1000);
+				});
+			</script>
+			<script src="../js/export.js"></script>
 </body>
 
 </html>

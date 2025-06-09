@@ -20,7 +20,7 @@
 	<div class="container-widgets">
 		<!-- Report Table Section -->
 		<div class=" widget-row">
-			<div class="widget table-widget" style="max-height: 82.7%;">
+			<div class="widget table-widget" style="max-height: 80%;">
 				<div class="widget-content">
 					<table class="data-table" id="table" style="width: 100%;">
 						<thead>
@@ -36,15 +36,14 @@
 						</thead>
 						<tbody>
 							<?php
-							$sql = "SELECT * from family_member WHERE stationID = '$STATION_CODE'";
+							$sql = "SELECT * from family_members WHERE stationID = '$STATION_CODE' ORDER BY family_ID ASC";
 							$result = $conn->query($sql);
 							while ($rows = $result->fetch_assoc()) {
 								?>
 								<tr>
-									<td><a href="edit_member.php?id=<?php echo $rows['ID']; ?>">Edit</a> &nbsp;&nbsp;&nbsp;
-										<b>|</b>
-										&nbsp;&nbsp;&nbsp;<a
-											href="view_member.php?famID=<?php echo $rows['family_ID']; ?>">View</a>
+									<td><a href="edit_member.php?id=<?php echo $rows['ID']; ?>">Edit</a>
+										|
+										<a href="view_member.php?famID=<?php echo $rows['family_ID']; ?>">View</a>
 									</td>
 									<td><?php echo $rows['family_ID']; ?></td>
 									<td><?php echo $rows['area_code']; ?></td>

@@ -1,22 +1,27 @@
 <?php
 include '../config/connection.php';
 
+$duplicate_error = '';
+
 if (isset($_POST['create_unit_code'])) {
-	// code...
-	$area_name = $_POST['area_name'];
-	$given_name = $_POST['given_name'];
-	$area_code = $_POST['area_code'];
+	$area_name = trim($_POST['area_name']);
+	$given_name = trim($_POST['given_name']);
+	$area_code = trim($_POST['area_code']);
 
-	$sql = "INSERT INTO area_mapping VALUES('','$STATION_CODE', '$area_name', '$given_name', '$area_code')";
+	// Check for duplicate area_name or area_code for this station
+	$check_sql = "SELECT COUNT(*) as cnt FROM area_mapping WHERE (area_name = '$area_name' OR area_code = '$area_code') AND stationID = '$STATION_CODE'";
+	$check_result = $conn->query($check_sql);
+	$check_row = $check_result->fetch_assoc();
 
-	if (mysqli_query($conn, $sql)) {
-		//header("Location: create_unit.php");
+	if ($check_row['cnt'] > 0) {
+		$duplicate_error = "Area Name or Area Code already exists for this station.";
 	} else {
-		echo "ERROR: $sql. " . mysqli_error($conn);
+		$sql = "INSERT INTO area_mapping VALUES('','$STATION_CODE', '$area_name', '$given_name', '$area_code')";
+		if (!mysqli_query($conn, $sql)) {
+			$duplicate_error = "ERROR: $sql. " . mysqli_error($conn);
+		}
 	}
-
 }
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -42,12 +47,34 @@ if (isset($_POST['create_unit_code'])) {
 	<br>
 
 
+	<!-- Display any error message for duplicate entries -->
+	<?php if (!empty($duplicate_error)): ?>
+		<div class="ps-note warning" id="duplicateWarning"
+			style="margin-bottom:18px; position:relative; margin: 0px 20px 10px 20px;">
+			<?php echo $duplicate_error; ?>
+			<button type="button"
+				style="position:absolute;top:8px;right:12px;background:none;border:none;font-size:1.2em;cursor:pointer;color:#b71c1c;"
+				onclick="
+				document.getElementById('duplicateWarning').style.display='none';
+				var form = document.getElementById('areaMappingForm');
+				if(form) {
+					form.reset();
+				}
+			" title="Close and reload form">&times;</button>
+		</div>
+	<?php endif; ?>
+
+
+
+
+
 	<!-- Form for baptism registration -->
 	<form id="areaMappingForm" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" enctype="multipart/form-data">
 		<div class="form-section">
 			<div class="form-section-header">
 				<h3>Create Area</h3>
 			</div>
+
 			<div class="form-grid">
 				<div class="form-group">
 					<label for="area Name">AREA NAME</label>
@@ -55,7 +82,7 @@ if (isset($_POST['create_unit_code'])) {
 				</div>
 				<div class="form-group">
 					<label for="Given Name">PATRON SAINT NAME</label>
-					<input type="text" name="given_name" placeholder="" required>
+					<input type="text" name="given_name" placeholder="">
 				</div>
 				<div class="form-group">
 					<label for="area code">AREA CODE</label>
@@ -109,7 +136,6 @@ if (isset($_POST['create_unit_code'])) {
 									<td><?php echo $rows['area_name']; ?></td>
 									<td><?php echo $rows['given_name']; ?></td>
 									<td><?php echo $rows['area_code']; ?></td>
-
 								</tr>
 							<?php } ?>
 						</tbody>

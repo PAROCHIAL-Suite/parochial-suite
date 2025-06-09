@@ -1,27 +1,27 @@
 <?php
+
 include '../config/connection.php';
-$sql = "SELECT COUNT(*) as total FROM eucharist";
-$result = $conn->query($sql);
-
-if ($result) {
-	// Fetch the result as an associative array
-	$row = $result->fetch_assoc();
-	$total_records = $row['total'];
-	if ($total_records == 0) {
-		// code...
-		$total_records = 1;
-	} elseif ($total_records > 0) {
-		// code...
-
-		// code...
-		$total_records = $total_records + 1;
-	}
-
-} else {
-	echo "Error: " . $sql . "<br>" . $conn->error;
+if (!$conn) {
+	die("Connection failed: " . mysqli_connect_error());
 }
+if (isset($_POST['add_anointing'])) {
+	$patient_name = mysqli_real_escape_string($conn, $_REQUEST['patient_name']);
+	$age = mysqli_real_escape_string($conn, $_REQUEST['age']);
+	$gender = mysqli_real_escape_string($conn, $_REQUEST['gender']);
+	$contact_no = mysqli_real_escape_string($conn, $_REQUEST['contact_no']);
+	$address = mysqli_real_escape_string($conn, $_REQUEST['address']);
+	$date = mysqli_real_escape_string($conn, $_REQUEST['date']);
+	$priest_name = mysqli_real_escape_string($conn, $_REQUEST['priest_name']);
+	$remarks = mysqli_real_escape_string($conn, $_REQUEST['remarks']);
 
-
+	$sql = "INSERT INTO anointing_of_the_sick (stationID, patient_name, age, gender, contact_no, address, date, priest_name, remarks) 
+            VALUES ('$STATION_CODE', '$patient_name', '$age', '$gender', '$contact_no', '$address', '$date', '$priest_name', '$remarks')";
+	if (mysqli_query($conn, $sql)) {
+		echo "<script>alert('Anointing record added successfully!');</script>";
+	} else {
+		echo "ERROR: Could not execute $sql. " . mysqli_error($conn);
+	}
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -29,163 +29,85 @@ if ($result) {
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" type="text/css" href="../css/ui.css">
-	<link rel="stylesheet" type="text/css" href="../css/baptism.css">
-	<title></title>
+	<link rel="stylesheet" type="text/css" href="../css/parochialUI.css">
+	<link rel="stylesheet" type="text/css" href="print.css">
+	<title>Anointing of the Sick</title>
 </head>
 
 <body>
 	<?php include '../nav/global_nav.php'; ?>
 	<br><br>
-	<div class="pageName card-heading">
-		<table border="0">
-			<tr>
-				<td width="40%">
-					<h3>REGISTRATION OF HOLY COMMUNION</h3>
-				</td>
-			</tr>
-		</table>
+	<div class="pageName">
+		<h3>ANOINTING OF THE SICK</h3>
 	</div>
 	<br>
+	<!-- form to add new anointing record -->
+	<form id="addAnointingForm" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST"
+		enctype="multipart/form-data">
+		<div class="form-section">
+			<div class="form-section-header">
+				<h3>Patient Information</h3>
+			</div>
+			<div class="form-grid">
+				<div class="form-group">
+					<label for="patient_name">Patient Name</label>
+					<input type="text" id="patient_name" name="patient_name" required>
+				</div>
+				<div class="form-group">
+					<label for="age">Age</label>
+					<input type="number" id="age" name="age" min="0" max="130" required
+						oninput="if(this.value < 0) this.value=0; if(this.value > 100) this.value=100;">
+				</div>
+				<div class="form-group">
+					<label for="gender">Gender</label>
+					<select id="gender" name="gender" required>
+						<option value="" hidden>Select</option>
+						<option>Male</option>
+						<option>Female</option>
+						<option>Other</option>
+					</select>
+				</div>
 
-	<form id="baptism_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-		<table width="100%" border="0" cellspacing="10" class="form">
-			<tr>
-				<td colspan="4">
-					<h4>Certificate Details</h4>
-				</td>
-			</tr>
-			<tr></tr>
-			<tr>
-				<td>
-					<p>NAME</p>
-				</td>
-				<td><input type="text" name="name"></td>
-			</tr>
-			<tr>
-				<td>
-					<p>SURNAME</p>
-				</td>
-				<td><input type="text" name="surname"></td>
-			</tr>
-			<tr>
-				<td>
-					<p>BAPTISM DATE</p>
-				</td>
-				<td><input type="date" name="baptism_date"></td>
-			</tr>
-			<tr>
-				<td>
-					<p>BAPTISM REGISTRATION NO.</p>
-				</td>
-				<td><input type="text" name="baptism_reg"></td>
-			</tr>
-			<tr>
-				<td>
-					<p>BAPTISM PARISH NAME</p>
-				</td>
-				<td><input type="text" name="baptism_parish"></td>
-			</tr>
-			<tr>
-				<td>
-					<p>PARISH ADDRESS</p>
-				</td>
-				<td><input type="text" name="p_address"></td>
-			</tr>
-			<tr>
-				<td>
-					<p>CHURCH OF HOLY COMMUNION</p>
-				</td>
-				<td><input type="text" name="church_of_eucharist"></td>
-			</tr>
-			<tr>
-				<td>
-					<p>DATE OF HOLY COMMUNION</p>
-				</td>
-				<td><input type="date" name="date"></td>
-			</tr>
-			<tr></tr>
-			<tr></tr>
-			<tr></tr>
-			<tr>
-				<td colspan="4">
-					<h4>Parochial Details</h4>
-				</td>
-			</tr>
-			<tr></tr>
-			<tr>
-				<td>
-					<p>MINISTER'S NAME</p>
-				</td>
-				<td><input type="text" name="minister_name"></td>
-			</tr>
-			<tr>
-				<td>
-					<p>PARISH PRIEST</p>
-				</td>
-				<td><input type="text" name="parish_priest"></td>
-			</tr>
+			</div>
+			<div class="form-grid">
+				<div class="form-group">
+					<label for="contact_no">Contact No.</label>
+					<input type="text" id="contact_no" name="contact_no" class="auto-format-contact" required>
+				</div>
+				<div class="form-group">
+					<label for="address">Address</label>
+					<textarea id="address" name="address" rows="2" required></textarea>
+				</div>
+				<div class="form-group">
+					<label for="date">Date of Anointing</label>
+					<input type="text" id="date" name="date" class="auto-format-date" required>
+				</div>
 
-			<tr></tr>
-			<tr></tr>
-			<tr></tr>
-			<tr>
-				<td></td>
-				<td>
-					<button>Cancel</button>
-					<input type="submit" name="post_eucharist_from" id="saveFrm">
-				</td>
-				<td></td>
-			</tr>
-		</table>
-	</form><br><br>
+			</div>
+			<div class="form-grid">
+				<div class="form-group">
+					<label for="priest_name">Priest Name</label>
+					<input type="text" id="priest_name" name="priest_name" required>
+				</div>
+				<div class="form-group">
+					<label for="remarks">Remarks</label>
+					<textarea id="remarks" name="remarks" rows="2"></textarea>
+				</div>
+				<div></div>
+			</div>
+		</div>
+		<div class="form-header">
+			<div class="form-actions">
+				<button type="submit" class="btn-primary" name="add_anointing">
+					<i class="fas fa-save"></i> Save
+				</button>
+				<button class="btn-secondary" onclick="location.reload(); return false;">
+					<i class="fas fa-times"></i> Reset
+				</button>
+			</div>
+		</div>
+		<br><br>
+	</form>
 </body>
 
 </html>
-
-
-<?php
-
-$year = date("Y");
-
-if (isset($_POST['post_eucharist_from'])) {
-	include '../config/connection.php';
-	$reg_no = $total_records . "/" . $year;
-	$name = mysqli_real_escape_string($conn, $_POST['name']);
-	$surname = mysqli_real_escape_string($conn, $_POST['surname']);
-	$baptism_reg = mysqli_real_escape_string($conn, $_POST['baptism_reg']);
-	$baptism_date = mysqli_real_escape_string($conn, $_POST['baptism_date']);
-	$baptism_parish = mysqli_real_escape_string($conn, $_POST['baptism_parish']);
-	$address = mysqli_real_escape_string($conn, $_POST['p_address']);
-	$church_of_eucharist = mysqli_real_escape_string($conn, $_POST['church_of_eucharist']);
-	$minister_name = mysqli_real_escape_string($conn, $_POST['minister_name']);
-	$parish_priest = mysqli_real_escape_string($conn, $_POST['parish_priest']);
-	$date = $_POST['date'];
-
-	$sql = "INSERT INTO eucharist VALUES(
-		'',
-		'$STATION_CODE',
-		'$reg_no',
-		'$name',
-		'$surname',
-		'$baptism_reg',
-		'$baptism_date',
-		'$baptism_parish' ,
-		'$address ',
-		'$church_of_eucharist' ,
-		'$minister_name',
-		'$parish_priest',
-		'$date', '', ''	)";
-	if (mysqli_query($conn, $sql)) {
-		echo "
-			<script>
-			    alert('A new Holy Communion record has been created.');			    	
-			</script>";
-		$total_records = $total_records + 1;
-	} else {
-		echo "ERROR: Hush! Sorry $sql. " . mysqli_error($conn);
-	}
-}
-
-
-?>

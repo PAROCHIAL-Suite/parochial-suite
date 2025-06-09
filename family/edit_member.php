@@ -2,7 +2,7 @@
 include '../config/connection.php';
 $id = $_GET['id'];
 
-$sql = "SELECT * FROM family_member WHERE ID = '$id'";
+$sql = "SELECT * FROM family_members WHERE ID = '$id'";
 $result = $conn->query($sql);
 
 

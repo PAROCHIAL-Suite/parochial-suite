@@ -2,7 +2,7 @@
 include "../config/connection.php";
 
 // Fetch family count
-$sql = "SELECT COUNT(*) as family_count FROM family_master_table WHERE stationID = '$STATION_CODE'";
+$sql = "SELECT COUNT(*) as family_count FROM family_members WHERE stationID = '$STATION_CODE'";
 $result = $conn->query($sql);
 if ($result) {
 	$row = $result->fetch_assoc();
@@ -16,52 +16,44 @@ if ($result) {
 if (isset($_POST['register_family'])) {
 	$date = date("d/m/Y");
 	$family_name = mysqli_real_escape_string($conn, $_POST['family_name']);
-	$address = $_POST['address'];
-	$area_code = $_POST['area_code'];
+	$address = mysqli_real_escape_string($conn, $_POST['address']);
+	$area_code = mysqli_real_escape_string($conn, $_POST['area_code']);
 	$family_ID = $STATION_CODE . $family_count; // Generate family ID
 
-	// Insert into family_master_table
-	$sql = "INSERT INTO family_master_table VALUES(
-            '', '$family_ID', '$STATION_CODE', 'ACTIVE', '$family_name', '$address', '$area_code',
-            '$date', '', '')";
+	$name = mysqli_real_escape_string($conn, $_POST['name']);
+	$contact_no = mysqli_real_escape_string($conn, $_POST['contact_no']);
 
-	try {
-		if (mysqli_query($conn, $sql)) {
-			echo "<script>alert('A new family has been created.');</script>";
-		} else {
-			throw new Exception(mysqli_error($conn));
-		}
-	} catch (Exception $e) {
-		if (strpos($e->getMessage(), '1062') !== false) {
-			echo "<script>alert('Duplicate entry detected. The family ID already exists.');</script>";
-		} else {
-			echo "ERROR: " . $e->getMessage();
-		}
-	}
+	// Duplicate check: same family name, surname, area code, and contact number
+	$dup_sql = "SELECT * FROM family_members 
+        WHERE surname = '$family_name' 
+        AND name = '$name' 
+        AND area_code = '$area_code' 
+        AND contact_no = '$contact_no'
+        AND stationID = '$STATION_CODE'
+        LIMIT 1";
+	$dup_result = $conn->query($dup_sql);
 
-	// Adding family head to family_member table
-	$name = $_POST['name'];
-	$contact_no = $_POST['contact_no'];
-	$date = date("d/m/Y");
+	if ($dup_result && $dup_result->num_rows > 0) {
+		echo "<script>alert('Duplicate entry detected. This family head already exists.');</script>";
+	} else {
+		$sql = "INSERT INTO `family_members` (`ID`, `family_ID`, `stationID`, `area_code`, `status`, `status_remark`, `name`, `surname`, `dob`, `gender`, `blood_group`, `occupation`, `qualification`, `address`, `contact_no`, `email`, `relation_with_head`, `relationship_status`, `lang`, `other_lang`, `baptism`, `confirmation`, `eucharist`, `anointing_of_the_sick`, `marriage`, `ration_card`, `pan_card`, `adhar_card`, `aayushman_bharat`, `ladki_bahin`, `old_age_pension`, `differently_able`, `voter_id`, `driving_license`, `monthly_income`, `any_other`, `modify_date`, `edited_by`, poc) VALUES
+        (NULL, '$family_ID', '$STATION_CODE', '$area_code', 'ACTIVE', '', '$name', '$family_name', '', '', '', '', '', '$address', '$contact_no', '', 'Head', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '$date', '$USERNAME', '$contact_no')";
 
-	$sql = "INSERT INTO `family_member` (`ID`, `family_ID`, `stationID`, `area_code`, `status`, `status_remark`, `name`, `surname`, `dob`, `gender`, `blood_group`, `occupation`, `qualification`, `address`, `contact_no`, `email`, `relation_with_head`, `relationship_status`, `lang`, `other_lang`, `baptism`, `confirmation`, `eucharist`, `anointing_of_the_sick`, `marriage`, `ration_card`, `pan_card`, `adhar_card`, `aayushman_bharat`, `ladki_bahin`, `old_age_pension`, `differently_able`, `voter_id`, `driving_license`, `monthly_income`, `any_other`, `modify_date`, `edited_by`) VALUES
- (NULL, '$family_ID', '$STATION_CODE', '$area_code', 'ACTIVE', '', '$name', '$family_name', '', '', '', '', '', '$address', '$contact_no', '', 'Head', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '$date', '$USERNAME')";
-
-	try {
-		if (mysqli_query($conn, $sql)) {
-			echo "<script>alert('Family head has been added successfully.');</script>";
-		} else {
-			throw new Exception(mysqli_error($conn));
-		}
-	} catch (Exception $e) {
-		if (strpos($e->getMessage(), '1062') !== false) {
-			echo "<script>alert('Duplicate entry detected. The family head already exists.');</script>";
-		} else {
-			echo "ERROR: " . $e->getMessage();
+		try {
+			if (mysqli_query($conn, $sql)) {
+				echo "<script>alert('Family head has been added successfully.');</script>";
+			} else {
+				throw new Exception(mysqli_error($conn));
+			}
+		} catch (Exception $e) {
+			if (strpos($e->getMessage(), '1062') !== false) {
+				echo "<script>alert('Duplicate entry detected. The family head already exists.');</script>";
+			} else {
+				echo "ERROR: " . $e->getMessage();
+			}
 		}
 	}
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -115,7 +107,7 @@ if (isset($_POST['register_family'])) {
 				</div>
 				<div class="form-group">
 					<label for="status">Area Code</label>
-					<select name="area_code" id="" required>
+					<select name="area_code" id="">
 						<option hidden>Area Code</option>
 						<?php
 						include "../config/connection.php";
@@ -162,6 +154,9 @@ if (isset($_POST['register_family'])) {
 			<div class="widget table-widget" style="max-height: 55%;">
 				<div class="widget-header">
 					<h3>Recently Created Records</h3>
+
+					<p>Below data represents "Head of the Family"</p>
+
 					<a href="family_list.php" class="btn-link">
 						Show All Records
 					</a>
@@ -170,27 +165,32 @@ if (isset($_POST['register_family'])) {
 					<table class="data-table">
 						<thead>
 							<tr>
-								<th onclick="sortTable(1)">FAMILY ID</th>
-								<th onclick="sortTable(1)">CREATED ON</th>
+								<th>ACTIONS</th>
+								<th onclick="sortTable(2)">FAMILY ID</th>
+								<th onclick="sortTable(3)">CREATED ON</th>
 								<th>FAMILY NAME</th>
-								<th onclick="sortTable(3)">AREA CODE</th>
+								<th>CONTACT NO.</th>
+								<th onclick="sortTable(4)">AREA CODE</th>
 								<th>ADDRESS</th>
-								<th hidden>PARISH ID</th>
+
 
 							</tr>
 						</thead>
 						<tbody>
 							<?php
 							include "../config/connection.php";
-							$sql = "SELECT * FROM family_master_table WHERE stationID = '$STATION_CODE'  ORDER BY sr_no DESC LIMIT 5";
+							$sql = "SELECT * FROM family_members WHERE stationID = '$STATION_CODE'  ORDER BY ID DESC LIMIT 5";
 							$result = $conn->query($sql);
 							while ($rows = $result->fetch_assoc()) {
 								$id = $rows['family_ID'];
 								?>
 								<tr>
+									<td><a href="create_member.php?id=<?php echo $rows['family_ID']; ?>">Add member</a>
+									</td>
 									<td><?php echo $rows['family_ID']; ?></td>
-									<td><?php echo $rows['registered_on']; ?></td>
-									<td><?php echo $rows['family_name']; ?></td>
+									<td><?php echo $rows['modify_date']; ?></td>
+									<td><?php echo $rows['name'] . " " . $rows['surname']; ?></td>
+									<td><?php echo $rows['contact_no']; ?></td>
 									<td><?php echo $rows['area_code']; ?></td>
 									<td><?php echo $rows['address']; ?></td>
 								</tr>
