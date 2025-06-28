@@ -9,7 +9,8 @@
 </head>
 
 <body>
-	<?php include '../nav/global_nav.php'; ?>
+	<?php @include '../nav/app_header_nav.php';
+	include '../nav/global_nav.php'; ?>
 	<br><br>
 	<div class="pageName">
 		<h3>MEMBERS RECORDS</h3>
@@ -26,12 +27,11 @@
 						<thead>
 							<tr>
 								<th>ACTION</th>
-								<th onclick="sortTable(1);">Family ID</th>
-								<th onclick="sortTable(2);">Area</th>
-								<th onclick="sortTable(3);">Status</th>
-								<th onclick="sortTable(4);">Name</th>
-								<th onclick="sortTable(5);">Gender</th>
-								<th onclick="sortTable(6);">Address</th>
+								<th onclick="sortTable(1);">Area</th>
+								<th onclick="sortTable(2);">Status</th>
+								<th onclick="sortTable(3);">Name</th>
+								<th onclick="sortTable(4);">Gender</th>
+								<th onclick="sortTable(5);">Address</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -42,10 +42,10 @@
 								?>
 								<tr>
 									<td><a href="edit_member.php?id=<?php echo $rows['ID']; ?>">Edit</a>
-										|
-										<a href="view_member.php?famID=<?php echo $rows['family_ID']; ?>">View</a>
+										<!--|-->
+										<!--<a href="view_member.php?famID=<?php echo $rows['family_ID']; ?>">View</a>-->
 									</td>
-									<td><?php echo $rows['family_ID']; ?></td>
+
 									<td><?php echo $rows['area_code']; ?></td>
 
 									<td><?php echo $rows['status']; ?></td>

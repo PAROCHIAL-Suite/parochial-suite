@@ -88,7 +88,7 @@
     <div class="container-widgets">
         <!-- Raised Tickets -->
         <div class="widget-row">
-            <div class="widget table-widget" style="max-height: 80%;">
+            <div class="widget table-widget" style="max-height: 55%;">
 
                 <div class="widget-content">
                     <table class="data-table" id="table">
@@ -107,7 +107,7 @@
                             <?php
                             // Show tickets for this user and this station code
                             $sql = "SELECT ticket_id, subject, category, description, status, date, time 
-                                FROM support_tickets 
+                                FROM ps_internal_sys.support_tickets 
                                 WHERE user_id = '$user_id'
                                 ORDER BY date DESC, time DESC LIMIT 20";
                             $result = $conn->query($sql);

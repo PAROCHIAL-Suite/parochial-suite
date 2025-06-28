@@ -2,7 +2,7 @@
 include '../config/connection.php';
 
 // Get the last created date from the baptism table
-$sql = "SELECT reg_no FROM burial WHERE stationID = '$STATION_CODE' ORDER BY created_on DESC LIMIT 1";
+$sql = "SELECT reg_no FROM burial WHERE stationID = '$STATION_CODE' ORDER BY created_at DESC LIMIT 1";
 $result = $conn->query($sql);
 if ($result && $result->num_rows > 0) {
 	$row = $result->fetch_assoc();
@@ -60,12 +60,13 @@ if (isset($_POST['post_burial_frm'])) {
 
 <body>
 	<!-- Include the global navigation bar -->
-	<?php include '../nav/global_nav.php'; ?>
+	<?php @include '../nav/app_header_nav.php';
+	include '../nav/global_nav.php'; ?>
 	<br><br>
 	<div class="pageName">
-		<!-- <a href="sacrament_search_index.php" class="" style="float: right; margin-right: 50px; ">
-			<i class="fas fa-search"></i> Search - Baptism Reports
-		</a> -->
+		<a href="search.php" class="" style="float: right; margin-right: 50px; ">
+			<i class="fas fa-search"></i> Search - Burial Reports
+		</a>
 		<h3>REGISTRATION OF BURIAL</h3>
 	</div>
 	<br>

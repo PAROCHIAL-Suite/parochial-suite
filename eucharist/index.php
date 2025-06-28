@@ -40,10 +40,11 @@ if ($result) {
 </head>
 
 <body>
-	<?php include '../nav/global_nav.php'; ?>
+	<?php @include '../nav/app_header_nav.php';
+	include '../nav/global_nav.php'; ?>
 	<br><br>
 	<div class="pageName">
-		<a href="sacrament_search_index.php" class="" style="float: right; margin-right: 50px; ">
+		<a href="search.php" class="" style="float: right; margin-right: 50px; ">
 			<i class="fas fa-search"></i> Search - Communion Reports
 		</a>
 		<h3>REGISTRATION OF HOLY COMMUNION</h3>

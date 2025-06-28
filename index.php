@@ -4,17 +4,17 @@ $servername = "localhost";
 $database = "parochial_cloud";
 $username = "root";
 
+// Create connecti
 // Create connection
-$conn = mysqli_connect('localhost', 'root', '', 'parochial_cloud');
-if ($conn->connect_error) {
-    echo "\'<h2>Running Status :<b> Active</b></h2>";
-    die("Connection failed. " . $conn->connect_error);
-}
+$conn = mysqli_connect($servername, $username, '', $database);
+
 
 // Check connection
+
 if (!$conn) {
     die("Unable to connect: " . mysqli_connect_error());
 }
+
 
 // ...existing code...
 $login_error = '';
@@ -55,7 +55,7 @@ if (isset($_POST['login'])) {
         setcookie($cookie_name, $cookie_value, time() + 86400);
 
         if (@$role == "Administrator") {
-            header("Location: admin/default.php?ref=$id");
+            header("Location: home/index.php?ref=$id");
         } else if (@$role == 'Superuser') {
             header("Location: ./superuser/default.php?ref=$id&page=");
         } else {

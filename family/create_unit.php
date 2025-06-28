@@ -39,7 +39,8 @@ if (isset($_POST['create_unit_code'])) {
 
 
 	<!-- Include the global navigation bar -->
-	<?php include '../nav/global_nav.php'; ?>
+	<?php @include '../nav/app_header_nav.php';
+	include '../nav/global_nav.php'; ?>
 	<br><br>
 	<div class="pageName">
 		<h3>Area Mapping</h3>

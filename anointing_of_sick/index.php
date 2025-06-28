@@ -35,7 +35,8 @@ if (isset($_POST['add_anointing'])) {
 </head>
 
 <body>
-	<?php include '../nav/global_nav.php'; ?>
+	<?php @include '../nav/app_header_nav.php';
+	include '../nav/global_nav.php'; ?>
 	<br><br>
 	<div class="pageName">
 		<h3>ANOINTING OF THE SICK</h3>

@@ -6,6 +6,7 @@ if (isset($_POST['edit_header'])) {
 	@$p_address = mysqli_real_escape_string($conn, $_POST['parish_address']);
 	@$diocese = mysqli_real_escape_string($conn, $_POST['diocese-name']);
 
+
 	$sql = "UPDATE parish_info SET 
             p_name = '$p_name', 
             p_address = '$p_address', 
@@ -49,7 +50,8 @@ if ($result) {
 </head>
 
 <body>
-	<?php include '../nav/global_nav.php'; ?>
+	<?php @include '../nav/app_header_nav.php';
+	include '../nav/global_nav.php'; ?>
 	<br><br>
 	<div class="pageName card-heading">
 		<h3>EDIT REPORT HEADER</h3>
@@ -80,19 +82,19 @@ if ($result) {
 				</div>
 			</div>
 		</div>
-	</form>
 
-	<div class="form-header">
-		<div class="form-actions">
-			<button type="submit" class="btn-primary" name="edit_header">
-				<i class="fas fa-save"></i> Save
-			</button>
-			<button class="btn-secondary" onclick="location.reload()">
-				<i class="fas fa-times"></i> Reset
-			</button>
+
+		<div class="form-header">
+			<div class="form-actions">
+				<button type="submit" class="btn-primary" name="edit_header">
+					<i class="fas fa-save"></i> Save
+				</button>
+				<button class="btn-secondary" onclick="location.reload()">
+					<i class="fas fa-times"></i> Reset
+				</button>
+			</div>
 		</div>
-	</div>
-
+	</form>
 	<br><br>
 	<div class="form-section">
 		<div class="form-section-header">

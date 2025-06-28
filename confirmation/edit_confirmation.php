@@ -84,7 +84,8 @@ $rows = $result ? $result->fetch_assoc() : null;
 </head>
 
 <body>
-	<?php include '../nav/global_nav.php'; ?>
+	<?php @include '../nav/app_header_nav.php';
+	include '../nav/global_nav.php'; ?>
 	<br><br>
 	<div class="pageName card-heading">
 		<h3>EDIT CONFIRMATION RECORD</h3>

@@ -33,16 +33,16 @@ if (isset($_POST['modify_priest'])) {
 }
 
 if (isset($_POST['delete_priest'])) {
-    $sql = "DELETE FROM priest WHERE ID = '$priest_id' AND stationID = '$STATION_CODE'";
-    if (mysqli_query($conn, $sql)) {
-        echo "<script>
+	$sql = "DELETE FROM priest WHERE ID = '$priest_id' AND stationID = '$STATION_CODE'";
+	if (mysqli_query($conn, $sql)) {
+		echo "<script>
             alert('Priest record deleted.');
             window.location.href = '../priest/index.php';
         </script>";
-        exit;
-    } else {
-        echo "<script>alert('Failed to delete priest record.');</script>";
-    }
+		exit;
+	} else {
+		echo "<script>alert('Failed to delete priest record.');</script>";
+	}
 }
 ?>
 <!DOCTYPE html>
@@ -58,7 +58,8 @@ if (isset($_POST['delete_priest'])) {
 </head>
 
 <body>
-	<?php include '../nav/global_nav.php'; ?>
+	<?php @include '../nav/app_header_nav.php';
+	include '../nav/global_nav.php'; ?>
 	<br><br>
 	<div class="pageName card-heading">
 		<table border="0">
@@ -110,7 +111,8 @@ if (isset($_POST['delete_priest'])) {
 					<i class="fas fa-save"></i> Save
 				</button>
 				<!-- Change Reset button to Delete button -->
-				<button type="button" class="btn-secondary" onclick="if(confirm('Are you sure you want to delete this priest record?')) { document.getElementById('deletePriestForm').submit(); }">
+				<button type="button" class="btn-secondary"
+					onclick="if(confirm('Are you sure you want to delete this priest record?')) { document.getElementById('deletePriestForm').submit(); }">
 					<i class="fas fa-trash"></i> Delete
 				</button>
 			</div>

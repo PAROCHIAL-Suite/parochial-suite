@@ -25,7 +25,8 @@
 </head>
 
 <body>
-  <?php include '../nav/global_nav.php'; ?>
+  <?php @include '../nav/app_header_nav.php';
+  include '../nav/global_nav.php'; ?>
   <br><br>
   <div class="pageName card-heading">
     <table border="0">
@@ -62,10 +63,12 @@
         <p>This letter informs you that <b><?php echo $rows['name'] . " " . $rows['surname']; ?></b> who was baptized at
           your church, recently received the Sacrament of Confirmation. The date of his/her baptism was
           <b><?php echo $rows['baptism_date']; ?></b> and the registration no. is
-          <b><?php echo $rows['baptism_reg_no']; ?></b></p>
+          <b><?php echo $rows['baptism_reg_no']; ?></b>
+        </p>
         <p>Please incorporate the following information into the baptismal entry for this person: This person received
           Confirmation on <b><?php echo $rows['date_of_communion']; ?></b> at
-          <b><?php echo $rows['church_of_comunion']; ?></b>.</p>
+          <b><?php echo $rows['church_of_comunion']; ?></b>.
+        </p>
         <p>Thank you for your kind assistance in this matter.
           <br /><br />Sincerely,<br /><br /><br />
           <?php echo $rows['parish_priest']; ?>
@@ -75,7 +78,8 @@
           envelope.</p>
         <hr>
         <p>The entry regarding Confirmation has been made in the Baptismal Registry regarding
-          <b><?php echo $rows['name'] . " " . $rows['surname']; ?></b>.</p><br /><br />
+          <b><?php echo $rows['name'] . " " . $rows['surname']; ?></b>.
+        </p><br /><br />
         <p><br />The Parish Priest<br /><?php echo $rows['baptism_parish']; ?>
           <br />
           (parish seal)

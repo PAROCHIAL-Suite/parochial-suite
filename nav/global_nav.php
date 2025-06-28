@@ -81,32 +81,35 @@
 	?>
 	<nav class="global_nav">
 
-		<a href="../home/index.php"><button id="home" class="btnNav"><i class="fa fa-home"></i></button></a>
+		<a href="../home/index.php?ref=<?php echo $_COOKIE['userID']; ?>"><button id="home" class="btnNav"><i
+					class="fa fa-home"></i></button></a>
 
 		<div class="dropdown">
 			<button class="btnNav">Sacraments</button>
 			<div class="dropdown-content">
-				<a href="../baptism/baptism_reg.php" target="_self">Baptism</a>
-				<a href="../eucharist/index.php">Holy Communion</a>
-				<a href="../confirmation/index.php">Confirmation</a>
-				<a href="../anointing_of_sick/index.php">Annointing of the Sick</a>
-				<a href="../burial/burial_reg.php">Burial</a>
+				<a href="../baptism/baptism_reg.php?ref=<?php echo $_COOKIE['userID']; ?>" target="_self">Baptism</a>
+				<a href="../eucharist/index.php?ref=<?php echo $_COOKIE['userID']; ?>">Holy Communion</a>
+				<a href="../confirmation/index.php?ref=<?php echo $_COOKIE['userID']; ?>">Confirmation</a>
+				<a href="../anointing_of_sick/index.php?ref=<?php echo $_COOKIE['userID']; ?>">Annointing of the
+					Sick</a>
+				<a href="../burial/burial_reg.php?ref=<?php echo $_COOKIE['userID']; ?>">Burial</a>
 			</div>
 		</div>
 
 		<div class="dropdown">
 			<button class="btnNav">Family</button>
 			<div class="dropdown-content">
-				<a href="../family/create_unit.php">Create Unit</a>
-				<a href="../family/create_family.php">Add Family</a>
-				<a href="../family/add_member_index.php">Add Members</a>
+				<a href="../family/create_unit.php?ref=<?php echo $_COOKIE['userID']; ?>">Create Unit</a>
+				<a href="../family/create_family.php?ref=<?php echo $_COOKIE['userID']; ?>">Add Family</a>
+				<a href="../family/add_member_index.php?ref=<?php echo $_COOKIE['userID']; ?>">Add Members</a>
 				<div class="dropdown">
 					<button class="btnNav">
 						More Family Options <i class="fa fa-caret-right caret-right"></i>
 					</button>
 					<div class="dropdown-content">
-						<a href="../family/family_list.php">Family List</a>
-						<a href="../family/member_list.php">Member List</a>
+						<a href="../operations/move_bulk_family.php?ref=<?php echo $_COOKIE['userID']; ?>">Bulk
+							Operations</a>
+						<a href="../family/member_list.php?ref=<?php echo $_COOKIE['userID']; ?>">Member List</a>
 					</div>
 				</div>
 			</div>
@@ -115,8 +118,9 @@
 		<div class="dropdown">
 			<button class="btnNav">Priests</button>
 			<div class="dropdown-content">
-				<a href="../priest/index.php" target="main-iframe">Add A Priest</a>
-				<a href="../priest/priest_list.php">List of Priest</a>
+				<a href="../priest/index.php?ref=<?php echo $_COOKIE['userID']; ?>" target="main-iframe">Add A
+					Priest</a>
+				<a href="../priest/priest_list.php?ref=<?php echo $_COOKIE['userID']; ?>">List of Priest</a>
 			</div>
 
 		</div>
@@ -124,27 +128,30 @@
 		<div class="dropdown">
 			<button class="btnNav">Council</button>
 			<div class="dropdown-content">
-				<a href="../council/create_tenure.php">Create New Term</a>
-				<a href="../council/add_council_member.php">Add Members</a>
-				<a href="../council/member_list.php">Members List</a>
+				<a href="../council/create_tenure.php?ref=<?php echo $_COOKIE['userID']; ?>">Create New Term</a>
+				<a href="../council/add_council_member.php?ref=<?php echo $_COOKIE['userID']; ?>">Add Members</a>
+				<a href="../council/member_list.php?ref=<?php echo $_COOKIE['userID']; ?>">Members List</a>
 			</div>
 		</div>
 
 		<div class="dropdown">
 			<button class="btnNav">Reports</button>
 			<div class="dropdown-content">
-				<a href="../family/member_list.php">Members List</a>
-				<a href="../family/family_list.php">Family List</a>
+				<a href="../family/member_list.php?ref=<?php echo $_COOKIE['userID']; ?>">Members List</a>
+				<a href="../family/family_list.php?ref=<?php echo $_COOKIE['userID']; ?>">Family List</a>
 				<div class="dropdown">
 					<button class="btnNav">
 						Sacrament Reports <i class="fa fa-caret-right caret-right"></i>
 					</button>
 					<div class="dropdown-content">
-						<a href="../baptism/search.php">Baptism Records</a>
-						<a href="../eucharist/search.php">Holy Communion Records</a>
-						<a href="../confirmation/search.php">Confirmation Records</a>
-						<a href="../anointing_of_sick/search.php">Anointing of the Sick</a>
-						<a href="../burial/search.php">Burial</a>
+						<a href="../baptism/search.php?ref=<?php echo $_COOKIE['userID']; ?>">Baptism Records</a>
+						<a href="../eucharist/search.php?ref=<?php echo $_COOKIE['userID']; ?>">Holy Communion
+							Records</a>
+						<a href="../confirmation/search.php?ref=<?php echo $_COOKIE['userID']; ?>">Confirmation
+							Records</a>
+						<a href="../anointing_of_sick/search.php?ref=<?php echo $_COOKIE['userID']; ?>">Anointing of the
+							Sick</a>
+						<a href="../burial/search.php?ref=<?php echo $_COOKIE['userID']; ?>">Burial</a>
 
 					</div>
 				</div>
@@ -154,8 +161,9 @@
 		<div class="dropdown">
 			<button class="btnNav">Setup</button>
 			<div class="dropdown-content">
-				<a href="../account_center/index.php">Account Center</a>
-				<a href="../prefrences/edit_report_header.php">Edit Report Header</a>
+				<a href="../account_center/index.php?ref=<?php echo $_COOKIE['userID']; ?>">Account Center</a>
+				<a href="../prefrences/edit_report_header.php?ref=<?php echo $_COOKIE['userID']; ?>">Edit Report
+					Header</a>
 			</div>
 		</div>
 
@@ -164,8 +172,8 @@
 		<div class="dropdown">
 			<button class="btnNav">Support</button>
 			<div class="dropdown-content">
-				<a href="../support/index.php">Raise Ticket</a>
-				<a href="../support/ticket_history.php">Ticket History</a>
+				<a href="../support/index.php?ref=<?php echo $_COOKIE['userID']; ?>">Raise Ticket</a>
+				<a href="../support/ticket_history.php?ref=<?php echo $_COOKIE['userID']; ?>">Ticket History</a>
 			</div>
 		</div>
 	</nav>

@@ -110,7 +110,8 @@ if (isset($_POST['post_bpt_frm'])) {
 
 <body>
 	<!-- Include the global navigation bar -->
-	<?php include '../nav/global_nav.php'; ?>
+	<?php @include '../nav/app_header_nav.php';
+	include '../nav/global_nav.php'; ?>
 	<br><br>
 	<div class="pageName">
 		<!-- <a href="sacrament_search_index.php" class="" style="float: right; margin-right: 50px; ">

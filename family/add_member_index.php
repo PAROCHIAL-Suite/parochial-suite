@@ -9,7 +9,8 @@
 </head>
 
 <body>
-	<?php include '../nav/global_nav.php'; ?>
+	<?php @include '../nav/app_header_nav.php';
+	include '../nav/global_nav.php'; ?>
 	<br><br>
 	<div class="pageName">
 		<h3>ADD A MEMBER</h3>
@@ -70,7 +71,7 @@
 	<div class="container-widgets">
 		<!-- Recent Transactions -->
 		<div class="widget-row">
-			<div class="widget table-widget" style="max-height: 55%;">
+			<div class="widget table-widget" style="max-height: 75%;">
 				<div class="widget-content">
 					<table class="data-table" id="table">
 						<thead>
@@ -89,7 +90,7 @@
 							include '../config/connection.php';
 							$sc = $_COOKIE['user'];
 							$sql = "SELECT * FROM family_members WHERE area_code = '$area_Code' AND
-				relation_with_head = 'Head' AND stationID = '$sc'";
+				relation_with_head = 'Head' AND stationID = '$STATION_CODE'";
 							$result = $conn->query($sql);
 							while ($rows = $result->fetch_assoc()) {
 								?>

@@ -246,8 +246,7 @@ select {
     align-items: center;
     padding: 5px;  
     padding-right: 30px;
-    background-color: rgb(241, 242, 247);
-    border-bottom: 1px solid #eee;
+    background-color: rgb(241, 242, 247); 
 }
 
 .widget-header h3 {

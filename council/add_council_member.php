@@ -15,7 +15,8 @@ $val = $area_Code;
 ?>
 
 <body>
-	<?php include '../nav/global_nav.php'; ?>
+	<?php @include '../nav/app_header_nav.php';
+	include '../nav/global_nav.php'; ?>
 	<br><br>
 	<div class="pageName">
 		<h3>CREATE COUNCIL MEMBERS</h3>

@@ -55,7 +55,8 @@ if (isset($_POST['add_member'])) {
 </head>
 
 <body>
-	<?php include '../nav/global_nav.php'; ?>
+	<?php @include '../nav/app_header_nav.php';
+	include '../nav/global_nav.php'; ?>
 	<br><br>
 	<div class="pageName card-heading">
 		<table border="0">

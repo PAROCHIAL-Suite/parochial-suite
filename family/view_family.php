@@ -1,8 +1,8 @@
 <?php
 include '../config/connection.php';
-$id = $_GET['id'];
+$getPOC = $_GET['id'];
 
-$sql = "SELECT * FROM family_members WHERE poc = '$id' AND relation_with_head = 'Head' AND stationID = '$STATION_CODE'";
+$sql = "SELECT * FROM family_members WHERE poc = '$getPOC' AND relation_with_head = 'Head' AND stationID = '$STATION_CODE'";
 $result = $conn->query($sql);
 
 while ($rows = $result->fetch_assoc()) {
@@ -46,7 +46,8 @@ while ($rows = $result->fetch_assoc()) {
 </head>
 
 <body>
-	<?php include '../nav/global_nav.php'; ?>
+	<?php include '../nav/global_nav.php';
+	include '../nav/global_nav.php'; ?>
 	<br><br>
 	<div class="pageName">
 		<h3>FAMILY INFORMATION</h3>
@@ -74,7 +75,7 @@ while ($rows = $result->fetch_assoc()) {
 							<i class="fa fa-refresh refresh reload"></i>
 						</button>
 
-						<a href="edit_family.php?id=<?php echo $id; ?>" class=" btn-secondary-exp btn-link"
+						<a href="edit_family.php?id=<?php echo $getPOC; ?>" class=" btn-secondary-exp btn-link"
 							style="float: left; margin-left: 50px;">
 							Edit Family Details
 						</a>
@@ -139,7 +140,7 @@ while ($rows = $result->fetch_assoc()) {
 					</tr>
 
 					<?php
-					$sql = "SELECT * FROM family_members WHERE poc = '$id' AND stationID = '$STATION_CODE'";
+					$sql = "SELECT * FROM family_members WHERE poc = '$getPOC' AND stationID = '$STATION_CODE'";
 					$result = $conn->query($sql);
 					if ($result->num_rows > 0) {
 						while ($row = $result->fetch_assoc()) {

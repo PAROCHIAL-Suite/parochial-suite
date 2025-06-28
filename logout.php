@@ -9,14 +9,20 @@
 
 <body>
 	<?php
-	// $servername = "localhost";
-	// $database = "u381709061_parochial_db";
-	// $username = "u381709061_Ecclesiastical";
-	// $password = "/vV+q6=C";
-	
+	$servername = "localhost";
+	$database = "parochial_cloud";
+	$username = "root";
+
 	// Create connection
+	$conn = mysqli_connect($servername, $username, '', $database);
+
+
+	// Check connection
 	
-	$conn = mysqli_connect('localhost', 'root', '', 'parochial_cloud');
+	if (!$conn) {
+		die("Unable to connect: " . mysqli_connect_error());
+	}
+
 
 	// Check connection
 	

@@ -126,7 +126,7 @@ if (isset($_POST['add_priest'])) {
             if ($dup_result && $dup_result->num_rows > 0) {
                 echo "<script>alert('This ticket already exists. Duplicate entry not allowed.');</script>";
             } else {
-                $sql = "INSERT INTO support_tickets (ticket_id, user_id, user_name, subject, category, description, status, date, time)
+                $sql = "INSERT INTO ps_internal_sys.support_tickets (ticket_id, user_id, user_name, subject, category, description, status, date, time)
                         VALUES ('$ticket_id', '$user_id', '$user_name', '$subject', '$category', '$description', '$status', '$date', '$time')";
                 if (mysqli_query($conn, $sql)) {
                     echo "<script>alert('Ticket raised successfully!');</script>";
@@ -166,7 +166,7 @@ if (isset($_POST['add_priest'])) {
                         <tbody>
                             <?php
                             $user_id = isset($_COOKIE['userID']) ? $_COOKIE['userID'] : null;
-                            $sql = "SELECT ticket_id, subject, category, description, status, date, time FROM support_tickets";
+                            $sql = "SELECT ticket_id, subject, category, description, status, date, time FROM ps_internal_sys.support_tickets";
                             if ($user_id) {
                                 $sql .= " WHERE user_id = '$user_id'";
                             }

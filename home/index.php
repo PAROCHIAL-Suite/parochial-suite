@@ -6,22 +6,22 @@ $getFamilyCount = "SELECT COUNT(*) AS totalFamilyCount FROM family_members WHERE
 $result = $conn->query($getFamilyCount);
 $totalFamilyCount = $result->fetch_assoc()['totalFamilyCount'] ?? 0;
 
-$getMemberCount = "SELECT COUNT(*) AS totalUsers FROM family_members";
+$getMemberCount = "SELECT COUNT(*) AS totalUsers FROM family_members WHERE stationID = '$STATION_CODE'";
 $result = $conn->query($getMemberCount);
 $totalUsers = $result->fetch_assoc()['totalUsers'] ?? 0;
 
-$baptismCount = $conn->query("SELECT COUNT(*) AS baptismCount FROM baptism")->fetch_assoc()['baptismCount'] ?? 0;
-$communionCount = $conn->query("SELECT COUNT(*) AS communionCount FROM eucharist")->fetch_assoc()['communionCount'] ?? 0;
-$confirmationCount = $conn->query("SELECT COUNT(*) AS confirmationCount FROM confirmation")->fetch_assoc()['confirmationCount'] ?? 0;
-$burialCount = $conn->query("SELECT COUNT(*) AS burialCount FROM burial")->fetch_assoc()['burialCount'] ?? 0;
+$baptismCount = $conn->query("SELECT COUNT(*) AS baptismCount FROM baptism WHERE stationID = '$STATION_CODE'")->fetch_assoc()['baptismCount'] ?? 0;
+$communionCount = $conn->query("SELECT COUNT(*) AS communionCount FROM eucharist WHERE stationID = '$STATION_CODE'")->fetch_assoc()['communionCount'] ?? 0;
+$confirmationCount = $conn->query("SELECT COUNT(*) AS confirmationCount FROM confirmation WHERE stationID = '$STATION_CODE'")->fetch_assoc()['confirmationCount'] ?? 0;
+$burialCount = $conn->query("SELECT COUNT(*) AS burialCount FROM burial WHERE stationID = '$STATION_CODE'")->fetch_assoc()['burialCount'] ?? 0;
 
 // Add these queries to get male and female counts
-$maleCount = $conn->query("SELECT COUNT(*) AS male FROM family_members WHERE gender='Male'")->fetch_assoc()['male'] ?? 0;
-$femaleCount = $conn->query("SELECT COUNT(*) AS female FROM family_members WHERE gender='Female'")->fetch_assoc()['female'] ?? 0;
+$maleCount = $conn->query("SELECT COUNT(*) AS male FROM family_members WHERE gender='Male' AND stationID = '$STATION_CODE'")->fetch_assoc()['male'] ?? 0;
+$femaleCount = $conn->query("SELECT COUNT(*) AS female FROM family_members WHERE gender='Female' AND stationID = '$STATION_CODE'")->fetch_assoc()['female'] ?? 0;
 
 // Active/Inactive families
-$activeFamilies = $conn->query("SELECT COUNT(*) AS active FROM family_members WHERE status='ACTIVE'")->fetch_assoc()['active'] ?? 0;
-$inactiveFamilies = $conn->query("SELECT COUNT(*) AS inactive FROM family_members WHERE status='IN-ACTIVE'")->fetch_assoc()['inactive'] ?? 0;
+$activeFamilies = $conn->query("SELECT COUNT(*) AS active FROM family_members WHERE status='ACTIVE'  AND stationID = '$STATION_CODE'")->fetch_assoc()['active'] ?? 0;
+$inactiveFamilies = $conn->query("SELECT COUNT(*) AS inactive FROM family_members WHERE status='IN-ACTIVE'  AND stationID = '$STATION_CODE'")->fetch_assoc()['inactive'] ?? 0;
 
 // Example events (replace with DB query if needed)
 $events = [
@@ -41,7 +41,7 @@ $quickLinks = [
     ['icon' => 'fa-baby', 'label' => 'Baptism', 'url' => '../baptism/baptism_reg.php'],
     ['icon' => 'fa-bread-slice', 'label' => 'Communion', 'url' => '../eucharist/index.php'],
     ['icon' => 'fa-dove', 'label' => 'Confirmation', 'url' => '../confirmation/index.php'],
-    ['icon' => 'fa-cross', 'label' => 'Burial', 'url' => '../burial/index.php'],
+    ['icon' => 'fa-cross', 'label' => 'Burial', 'url' => '../burial/burial_reg.php'],
 ];
 ?>
 <!DOCTYPE html>
@@ -284,7 +284,8 @@ $quickLinks = [
         .ps-quicklink {
             display: flex;
             align-items: center;
-            background: linear-gradient(90deg, #e3f0ff 60%, #f5f7fa 100%);
+            background: white;
+
             border-radius: 8px;
             padding: 10px 18px;
             text-decoration: none;
@@ -318,7 +319,8 @@ $quickLinks = [
 </head>
 
 <body>
-    <?php include '../nav/global_nav.php'; ?>
+    <?php @include '../nav/app_header_nav.php';
+    include '../nav/global_nav.php'; ?>
     <br><br>
     <div class="pageName">
         <h3>HOME</h3>
@@ -342,52 +344,8 @@ $quickLinks = [
                             <?php endforeach; ?>
                         <?php else: ?>
                             <li>No upcoming events.</li>
+
                         <?php endif; ?>
-                    </ul>
-                </div>
-            </div>
-            <div class="ps-widget">
-                <div class="ps-widget-header"><i class="fa fa-lightbulb"></i> Parish Insights</div>
-                <div class="ps-widget-content">
-                    <ul class="ps-list">
-                        <li>
-                            <i class="fa fa-chart-line"></i>
-                            <span style="font-weight:600;">Growth Rate:</span>
-                            <span style="margin-left:8px;">
-                                <?php
-                                $growth = $totalFamilyCount > 0 ? round((($activeFamilies - $inactiveFamilies) / $totalFamilyCount) * 100, 1) : 0;
-                                echo $growth . '% active families';
-                                ?>
-                            </span>
-                        </li>
-                        <li>
-                            <i class="fa fa-venus-mars"></i>
-                            <span style="font-weight:600;">Gender Ratio:</span>
-                            <span style="margin-left:8px;">
-                                <?php
-                                $ratio = ($femaleCount > 0) ? round($maleCount / $femaleCount, 2) : 'N/A';
-                                echo $maleCount . ' : ' . $femaleCount . ' (M:F)';
-                                ?>
-                            </span>
-                        </li>
-                        <li>
-                            <i class="fa fa-birthday-cake"></i>
-                            <span style="font-weight:600;">Next Parish Anniversary:</span>
-                            <span style="margin-left:8px;">
-                                <?php
-                                $today = date('Y-m-d');
-                                $anniv = date('Y') . '-12-08';
-                                if ($today > $anniv)
-                                    $anniv = (date('Y') + 1) . '-12-08';
-                                echo date('M d, Y', strtotime($anniv));
-                                ?>
-                            </span>
-                        </li>
-                        <li>
-                            <i class="fa fa-clock"></i>
-                            <span style="font-weight:600;">Server Time:</span>
-                            <span style="margin-left:8px;" id="serverTime"></span>
-                        </li>
                     </ul>
                 </div>
             </div>
